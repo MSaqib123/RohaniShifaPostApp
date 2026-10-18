@@ -77,6 +77,10 @@ export class AuthService {
       .toUpperCase();
   });
 
+  readonly photoURL = computed(() => {
+    return this.profileState()?.photoURL || this.userState()?.photoURL || null;
+  });
+
   private profileUnsubscribe: Unsubscribe | null = null;
   private readonly profileCreationStarted = new Set<string>();
 
@@ -139,9 +143,18 @@ export class AuthService {
     const db = this.firebase.requireDb();
     if (!user) throw new Error('auth.unauthorizedAction');
     const now = Timestamp.now();
-    await setDoc(doc(db, 'users', user.uid), { ...patch, updatedAt: now }, { merge: true });
+    await setDoc(doc(db, 'users', user.uid), removeUndefined({ ...patch, updatedAt: now }), {
+      merge: true,
+    });
+    const firebaseProfileUpdates: { displayName?: string; photoURL?: string } = {};
     if (patch.displayName !== undefined) {
-      await updateFirebaseProfile(user, { displayName: patch.displayName }).catch(() => undefined);
+      firebaseProfileUpdates.displayName = patch.displayName;
+    }
+    if (patch.photoURL !== undefined) {
+      firebaseProfileUpdates.photoURL = patch.photoURL || '';
+    }
+    if (Object.keys(firebaseProfileUpdates).length > 0) {
+      await updateFirebaseProfile(user, firebaseProfileUpdates).catch(() => undefined);
     }
     this.profileState.update((profile) =>
       profile ? { ...profile, ...patch, updatedAt: now } : profile,

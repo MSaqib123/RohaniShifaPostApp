@@ -317,6 +317,14 @@ export const ur: Record<TranslationKey, string> = {
   'profile.role.user': 'ممبر',
   'profile.manageAccount': 'اکاؤنٹ منیج کریں',
   'profile.pendingAction': 'بقایہ عمل جاری رکھیں',
+  'profile.changePhoto': 'تصویر تبدیل کریں',
+  'profile.uploadPhoto': 'تصویر اپ لوڈ کریں',
+  'profile.removePhoto': 'تصویر ہٹائیں',
+  'profile.photoHint': 'مربع تصویر (JPG, PNG یا WebP، زیادہ سے زیادہ 2MB)۔',
+  'profile.photoUpdated': 'پروفائل تصویر کامیابی سے اپ ڈیٹ ہو گئی',
+  'profile.photoRemoved': 'پروفائل تصویر ہٹا دی گئی',
+  'profile.invalidPhoto': 'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2MB سے کم ہو۔',
+  'profile.uploadingPhoto': 'تصویر محفوظ ہو رہی ہے…',
 
   // ── تبصرے ───────────────────────────────────────────────────────────────
   'comments.title': 'تبصرے',

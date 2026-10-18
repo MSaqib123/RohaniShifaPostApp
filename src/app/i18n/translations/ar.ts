@@ -317,6 +317,14 @@ export const ar: Record<TranslationKey, string> = {
   'profile.role.user': 'عضو',
   'profile.manageAccount': 'إدارة الحساب',
   'profile.pendingAction': 'تابع إجراءك المعلّق',
+  'profile.changePhoto': 'تغيير الصورة',
+  'profile.uploadPhoto': 'تحميل صورة',
+  'profile.removePhoto': 'إزالة الصورة',
+  'profile.photoHint': 'صورة مربعة (JPG أو PNG أو WebP، أقصى حجم 2 ميجابايت).',
+  'profile.photoUpdated': 'تم تحديث الصورة الشخصية بنجاح',
+  'profile.photoRemoved': 'تمت إزالة الصورة الشخصية',
+  'profile.invalidPhoto': 'يرجى اختيار ملف صورة صالح (JPG أو PNG أو WebP) أقل من 2 ميجابايت.',
+  'profile.uploadingPhoto': 'جاري حفظ الصورة…',
 
   // ── التعليقات ────────────────────────────────────────────────────────────
   'comments.title': 'التعليقات',

@@ -41,7 +41,13 @@
             aria-haspopup="true"
             [attr.aria-label]="i18n.t('profile.manageAccount')"
           >
-            <span class="avatar" aria-hidden="true">{{ auth.initials() }}</span>
+            <span class="avatar" aria-hidden="true">
+              @if (auth.photoURL(); as photo) {
+                <img [src]="photo" [alt]="auth.displayName()" />
+              } @else {
+                {{ auth.initials() }}
+              }
+            </span>
             <app-icon [name]="userMenuOpen() ? 'chevron-up' : 'chevron-down'" />
           </button>
 

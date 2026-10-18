@@ -28,12 +28,121 @@
   align-items: center;
 
   h2 {
-    margin-block-end: var(--sp-1);
+    margin: 0 0 var(--sp-1);
+    font-size: var(--fs-lg);
+    font-weight: 800;
   }
 }
 
+.avatar-upload-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.avatar--xl {
+  inline-size: 5rem;
+  block-size: 5rem;
+  font-size: var(--fs-2xl);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(201, 162, 39, 0.4);
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.avatar-upload-btn {
+  position: absolute;
+  inset-inline-end: -0.25rem;
+  inset-block-end: -0.25rem;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  background: var(--c-primary-700);
+  border: 2px solid var(--c-surface);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--c-primary-600);
+    transform: scale(1.1);
+  }
+
+  .icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+}
+
+.profile__identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-inline-size: 0;
+}
+
+.profile__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-block-start: 0.25rem;
+}
+
+.btn-text-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  padding: 0.15rem 0.4rem;
+  color: var(--c-danger-600, #dc2626);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(220, 38, 38, 0.08);
+  }
+
+  .icon {
+    inline-size: 0.85rem;
+    block-size: 0.85rem;
+  }
+}
+
+.profile__photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--c-bg-deep);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-md);
+}
+
+.profile__photo-hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
 .profile__email {
-  margin: 0 0 var(--sp-2);
+  margin: 0 0 var(--sp-1);
   color: var(--text-muted);
   font-size: var(--fs-sm);
 }

@@ -69,7 +69,11 @@
           <span class="admin-topbar__site-label">{{ i18n.t('admin.viewSite') }}</span>
         </a>
         <span class="avatar" [attr.title]="auth.displayName()" aria-hidden="true">
-          {{ auth.initials() }}
+          @if (auth.photoURL(); as photo) {
+            <img [src]="photo" [alt]="auth.displayName()" />
+          } @else {
+            {{ auth.initials() }}
+          }
         </span>
         <button
           type="button"

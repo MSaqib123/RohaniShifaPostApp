@@ -320,6 +320,14 @@ export const en = {
   'profile.role.user': 'Member',
   'profile.manageAccount': 'Manage account',
   'profile.pendingAction': 'Continue to your pending action',
+  'profile.changePhoto': 'Change picture',
+  'profile.uploadPhoto': 'Upload picture',
+  'profile.removePhoto': 'Remove picture',
+  'profile.photoHint': 'Square image (JPG, PNG or WebP, max 2MB).',
+  'profile.photoUpdated': 'Profile picture updated successfully',
+  'profile.photoRemoved': 'Profile picture removed',
+  'profile.invalidPhoto': 'Please select a valid image file (JPG, PNG, or WebP) under 2MB.',
+  'profile.uploadingPhoto': 'Updating picture…',
 
   // ── Comments ──────────────────────────────────────────────────────────────
   'comments.title': 'Comments',
