@@ -1,0 +1,5 @@
+# Rohani Shifa — public, client-rendered SPA.
+# All public routes are crawlable; admin routes are auth-gated and return
+# the 403 page to anonymous visitors, so they are not disallowed explicitly.
+User-agent: *
+Allow: /
