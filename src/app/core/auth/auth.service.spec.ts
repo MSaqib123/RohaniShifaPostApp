@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { FirebaseNotConfiguredError } from '../firebase/firebase.service';
+import { FirebaseNotConfiguredError, FirebaseService } from '../firebase/firebase.service';
 import { AuthService } from './auth.service';
 
 /**
- * These tests run in the repository's default state: placeholders in
- * `environment.ts`, so `firebase.configured === false` (demo mode). What they
- * pin down is the honest-degradation contract — the service must neither
+ * These tests run in the repository's demo state: `firebase.configured === false` (demo mode).
+ * What they pin down is the honest-degradation contract — the service must neither
  * pretend a user is signed in nor crash (§61).
  *
  * The configured paths (real sign-in, profile listener, claims) need a
@@ -17,7 +16,22 @@ describe('AuthService in demo mode', () => {
 
   beforeEach(() => {
     TestBed.resetTestingModule();
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: FirebaseService,
+          useValue: {
+            configured: false,
+            requireAuth: () => {
+              throw new FirebaseNotConfiguredError();
+            },
+            requireDb: () => {
+              throw new FirebaseNotConfiguredError();
+            },
+          },
+        },
+      ],
+    });
     auth = TestBed.inject(AuthService);
   });
 

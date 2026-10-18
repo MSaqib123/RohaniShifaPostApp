@@ -151,9 +151,7 @@ export class EngagementService {
       ),
     ).pipe(
       map((comments) => {
-        const filtered = comments.filter(
-          (c) => c.itemType === itemType && c.status === 'visible',
-        );
+        const filtered = comments.filter((c) => c.itemType === itemType && c.status === 'visible');
         filtered.sort((a, b) => {
           const timeA = a.createdAt?.toMillis() ?? 0;
           const timeB = b.createdAt?.toMillis() ?? 0;

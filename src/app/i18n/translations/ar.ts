@@ -537,12 +537,15 @@ export const ar: Record<TranslationKey, string> = {
   'admin.settings.saved': 'تم حفظ الإعدادات',
   'admin.settings.save': 'حفظ الإعدادات',
   'admin.settings.heroBanner': 'بانر الصفحة الرئيسية',
-  'admin.settings.heroBannerSub': 'تحميل أو تغيير صورة البانر الرئيسية المعروضة في أعلى الصفحة الرئيسية.',
-  'admin.settings.heroBannerPlaceholder': 'الأبعاد الموصى بها: 1200 × 750 بكسل (نسبة 16:10) أو 1920 × 1080 بكسل (نسبة 16:9). أقصى حجم: 2 ميجابايت. التنسيقات: JPG, PNG, WebP.',
+  'admin.settings.heroBannerSub':
+    'تحميل أو تغيير صورة البانر الرئيسية المعروضة في أعلى الصفحة الرئيسية.',
+  'admin.settings.heroBannerPlaceholder':
+    'الأبعاد الموصى بها: 1200 × 750 بكسل (نسبة 16:10) أو 1920 × 1080 بكسل (نسبة 16:9). أقصى حجم: 2 ميجابايت. التنسيقات: JPG, PNG, WebP.',
   'admin.settings.uploadBanner': 'تحميل صورة البانر',
   'admin.settings.dropBannerHere': 'انقر أو اسحب ملف الصورة هنا للتحميل',
   'admin.settings.bannerUrlLabel': 'رابط الصورة (URL)',
-  'admin.settings.bannerUrlPlaceholder': 'https://example.com/banner.jpg أو images/islamic-hero.jpg',
+  'admin.settings.bannerUrlPlaceholder':
+    'https://example.com/banner.jpg أو images/islamic-hero.jpg',
   'admin.settings.bannerAltLabel': 'وصف البانر (النص البديل Alt)',
   'admin.settings.bannerAltPlaceholder': 'مثال: بانر روحاني شفاء للفنون الإسلامية',
   'admin.settings.resetDefaultBanner': 'استعادة البانر الافتراضي',
@@ -550,7 +553,8 @@ export const ar: Record<TranslationKey, string> = {
   'admin.settings.imageDimensions': 'الأبعاد: {width} × {height} بكسل',
   'admin.settings.imageSize': 'حجم الملف: {size}',
   'admin.settings.bannerUploaded': 'تم تحميل البانر بنجاح',
-  'admin.settings.invalidImage': 'يرجى تحديد ملف صورة صالح (JPG أو PNG أو WebP) بحجم أقل من 2 ميجابايت.',
+  'admin.settings.invalidImage':
+    'يرجى تحديد ملف صورة صالح (JPG أو PNG أو WebP) بحجم أقل من 2 ميجابايت.',
 
   // ── الأخطاء / التنبيهات ──────────────────────────────────────────────────
   'error.notFoundTitle': 'الصفحة غير موجودة',

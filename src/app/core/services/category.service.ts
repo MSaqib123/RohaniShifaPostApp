@@ -61,7 +61,9 @@ export class CategoryService {
   /** Categories by slug — the public detail route addresses them this way. */
   bySlug(slug: string): Observable<Category[]> {
     if (!this.firebase.configured) return of([]);
-    return fromFirestoreQuery(query(this.categoriesRef(), where('slug', '==', slug), limitDocs(1))).pipe(
+    return fromFirestoreQuery(
+      query(this.categoriesRef(), where('slug', '==', slug), limitDocs(1)),
+    ).pipe(
       catchError((err) => {
         console.error('Error in bySlug categories:', err);
         return of([]);

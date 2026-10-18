@@ -59,7 +59,9 @@ export class AdminSettingsPage {
 
   readonly heroBannerUrl = signal<string>('');
   readonly heroBannerAlt = signal<string>('');
-  readonly bannerDimensions = signal<{ width: number; height: number; sizeStr: string } | null>(null);
+  readonly bannerDimensions = signal<{ width: number; height: number; sizeStr: string } | null>(
+    null,
+  );
   readonly isDragging = signal<boolean>(false);
 
   readonly currentBannerPreview = computed(() => {

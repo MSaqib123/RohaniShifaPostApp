@@ -146,7 +146,9 @@ export class HomePage {
       videos: this.videoService.listPublished({ max: 6 }).pipe(catchError(() => of([]))),
       events: this.eventService.listUpcoming(3).pipe(catchError(() => of([]))),
       categories: this.categoryService.listActive().pipe(catchError(() => of([]))),
-      reminder: this.postService.listPublished({ type: 'reminder', max: 1 }).pipe(catchError(() => of([]))),
+      reminder: this.postService
+        .listPublished({ type: 'reminder', max: 1 })
+        .pipe(catchError(() => of([]))),
       settings: this.adminService.settings().pipe(catchError(() => of(null))),
     }).subscribe({
       next: ({ posts, videos, events, categories, reminder, settings }) => {

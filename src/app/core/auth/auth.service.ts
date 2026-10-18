@@ -190,9 +190,8 @@ export class AuthService {
       if (snapshot.exists()) {
         const data = snapshot.data();
         const email = (user.email || '').toLowerCase();
-        const role = (email === 'sain@gmail.com' ? 'admin' : (data['role'] || 'user')) as
-          | 'user'
-          | 'admin';
+        const role = (email === 'sain@gmail.com' ? 'admin' : data['role'] || 'user') as
+          'user' | 'admin';
         this.profileState.set({ uid: snapshot.id, ...data, role } as UserProfile);
         return;
       }

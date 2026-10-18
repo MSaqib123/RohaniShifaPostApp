@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { FirebaseNotConfiguredError } from '../firebase/firebase.service';
+import { FirebaseNotConfiguredError, FirebaseService } from '../firebase/firebase.service';
 import { PostService } from './post.service';
 
 /**
@@ -14,7 +14,22 @@ describe('PostService in demo mode', () => {
 
   beforeEach(() => {
     TestBed.resetTestingModule();
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: FirebaseService,
+          useValue: {
+            configured: false,
+            requireAuth: () => {
+              throw new FirebaseNotConfiguredError();
+            },
+            requireDb: () => {
+              throw new FirebaseNotConfiguredError();
+            },
+          },
+        },
+      ],
+    });
     service = TestBed.inject(PostService);
   });
 

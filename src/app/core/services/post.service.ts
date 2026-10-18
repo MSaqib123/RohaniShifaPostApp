@@ -58,7 +58,11 @@ export class PostService {
   listPublished(options: PostListOptions = {}): Observable<Post[]> {
     if (!this.firebase.configured) return of([]);
     return fromFirestoreQuery(
-      query(this.postsRef(), where('status', '==', 'published'), limitDocs(options.max ? options.max * 5 : 200)),
+      query(
+        this.postsRef(),
+        where('status', '==', 'published'),
+        limitDocs(options.max ? options.max * 5 : 200),
+      ),
     ).pipe(
       map((posts) => {
         let result = posts;

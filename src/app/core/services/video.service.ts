@@ -55,7 +55,11 @@ export class VideoService {
   listPublished(options: VideoListOptions = {}): Observable<Video[]> {
     if (!this.firebase.configured) return of([]);
     return fromFirestoreQuery(
-      query(this.videosRef(), where('status', '==', 'published'), limitDocs(options.max ? options.max * 5 : 200)),
+      query(
+        this.videosRef(),
+        where('status', '==', 'published'),
+        limitDocs(options.max ? options.max * 5 : 200),
+      ),
     ).pipe(
       map((videos) => {
         let result = videos;

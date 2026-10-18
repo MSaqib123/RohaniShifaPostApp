@@ -182,9 +182,8 @@ export class AdminService {
     videos: number;
     events: number;
   }> {
-    const { SAMPLE_CATEGORIES, SAMPLE_POSTS, SAMPLE_VIDEOS, SAMPLE_EVENTS } = await import(
-      '../data/sample-data'
-    );
+    const { SAMPLE_CATEGORIES, SAMPLE_POSTS, SAMPLE_VIDEOS, SAMPLE_EVENTS } =
+      await import('../data/sample-data');
 
     // 1. Categories
     const categoryMap = new Map<string, string>();
@@ -261,4 +260,3 @@ export class AdminService {
     };
   }
 }
-

@@ -158,7 +158,10 @@ function buildKeywords(...texts) {
   const set = new Set();
   for (const text of texts) {
     if (!text) continue;
-    const words = String(text).toLowerCase().split(/[\s,.;:!?()«»"']+/).filter(Boolean);
+    const words = String(text)
+      .toLowerCase()
+      .split(/[\s,.;:!?()«»"']+/)
+      .filter(Boolean);
     for (const word of words) {
       for (let i = 2; i <= Math.min(word.length, 15); i++) {
         set.add(word.slice(0, i));
@@ -395,7 +398,9 @@ const events = [
       ar: 'ندعوكم للمشاركة في حلقتنا الأسبوعية عبر الإنترنت لدراسة معاني القرآن العظيم وهدي السنة النبوية وإجابة الأسئلة الإيمانية.',
     },
     startDate: admin.firestore.Timestamp.fromMillis(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    endDate: admin.firestore.Timestamp.fromMillis(Date.now() + 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
+    endDate: admin.firestore.Timestamp.fromMillis(
+      Date.now() + 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000,
+    ),
     location: 'Virtual Classroom (Zoom / Live Stream)',
     isOnline: true,
     meetingUrl: 'https://zoom.us',
@@ -414,7 +419,9 @@ const events = [
       ar: 'لقاء إيماني مبارك يهدف إلى ترسيخ الأخوة الإسلامية وتزكية النفوس وسماع المواعظ النافعة.',
     },
     startDate: admin.firestore.Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000),
-    endDate: admin.firestore.Timestamp.fromMillis(Date.now() + 14 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000),
+    endDate: admin.firestore.Timestamp.fromMillis(
+      Date.now() + 14 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000,
+    ),
     location: 'Rohani Shifa Islamic Center, Main Hall',
     isOnline: false,
     status: 'published',
@@ -432,7 +439,9 @@ const events = [
       ar: 'سجل محفوظ من فعاليات شهر رمضان المبارك المباركة، حفظًا للتاريخ والذكريات الإيمانية.',
     },
     startDate: admin.firestore.Timestamp.fromMillis(Date.now() - 120 * 24 * 60 * 60 * 1000),
-    endDate: admin.firestore.Timestamp.fromMillis(Date.now() - 120 * 24 * 60 * 60 * 1000 + 4 * 60 * 60 * 1000),
+    endDate: admin.firestore.Timestamp.fromMillis(
+      Date.now() - 120 * 24 * 60 * 60 * 1000 + 4 * 60 * 60 * 1000,
+    ),
     location: 'Rohani Shifa Islamic Center',
     isOnline: false,
     status: 'completed',
@@ -463,11 +472,17 @@ for (const e of events) {
 }
 
 // ── 5. Platform Settings ─────────────────────────────────────────────────────
-await db.collection('settings').doc('site').set({
-  featuredVideoId: videoIds[0] || null,
-  featuredPostIds: postIds.slice(0, 3),
-  updatedAt: now,
-}, { merge: true });
+await db
+  .collection('settings')
+  .doc('site')
+  .set(
+    {
+      featuredVideoId: videoIds[0] || null,
+      featuredPostIds: postIds.slice(0, 3),
+      updatedAt: now,
+    },
+    { merge: true },
+  );
 
 console.log('✓ Platform settings configured with featured items.');
 console.log('✓ Seeding complete! All collections populated successfully.');

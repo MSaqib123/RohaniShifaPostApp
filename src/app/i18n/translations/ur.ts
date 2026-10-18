@@ -323,7 +323,8 @@ export const ur: Record<TranslationKey, string> = {
   'profile.photoHint': 'مربع تصویر (JPG, PNG یا WebP، زیادہ سے زیادہ 2MB)۔',
   'profile.photoUpdated': 'پروفائل تصویر کامیابی سے اپ ڈیٹ ہو گئی',
   'profile.photoRemoved': 'پروفائل تصویر ہٹا دی گئی',
-  'profile.invalidPhoto': 'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2MB سے کم ہو۔',
+  'profile.invalidPhoto':
+    'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2MB سے کم ہو۔',
   'profile.uploadingPhoto': 'تصویر محفوظ ہو رہی ہے…',
 
   // ── تبصرے ───────────────────────────────────────────────────────────────
@@ -539,11 +540,13 @@ export const ur: Record<TranslationKey, string> = {
   'admin.settings.save': 'ترتیبات محفوظ کریں',
   'admin.settings.heroBanner': 'مرکزی صفحہ کا ہیرو بینر',
   'admin.settings.heroBannerSub': 'ہوم پیج پر دکھائے جانے والے بینر کی تصویر اپ لوڈ یا تبدیل کریں۔',
-  'admin.settings.heroBannerPlaceholder': 'تجویز کردہ سائز: 1200 × 750 px (نسبت 16:10) یا 1920 × 1080 px (نسبت 16:9)۔ زیادہ سے زیادہ سائز: 2 MB۔ فارمیٹس: JPG, PNG, WebP۔',
+  'admin.settings.heroBannerPlaceholder':
+    'تجویز کردہ سائز: 1200 × 750 px (نسبت 16:10) یا 1920 × 1080 px (نسبت 16:9)۔ زیادہ سے زیادہ سائز: 2 MB۔ فارمیٹس: JPG, PNG, WebP۔',
   'admin.settings.uploadBanner': 'بینر تصویر اپ لوڈ کریں',
   'admin.settings.dropBannerHere': 'اپ لوڈ کے لیے تصویر یہاں کلک کریں یا ڈریگ کریں',
   'admin.settings.bannerUrlLabel': 'تصویر کا لنک (URL)',
-  'admin.settings.bannerUrlPlaceholder': 'https://example.com/banner.jpg یا images/islamic-hero.jpg',
+  'admin.settings.bannerUrlPlaceholder':
+    'https://example.com/banner.jpg یا images/islamic-hero.jpg',
   'admin.settings.bannerAltLabel': 'بینر کی تفصیل (Alt Text)',
   'admin.settings.bannerAltPlaceholder': 'مثلاً: روحانی شفاء اسلامی بینر',
   'admin.settings.resetDefaultBanner': 'ڈیفالٹ بینر پر واپس جائیں',
@@ -551,7 +554,8 @@ export const ur: Record<TranslationKey, string> = {
   'admin.settings.imageDimensions': 'ابعاد: {width} × {height} پکسل',
   'admin.settings.imageSize': 'فائل سائز: {size}',
   'admin.settings.bannerUploaded': 'بینر کامیابی سے لوڈ ہو گیا',
-  'admin.settings.invalidImage': 'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2 MB سے کم ہو۔',
+  'admin.settings.invalidImage':
+    'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2 MB سے کم ہو۔',
 
   // ── خرابیاں / توست ──────────────────────────────────────────────────────
   'error.notFoundTitle': 'صفحہ نہیں ملا',

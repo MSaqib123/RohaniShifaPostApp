@@ -549,12 +549,15 @@ export const en = {
   'admin.settings.saved': 'Settings saved',
   'admin.settings.save': 'Save settings',
   'admin.settings.heroBanner': 'Home Page Hero Banner',
-  'admin.settings.heroBannerSub': 'Upload or customize the hero banner image displayed on the home page.',
-  'admin.settings.heroBannerPlaceholder': 'Recommended dimensions: 1200 × 750 px (16:10 aspect ratio) or 1920 × 1080 px (16:9). Maximum size: 2 MB. Formats: JPG, PNG, WebP.',
+  'admin.settings.heroBannerSub':
+    'Upload or customize the hero banner image displayed on the home page.',
+  'admin.settings.heroBannerPlaceholder':
+    'Recommended dimensions: 1200 × 750 px (16:10 aspect ratio) or 1920 × 1080 px (16:9). Maximum size: 2 MB. Formats: JPG, PNG, WebP.',
   'admin.settings.uploadBanner': 'Upload banner image',
   'admin.settings.dropBannerHere': 'Click or drag image file here to upload',
   'admin.settings.bannerUrlLabel': 'Image URL (direct link or uploaded)',
-  'admin.settings.bannerUrlPlaceholder': 'https://example.com/banner.jpg or images/islamic-hero.jpg',
+  'admin.settings.bannerUrlPlaceholder':
+    'https://example.com/banner.jpg or images/islamic-hero.jpg',
   'admin.settings.bannerAltLabel': 'Banner description / Alt text',
   'admin.settings.bannerAltPlaceholder': 'e.g. Rohani Shifa Islamic Art Banner',
   'admin.settings.resetDefaultBanner': 'Reset to default banner',

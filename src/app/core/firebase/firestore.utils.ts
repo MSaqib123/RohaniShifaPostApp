@@ -99,11 +99,18 @@ export function firestoreErrorKey(error: unknown): string {
  * Strips all undefined properties from an object so Firestore operations
  * never reject writes due to unsupported undefined field values.
  */
-export function removeUndefined<T extends Record<string, unknown>>(data: T): Record<string, unknown> {
+export function removeUndefined<T extends Record<string, unknown>>(
+  data: T,
+): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(data)) {
     if (value !== undefined) {
-      if (value !== null && typeof value === 'object' && !Array.isArray(value) && !('toMillis' in value)) {
+      if (
+        value !== null &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        !('toMillis' in value)
+      ) {
         result[key] = removeUndefined(value as Record<string, unknown>);
       } else {
         result[key] = value;
@@ -112,4 +119,3 @@ export function removeUndefined<T extends Record<string, unknown>>(data: T): Rec
   }
   return result;
 }
-

@@ -59,7 +59,11 @@ export class EventService {
   listPast(max = 50): Observable<EventItem[]> {
     if (!this.firebase.configured) return of([]);
     return fromFirestoreQuery(
-      query(this.eventsRef(), where('status', 'in', ['published', 'completed', 'cancelled']), limitDocs(100)),
+      query(
+        this.eventsRef(),
+        where('status', 'in', ['published', 'completed', 'cancelled']),
+        limitDocs(100),
+      ),
     ).pipe(
       map((events) => {
         const now = Date.now();
@@ -80,7 +84,11 @@ export class EventService {
     const fromTime = from.getTime();
     const toTime = to.getTime();
     return fromFirestoreQuery(
-      query(this.eventsRef(), where('status', 'in', ['published', 'completed', 'cancelled']), limitDocs(200)),
+      query(
+        this.eventsRef(),
+        where('status', 'in', ['published', 'completed', 'cancelled']),
+        limitDocs(200),
+      ),
     ).pipe(
       map((events) => {
         const result = events.filter((e) => {

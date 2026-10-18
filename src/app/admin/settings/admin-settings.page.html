@@ -27,11 +27,7 @@
             <p class="admin-card__desc">{{ i18n.t('admin.settings.heroBannerSub') }}</p>
           </div>
           @if (heroBannerUrl()) {
-            <button
-              type="button"
-              class="btn btn--outline btn--sm"
-              (click)="resetDefaultBanner()"
-            >
+            <button type="button" class="btn btn--outline btn--sm" (click)="resetDefaultBanner()">
               <app-icon name="refresh" />
               {{ i18n.t('admin.settings.resetDefaultBanner') }}
             </button>
@@ -102,10 +98,17 @@
           <!-- Preview Frame -->
           <div class="banner-preview-card">
             <div class="banner-preview-card__header">
-              <span class="banner-preview-card__label">{{ i18n.t('admin.settings.currentBanner') }}</span>
+              <span class="banner-preview-card__label">{{
+                i18n.t('admin.settings.currentBanner')
+              }}</span>
               @if (bannerDimensions(); as dims) {
                 <span class="badge badge--gold">
-                  {{ i18n.t('admin.settings.imageDimensions', { width: dims.width, height: dims.height }) }}
+                  {{
+                    i18n.t('admin.settings.imageDimensions', {
+                      width: dims.width,
+                      height: dims.height,
+                    })
+                  }}
                 </span>
               } @else if (heroBannerUrl()) {
                 <span class="badge badge--success">Custom</span>
