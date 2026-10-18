@@ -19,6 +19,143 @@
     />
   } @else {
     <form class="admin-form" (submit)="onSubmit($event)" novalidate>
+      <!-- ── Home Page Hero Banner ── -->
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.heroBanner')">
+        <div class="admin-card__header-row">
+          <div>
+            <h2 class="admin-card__title">{{ i18n.t('admin.settings.heroBanner') }}</h2>
+            <p class="admin-card__desc">{{ i18n.t('admin.settings.heroBannerSub') }}</p>
+          </div>
+          @if (heroBannerUrl()) {
+            <button
+              type="button"
+              class="btn btn--outline btn--sm"
+              (click)="resetDefaultBanner()"
+            >
+              <app-icon name="refresh" />
+              {{ i18n.t('admin.settings.resetDefaultBanner') }}
+            </button>
+          }
+        </div>
+
+        <!-- Banner dimensions / specifications guidance box -->
+        <div class="banner-specs-notice">
+          <div class="banner-specs-notice__icon">
+            <app-icon name="info" />
+          </div>
+          <div class="banner-specs-notice__content">
+            <p class="banner-specs-notice__title">
+              {{ i18n.t('admin.settings.heroBannerPlaceholder') }}
+            </p>
+            <div class="banner-specs-tags">
+              <span class="spec-tag">
+                <app-icon name="grid" />
+                1200 × 750 px (16:10)
+              </span>
+              <span class="spec-tag">
+                <app-icon name="image" />
+                JPG, PNG, WebP
+              </span>
+              <span class="spec-tag">
+                <app-icon name="shield" />
+                Max 2 MB
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropzone & Live preview area -->
+        <div class="banner-upload-grid">
+          <!-- Interactive Upload Dropzone -->
+          <div
+            class="banner-dropzone"
+            [class.banner-dropzone--dragging]="isDragging()"
+            (dragover)="onBannerDragOver($event)"
+            (dragleave)="onBannerDragLeave($event)"
+            (drop)="onBannerDrop($event)"
+            (click)="bannerFileInput.click()"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="i18n.t('admin.settings.uploadBanner')"
+            (keydown.enter)="bannerFileInput.click()"
+            (keydown.space)="bannerFileInput.click()"
+          >
+            <input
+              #bannerFileInput
+              type="file"
+              class="sr-only"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="onBannerFileSelected($event)"
+            />
+            <div class="banner-dropzone__body">
+              <div class="banner-dropzone__icon">
+                <app-icon name="image" />
+              </div>
+              <p class="banner-dropzone__title">{{ i18n.t('admin.settings.dropBannerHere') }}</p>
+              <span class="btn btn--outline btn--sm">
+                <app-icon name="plus" />
+                {{ i18n.t('admin.settings.uploadBanner') }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Preview Frame -->
+          <div class="banner-preview-card">
+            <div class="banner-preview-card__header">
+              <span class="banner-preview-card__label">{{ i18n.t('admin.settings.currentBanner') }}</span>
+              @if (bannerDimensions(); as dims) {
+                <span class="badge badge--gold">
+                  {{ i18n.t('admin.settings.imageDimensions', { width: dims.width, height: dims.height }) }}
+                </span>
+              } @else if (heroBannerUrl()) {
+                <span class="badge badge--success">Custom</span>
+              } @else {
+                <span class="badge badge--info">Default</span>
+              }
+            </div>
+
+            <div class="banner-preview-frame">
+              <img
+                [src]="currentBannerPreview()"
+                [alt]="heroBannerAlt() || 'Banner preview'"
+                class="banner-preview-img"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- URL & Alt text inputs -->
+        <div class="fields-row">
+          <div class="field">
+            <label class="field__label" for="settings-banner-url">
+              {{ i18n.t('admin.settings.bannerUrlLabel') }}
+            </label>
+            <input
+              id="settings-banner-url"
+              class="input"
+              type="text"
+              [placeholder]="i18n.t('admin.settings.bannerUrlPlaceholder')"
+              [value]="heroBannerUrl()"
+              (input)="onBannerUrlChange($event)"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="settings-banner-alt">
+              {{ i18n.t('admin.settings.bannerAltLabel') }}
+            </label>
+            <input
+              id="settings-banner-alt"
+              class="input"
+              type="text"
+              [placeholder]="i18n.t('admin.settings.bannerAltPlaceholder')"
+              [value]="heroBannerAlt()"
+              (input)="onBannerAltChange($event)"
+            />
+          </div>
+        </div>
+      </section>
+
       <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.featuredVideo')">
         <h2 class="admin-card__title">{{ i18n.t('admin.settings.featuredVideo') }}</h2>
 

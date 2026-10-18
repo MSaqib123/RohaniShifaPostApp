@@ -85,6 +85,16 @@ export class HomePage {
   readonly siteName = computed(() => localizedSiteName(this.i18n.language()));
   readonly tagline = computed(() => this.i18n.localized(this.config.tagline));
 
+  readonly heroBannerUrl = computed(() => {
+    const custom = this.settings()?.heroBannerUrl;
+    return custom && custom.trim() ? custom.trim() : 'images/islamic-hero.jpg';
+  });
+
+  readonly heroBannerAlt = computed(() => {
+    const custom = this.settings()?.heroBannerAlt;
+    return custom && custom.trim() ? custom.trim() : 'Rohani Shifa Islamic Art';
+  });
+
   /** Config order + enabled flags, overridden by the saved settings (§22). */
   readonly enabledSections = computed(() => {
     const stored = this.settings()?.homeSections;

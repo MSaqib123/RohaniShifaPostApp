@@ -150,5 +150,7 @@ export interface SiteSettings {
   featuredVideoId?: string | null;
   featuredPostIds?: string[];
   homeSections?: Array<{ id: string; enabled: boolean }>;
+  heroBannerUrl?: string | null;
+  heroBannerAlt?: string | null;
   updatedAt?: Timestamp;
 }

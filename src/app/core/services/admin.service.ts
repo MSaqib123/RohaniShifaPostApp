@@ -18,7 +18,7 @@ import {
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { Comment, ReportDoc, ReportStatus, SiteSettings, UserProfile } from '../models';
 import { FirebaseService } from '../firebase/firebase.service';
-import { fromFirestoreQuery } from '../firebase/firestore.utils';
+import { fromFirestoreQuery, removeUndefined } from '../firebase/firestore.utils';
 import { CategoryService } from './category.service';
 import { PostService } from './post.service';
 import { VideoService } from './video.service';
@@ -150,7 +150,7 @@ export class AdminService {
     const db = this.firebase.requireDb();
     await setDoc(
       doc(db, 'settings', 'site'),
-      { ...patch, updatedAt: Timestamp.now() },
+      removeUndefined({ ...patch, updatedAt: Timestamp.now() }),
       { merge: true },
     );
   }

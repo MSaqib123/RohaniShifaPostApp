@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Post, SiteSettings, Video } from '../../core/models';
 import { AdminService } from '../../core/services/admin.service';
@@ -57,6 +57,16 @@ export class AdminSettingsPage {
     siteConfig.homeSections.map((section) => ({ ...section })),
   );
 
+  readonly heroBannerUrl = signal<string>('');
+  readonly heroBannerAlt = signal<string>('');
+  readonly bannerDimensions = signal<{ width: number; height: number; sizeStr: string } | null>(null);
+  readonly isDragging = signal<boolean>(false);
+
+  readonly currentBannerPreview = computed(() => {
+    const custom = this.heroBannerUrl().trim();
+    return custom || 'images/islamic-hero.jpg';
+  });
+
   readonly postSearch = signal('');
 
   readonly filteredPosts = computed(() => {
@@ -113,6 +123,123 @@ export class AdminSettingsPage {
     this.postSearch.set((event.target as HTMLInputElement).value);
   }
 
+  onBannerUrlChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.heroBannerUrl.set(value);
+    if (value.trim()) {
+      this.probeImageDimensions(value.trim());
+    } else {
+      this.bannerDimensions.set(null);
+    }
+  }
+
+  onBannerAltChange(event: Event): void {
+    this.heroBannerAlt.set((event.target as HTMLInputElement).value);
+  }
+
+  resetDefaultBanner(): void {
+    this.heroBannerUrl.set('');
+    this.heroBannerAlt.set('');
+    this.bannerDimensions.set(null);
+  }
+
+  onBannerDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging.set(true);
+  }
+
+  onBannerDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging.set(false);
+  }
+
+  onBannerDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging.set(false);
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      void this.processBannerFile(files[0]);
+    }
+  }
+
+  onBannerFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (files && files.length > 0) {
+      void this.processBannerFile(files[0]);
+    }
+    input.value = '';
+  }
+
+  private async processBannerFile(file: File): Promise<void> {
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      return;
+    }
+
+    const sizeStr =
+      file.size > 1024 * 1024
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        : `${Math.round(file.size / 1024)} KB`;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const img = new Image();
+      img.onload = () => {
+        let finalUrl = result;
+        const maxW = 1600;
+        if (img.naturalWidth > maxW) {
+          const canvas = document.createElement('canvas');
+          const scale = maxW / img.naturalWidth;
+          canvas.width = maxW;
+          canvas.height = Math.round(img.naturalHeight * scale);
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            finalUrl = canvas.toDataURL('image/jpeg', 0.88);
+          }
+        }
+        this.heroBannerUrl.set(finalUrl);
+        this.bannerDimensions.set({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+          sizeStr,
+        });
+        this.toast.success(this.i18n.t('admin.settings.bannerUploaded'));
+      };
+      img.onerror = () => {
+        this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      };
+      img.src = result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private probeImageDimensions(url: string): void {
+    const img = new Image();
+    img.onload = () => {
+      this.bannerDimensions.set({
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+        sizeStr: 'URL link',
+      });
+    };
+    img.onerror = () => {
+      this.bannerDimensions.set(null);
+    };
+    img.src = url;
+  }
+
   onSubmit(event: Event): void {
     event.preventDefault();
     void this.save();
@@ -128,6 +255,8 @@ export class AdminSettingsPage {
       featuredPostIds: this.featuredPostIds(),
       featuredVideoId: this.featuredVideoId(),
       homeSections: this.sections(),
+      heroBannerUrl: this.heroBannerUrl().trim() || null,
+      heroBannerAlt: this.heroBannerAlt().trim() || null,
     };
     try {
       await this.adminService.saveSettings(patch);
@@ -187,6 +316,15 @@ export class AdminSettingsPage {
   private applySettings(settings: SiteSettings): void {
     if (settings.featuredPostIds) this.featuredPostIds.set(settings.featuredPostIds);
     if (settings.featuredVideoId !== undefined) this.featuredVideoId.set(settings.featuredVideoId);
+    if (settings.heroBannerUrl !== undefined) {
+      this.heroBannerUrl.set(settings.heroBannerUrl ?? '');
+      if (settings.heroBannerUrl) {
+        this.probeImageDimensions(settings.heroBannerUrl);
+      }
+    }
+    if (settings.heroBannerAlt !== undefined) {
+      this.heroBannerAlt.set(settings.heroBannerAlt ?? '');
+    }
 
     if (settings.homeSections?.length) {
       const stored = new Map(settings.homeSections.map((section) => [section.id, section.enabled]));

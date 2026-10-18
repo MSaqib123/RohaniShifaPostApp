@@ -1,8 +1,213 @@
-// Settings page uses the shared admin cards; only local list styling lives here.
 :host {
   display: block;
 }
 
+.admin-card__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-block-end: var(--sp-4);
+}
+
+.admin-card__desc {
+  color: var(--c-ink-500);
+  font-size: var(--fs-sm);
+  margin-block-start: 0.25rem;
+}
+
+// ── Banner Specifications / Notice ──────────────────────────────────────────
+.banner-specs-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  border-radius: var(--r-md);
+  margin-block-end: var(--sp-4);
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-gold-600);
+    flex-shrink: 0;
+    margin-block-start: 0.15rem;
+
+    .icon {
+      inline-size: 1.15rem;
+      block-size: 1.15rem;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    font-size: var(--fs-sm);
+    color: var(--c-ink-700);
+  }
+
+  &__title {
+    margin: 0;
+    line-height: var(--lh-normal);
+  }
+}
+
+.banner-specs-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.spec-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--c-ink-600);
+
+  .icon {
+    inline-size: 0.85rem;
+    block-size: 0.85rem;
+    color: var(--c-gold-600);
+  }
+}
+
+// ── Upload & Preview Grid ───────────────────────────────────────────────────
+.banner-upload-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: stretch;
+  margin-block-end: var(--sp-4);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.banner-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6) var(--sp-4);
+  background: var(--c-bg-deep);
+  border: 2px dashed var(--c-line);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  text-align: center;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--c-primary-500);
+    background: rgba(16, 113, 85, 0.04);
+  }
+
+  &--dragging {
+    border-color: var(--c-gold-500);
+    background: rgba(201, 162, 39, 0.1);
+    transform: scale(0.99);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    pointer-events: none;
+  }
+
+  &__icon {
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: 50%;
+    background: var(--c-surface);
+    border: 1px solid var(--c-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-primary-600);
+
+    .icon {
+      inline-size: 1.5rem;
+      block-size: 1.5rem;
+    }
+  }
+
+  &__title {
+    font-weight: 600;
+    color: var(--c-ink-800);
+    margin: 0;
+  }
+
+  .btn {
+    pointer-events: auto;
+    margin-block-start: var(--sp-1);
+  }
+}
+
+.banner-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--c-bg-deep);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+
+  &__label {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--c-ink-500);
+  }
+}
+
+.banner-preview-frame {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #04211a;
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  box-shadow: var(--shadow-sm);
+}
+
+.banner-preview-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+// ── Fields Row ──────────────────────────────────────────────────────────────
+.fields-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--sp-3);
+  margin-block-start: var(--sp-2);
+}
+
+// ── Pick list ───────────────────────────────────────────────────────────────
 .pick-list {
   display: flex;
   flex-direction: column;
