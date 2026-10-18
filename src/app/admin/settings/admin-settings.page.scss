@@ -1,0 +1,29 @@
+// Settings page uses the shared admin cards; only local list styling lives here.
+:host {
+  display: block;
+}
+
+.pick-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-3);
+  max-block-size: 22rem;
+  overflow-y: auto;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-bg-deep);
+  list-style: none;
+
+  li {
+    padding-block: 0.15rem;
+  }
+
+  &--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    max-block-size: none;
+    overflow: visible;
+  }
+}

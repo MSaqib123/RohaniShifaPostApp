@@ -1,0 +1,19 @@
+{
+  "name": "Rohani Shifa",
+  "short_name": "Rohani Shifa",
+  "description": "Islamic knowledge for a better life — daily reminders, videos and events.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#0d5c46",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

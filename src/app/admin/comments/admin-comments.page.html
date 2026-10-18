@@ -1,0 +1,136 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.comments') }}</h1>
+      <p>{{ i18n.t('comments.title') }}</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('comments.loadError')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="toolbar">
+      <div class="toolbar__search">
+        <app-icon name="search" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="i18n.t('admin.searchComments')"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+        />
+      </div>
+
+      <label class="sr-only" for="comment-status-filter">{{ i18n.t('admin.filterStatus') }}</label>
+      <select
+        id="comment-status-filter"
+        class="select toolbar__status"
+        [value]="statusFilter() ?? ''"
+        (change)="setStatusFilter(toStatus($event))"
+      >
+        @for (option of statusOptions; track option.value ?? 'all') {
+          <option [value]="option.value ?? ''">{{ option.label }}</option>
+        }
+      </select>
+
+      @if (hasFilters()) {
+        <button type="button" class="btn btn--ghost btn--sm" (click)="clearFilters()">
+          <app-icon name="close" />
+          {{ i18n.t('common.clear') }}
+        </button>
+      }
+
+      <span class="result-count">{{ i18n.t('common.results', { count: filtered().length }) }}</span>
+    </div>
+
+    @if (comments().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="comment"
+        [title]="i18n.t('comments.empty')"
+        [message]="i18n.t('admin.listEmptyMessage')"
+      />
+    } @else if (filtered().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="search"
+        [title]="i18n.t('admin.listEmptyFiltered')"
+        [message]="i18n.t('common.noResultsMessage')"
+      />
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n.t('common.comment') }}</th>
+              <th scope="col">{{ i18n.t('common.status') }}</th>
+              <th scope="col">{{ i18n.t('common.createdAt') }}</th>
+              <th scope="col">{{ i18n.t('common.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (comment of filtered(); track comment.id) {
+              <tr>
+                <td class="cell-title">
+                  {{ comment.content }}
+                  <span class="cell-sub">
+                    {{ comment.displayName }} ·
+                    <a [routerLink]="itemLink(comment)">{{ itemLabel(comment) }}</a>
+                  </span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.badge--success]="comment.status === 'visible'"
+                    [class.badge--danger]="comment.status === 'flagged'"
+                    [class.badge--muted]="comment.status === 'hidden'"
+                  >
+                    {{ statusLabel(comment.status) }}
+                  </span>
+                </td>
+                <td>{{ comment.createdAt | appDate: 'short' }}</td>
+                <td class="cell-actions">
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    (click)="toggleHidden(comment)"
+                    [attr.aria-label]="
+                      comment.status === 'hidden'
+                        ? i18n.t('comments.restore')
+                        : i18n.t('comments.hide')
+                    "
+                    [title]="
+                      comment.status === 'hidden'
+                        ? i18n.t('comments.restore')
+                        : i18n.t('comments.hide')
+                    "
+                  >
+                    <app-icon [name]="comment.status === 'hidden' ? 'eye' : 'eye-off'" />
+                  </button>
+                  <button
+                    type="button"
+                    class="icon-btn icon-btn--danger"
+                    (click)="remove(comment)"
+                    [attr.aria-label]="i18n.t('common.delete')"
+                    [title]="i18n.t('common.delete')"
+                  >
+                    <app-icon name="trash" />
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

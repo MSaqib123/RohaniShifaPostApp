@@ -1,0 +1,91 @@
+<section class="comments" id="comments" tabindex="-1" [attr.aria-label]="i18n.t('comments.title')">
+  <h2 class="comments__title">{{ i18n.t('comments.count', { count: comments().length }) }}</h2>
+
+  <form class="comments__form" (submit)="submit(); $event.preventDefault()" novalidate>
+    <div class="field">
+      <label class="field__label" for="comment-body">
+        {{ i18n.t('common.comment') }}
+      </label>
+      <textarea
+        id="comment-body"
+        class="textarea"
+        rows="3"
+        [attr.maxlength]="maxLength"
+        [placeholder]="i18n.t('comments.placeholder')"
+        [value]="draft()"
+        (input)="onDraft($event)"
+        [attr.aria-describedby]="'comment-hint'"
+      ></textarea>
+      <p class="field__hint" id="comment-hint">{{ remaining() }} / {{ maxLength }}</p>
+    </div>
+
+    @if (formError()) {
+      <div class="alert alert--danger" role="alert">
+        <app-icon name="alert-circle" />
+        <span>{{ formError() }}</span>
+      </div>
+    }
+
+    <div class="comments__actions">
+      <button class="btn btn--gold" type="submit" [disabled]="submitting() || dialogOpen()">
+        @if (submitting()) {
+          <span class="spinner spinner--sm" aria-hidden="true"></span>
+          {{ i18n.t('comments.posting') }}
+        } @else if (!isLoggedIn()) {
+          <app-icon name="login" />
+          {{ i18n.t('comments.loginToComment') }}
+        } @else {
+          <app-icon name="comment" />
+          {{ i18n.t('comments.submit') }}
+        }
+      </button>
+      @if (!isLoggedIn()) {
+        <a class="btn btn--ghost" routerLink="/login">{{ i18n.t('common.signIn') }}</a>
+      }
+    </div>
+  </form>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('comments.loadError')"
+      (retry)="retry()"
+    />
+  } @else if (comments().length === 0) {
+    <app-content-state
+      kind="empty"
+      icon="comment"
+      [title]="i18n.t('comments.empty')"
+      [message]="i18n.t('comments.emptyMessage')"
+    />
+  } @else {
+    <ol class="comments__list">
+      @for (comment of comments(); track comment.id) {
+        <li class="comment" [class.comment--own]="isOwn(comment)">
+          <header class="comment__head">
+            <span class="comment__avatar" aria-hidden="true">
+              {{ comment.displayName.slice(0, 1).toUpperCase() }}
+            </span>
+            <div>
+              <strong class="comment__author">{{ comment.displayName }}</strong>
+              <span class="comment__date">{{ comment.createdAt | appDate: 'short' }}</span>
+            </div>
+          </header>
+          <p class="comment__body">{{ comment.content }}</p>
+          @if (isOwn(comment)) {
+            <div class="comment__actions">
+              <button type="button" class="btn btn--ghost btn--sm" (click)="remove(comment)">
+                <app-icon name="trash" />
+                {{ i18n.t('common.delete') }}
+              </button>
+            </div>
+          }
+        </li>
+      }
+    </ol>
+  }
+</section>

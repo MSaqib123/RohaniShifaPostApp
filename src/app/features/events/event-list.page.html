@@ -1,0 +1,117 @@
+<section class="section container">
+  <header class="section-head">
+    <div class="section-head__titles">
+      <span class="section-head__kicker">{{ i18n.t('nav.events') }}</span>
+      <h1 class="section-head__title">{{ i18n.t('events.title') }}</h1>
+      <p class="section-head__sub">{{ i18n.t('events.subtitle') }}</p>
+    </div>
+  </header>
+
+  <div class="event-toolbar" role="group" [attr.aria-label]="i18n.t('common.filters')">
+    @for (option of modes; track option.value) {
+      <button
+        type="button"
+        class="chip"
+        [class.chip--active]="mode() === option.value"
+        [attr.aria-pressed]="mode() === option.value"
+        (click)="setMode(option.value)"
+      >
+        {{ i18n.t(option.labelKey) }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (mode() === 'calendar') {
+    <div class="calendar">
+      <div class="calendar__head">
+        <button
+          type="button"
+          class="icon-btn"
+          (click)="previousMonth()"
+          [attr.aria-label]="i18n.t('common.previous')"
+          [title]="i18n.t('common.previous')"
+        >
+          <app-icon name="chevron-left" />
+        </button>
+        <h2 class="calendar__label" id="calendar-month-label">{{ monthLabel() }}</h2>
+        <button
+          type="button"
+          class="icon-btn"
+          (click)="nextMonth()"
+          [attr.aria-label]="i18n.t('common.next')"
+          [title]="i18n.t('common.next')"
+        >
+          <app-icon name="chevron-right" />
+        </button>
+      </div>
+
+      <!--
+        Calendar grid with real ARIA table semantics: one `row` per week so a
+        screen reader announces "3, Charity Dinner, October 18, 2026" instead
+        of an anonymous list of titles.
+      -->
+      <div class="calendar__grid" role="grid" [attr.aria-labelledby]="'calendar-month-label'">
+        <div class="calendar__row" role="row">
+          @for (label of weekdayLabels(); track $index) {
+            <span class="calendar__weekday" role="columnheader">{{ label }}</span>
+          }
+        </div>
+        @for (week of weeks(); track $index) {
+          <div class="calendar__row" role="row">
+            @for (cell of week; track $index) {
+              <div
+                class="calendar__day"
+                role="gridcell"
+                [class.calendar__day--empty]="cell.day === 0"
+                [class.calendar__day--today]="cell.iso === todayKey"
+                [class.calendar__day--has]="cell.events.length > 0"
+              >
+                @if (cell.day > 0) {
+                  <span class="calendar__num">{{ cell.day }}</span>
+                  @for (item of cell.events; track item.id) {
+                    <a
+                      class="calendar__event"
+                      [routerLink]="['/events', item.id]"
+                      [attr.aria-label]="eventLinkLabel(item)"
+                    >
+                      {{ i18n.localized(item.title) }}
+                    </a>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      @if (calendarEvents().length === 0) {
+        <p class="calendar__empty">{{ i18n.t('events.noUpcomingMessage') }}</p>
+      }
+    </div>
+  } @else if (events().length === 0) {
+    <app-content-state
+      kind="empty"
+      icon="calendar"
+      [title]="mode() === 'past' ? i18n.t('events.noPast') : i18n.t('events.noUpcoming')"
+      [message]="
+        mode() === 'past' ? i18n.t('events.noPastMessage') : i18n.t('events.noUpcomingMessage')
+      "
+    />
+  } @else {
+    <div class="grid-cards">
+      @for (event of events(); track event.id) {
+        <app-event-card [event]="event" />
+      }
+    </div>
+  }
+</section>

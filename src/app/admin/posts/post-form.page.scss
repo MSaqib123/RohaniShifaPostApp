@@ -1,0 +1,5 @@
+// Page-specific styling for the post editor. Shared structure (cards, grids,
+// fields) lives in `src/styles`, so only local layout tweaks belong here.
+:host {
+  display: block;
+}

@@ -1,0 +1,86 @@
+<section class="section container">
+  <header class="section-head">
+    <div class="section-head__titles">
+      <span class="section-head__kicker">{{ i18n.t('nav.posts') }}</span>
+      <h1 class="section-head__title">{{ i18n.t('posts.title') }}</h1>
+      <p class="section-head__sub">{{ i18n.t('posts.subtitle') }}</p>
+    </div>
+  </header>
+
+  <!-- Type filter (a filter bar, not a tab set: no panels, no arrow keys) -->
+  <div class="tabs" role="group" [attr.aria-label]="i18n.t('common.filters')">
+    @for (option of typeOptions(); track option.value ?? 'all') {
+      <button
+        type="button"
+        [attr.aria-pressed]="selectedType() === option.value"
+        (click)="setType(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Category filter -->
+  @if (categories().length > 0) {
+    <div class="toolbar">
+      <div class="chip-row" role="group" [attr.aria-label]="i18n.t('nav.categories')">
+        <button
+          type="button"
+          class="chip"
+          [class.chip--active]="selectedCategory() === null"
+          [attr.aria-pressed]="selectedCategory() === null"
+          (click)="setCategory(null)"
+        >
+          {{ i18n.t('common.all') }}
+        </button>
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            class="chip"
+            [class.chip--active]="selectedCategory() === category.id"
+            [attr.aria-pressed]="selectedCategory() === category.id"
+            (click)="setCategory(category.id)"
+          >
+            {{ i18n.localized(category.name) }}
+          </button>
+        }
+      </div>
+      <span class="result-count">{{ i18n.t('common.results', { count: resultCount() }) }}</span>
+    </div>
+  }
+
+  <!-- States -->
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (resultCount() === 0) {
+    <app-content-state
+      kind="empty"
+      icon="post"
+      [title]="i18n.t('posts.empty')"
+      [message]="i18n.t('posts.emptyMessage')"
+    />
+  } @else {
+    <div class="grid-cards">
+      @for (post of visiblePosts(); track post.id) {
+        <app-post-card [post]="post" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="list-more">
+        <button type="button" class="btn btn--outline" (click)="showMore()">
+          <app-icon name="chevron-down" />
+          {{ i18n.t('common.next') }}
+        </button>
+      </div>
+    }
+  }
+</section>

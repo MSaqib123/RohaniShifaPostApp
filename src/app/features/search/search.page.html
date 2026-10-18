@@ -1,0 +1,84 @@
+<section class="section container container--narrow">
+  <header class="section-head">
+    <div class="section-head__titles">
+      <span class="section-head__kicker">{{ i18n.t('nav.search') }}</span>
+      <h1 class="section-head__title">{{ i18n.t('search.title') }}</h1>
+      <p class="section-head__sub">{{ i18n.t('search.note') }}</p>
+    </div>
+  </header>
+
+  <form class="search-box" role="search" (submit)="$event.preventDefault()">
+    <label class="sr-only" for="site-search">{{ i18n.t('search.title') }}</label>
+    <div class="search-box__field">
+      <app-icon name="search" />
+      <input
+        id="site-search"
+        class="input"
+        type="search"
+        [placeholder]="i18n.t('search.placeholder')"
+        [value]="query()"
+        (input)="onInput($event)"
+        autocomplete="off"
+      />
+    </div>
+  </form>
+
+  @if (searching()) {
+    <p class="search-status" role="status">{{ i18n.t('search.searching') }}</p>
+  }
+
+  @if (visibleResults().length > 0) {
+    <p class="search-status search-status--count">
+      {{ i18n.t('common.results', { count: results().length }) }}
+      @if (query()) {
+        — {{ i18n.t('search.resultsFor', { query: query() }) }}
+      }
+    </p>
+
+    <div class="tabs" role="group" [attr.aria-label]="i18n.t('common.filters')">
+      @for (tab of availableTabs(); track tab.value) {
+        <button
+          type="button"
+          [attr.aria-pressed]="activeTab() === tab.value"
+          (click)="setTab(tab.value)"
+        >
+          {{ i18n.t(tab.key) }}
+        </button>
+      }
+    </div>
+
+    <ul class="search-results">
+      @for (result of visibleResults(); track result.kind + result.id) {
+        <li>
+          <a class="search-result" [routerLink]="result.route">
+            <span class="search-result__icon" aria-hidden="true">
+              <app-icon [name]="kindIcon(result.kind)" />
+            </span>
+            <span class="search-result__text">
+              <span class="search-result__title">{{ result.title }}</span>
+              @if (result.subtitle) {
+                <span class="search-result__subtitle">{{ result.subtitle }}</span>
+              }
+            </span>
+            <span class="badge search-result__kind">{{ kindLabel(result.kind) }}</span>
+            <app-icon name="chevron-right" />
+          </a>
+        </li>
+      }
+    </ul>
+  } @else if (showEmpty()) {
+    <app-content-state
+      kind="empty"
+      icon="search"
+      [title]="i18n.t('common.noResultsTitle')"
+      [message]="i18n.t('common.noResultsMessage')"
+    />
+  } @else if (!searching() && !searched()) {
+    <app-content-state
+      kind="empty"
+      icon="search"
+      [title]="i18n.t('search.empty')"
+      [message]="i18n.t('search.emptyMessage')"
+    />
+  }
+</section>

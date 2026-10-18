@@ -1,0 +1,64 @@
+<section class="section container">
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (!category()) {
+    <app-content-state
+      kind="empty"
+      icon="grid"
+      [title]="i18n.t('categories.notFound')"
+      [message]="i18n.t('categories.emptyMessage')"
+    />
+  } @else {
+    <header class="category-head">
+      <a class="category-head__back" routerLink="/categories">
+        <app-icon name="arrow-left" />
+        {{ i18n.t('nav.categories') }}
+      </a>
+      <h1 class="category-head__title">{{ categoryName() }}</h1>
+      @if (i18n.localized(category()!.description); as text) {
+        <p class="category-head__sub">{{ text }}</p>
+      }
+    </header>
+
+    @if (loadingContent()) {
+      <app-content-state kind="loading" />
+    } @else if (isEmpty()) {
+      <app-content-state
+        kind="empty"
+        icon="post"
+        [title]="i18n.t('posts.empty')"
+        [message]="i18n.t('posts.emptyMessage')"
+      />
+    } @else {
+      @if (posts().length > 0) {
+        <section class="category-block" [attr.aria-label]="i18n.t('nav.posts')">
+          <h2>{{ i18n.t('posts.title') }}</h2>
+          <div class="grid-cards">
+            @for (post of posts(); track post.id) {
+              <app-post-card [post]="post" />
+            }
+          </div>
+        </section>
+      }
+
+      @if (videos().length > 0) {
+        <section class="category-block" [attr.aria-label]="i18n.t('nav.videos')">
+          <h2>{{ i18n.t('videos.title') }}</h2>
+          <div class="grid-cards">
+            @for (video of videos(); track video.id) {
+              <app-video-card [post]="video" />
+            }
+          </div>
+        </section>
+      }
+    }
+  }
+</section>

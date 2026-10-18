@@ -1,0 +1,114 @@
+<section class="section container">
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (!post()) {
+    <app-content-state
+      kind="empty"
+      icon="post"
+      [title]="i18n.t('posts.notFound')"
+      [message]="i18n.t('posts.notFoundMessage')"
+    />
+  } @else {
+    <article class="post-detail">
+      <header class="post-detail__head">
+        <a class="post-detail__back" routerLink="/posts">
+          <app-icon name="arrow-left" />
+          {{ i18n.t('nav.posts') }}
+        </a>
+
+        <div class="post-detail__meta">
+          <span class="badge">{{ i18n.t('posts.type.' + post()!.type) }}</span>
+          @if (post()!.publishedAt; as published) {
+            <span class="meta-item"
+              ><app-icon name="calendar" /> {{ published | appDate: 'long' }}</span
+            >
+          }
+          @if (post()!.likesCount > 0) {
+            <span class="meta-item"><app-icon name="heart" /> {{ post()!.likesCount }}</span>
+          }
+          @if (post()!.commentsCount > 0) {
+            <span class="meta-item"><app-icon name="comment" /> {{ post()!.commentsCount }}</span>
+          }
+        </div>
+
+        <h1 class="post-detail__title">{{ i18n.localized(post()!.title) }}</h1>
+
+        @if (i18n.localized(post()!.description); as lead) {
+          <p class="post-detail__lead">{{ lead }}</p>
+        }
+      </header>
+
+      @if (post()!.coverImage; as cover) {
+        <figure class="post-detail__cover">
+          <img [src]="cover" [alt]="i18n.localized(post()!.title)" />
+        </figure>
+      }
+
+      <div class="post-detail__body">
+        @for (paragraph of paragraphs(); track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+
+      <!-- Source citation (§47 — rendered verbatim, never invented) -->
+      @if (sourceFields().length > 0) {
+        <aside class="post-detail__source" [attr.aria-label]="i18n.t('posts.source')">
+          <h2><app-icon name="book" /> {{ i18n.t('posts.source') }}</h2>
+          <dl>
+            @for (field of sourceFields(); track field.key) {
+              <div>
+                <dt>{{ i18n.t(field.key) }}</dt>
+                <dd>{{ field.value }}</dd>
+              </div>
+            }
+          </dl>
+          <p class="post-detail__source-note">{{ i18n.t('posts.sourceNote') }}</p>
+        </aside>
+      }
+
+      @if (post()!.tags.length > 0) {
+        <div class="post-detail__tags">
+          <span class="post-detail__tags-label">{{ i18n.t('posts.tags') }}</span>
+          <div class="chip-row">
+            @for (tag of post()!.tags; track tag) {
+              <span class="chip">{{ tag }}</span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="post-detail__share">
+        <span class="post-detail__share-label">{{ i18n.t('common.share') }}</span>
+        <app-share-bar [text]="i18n.localized(post()!.title)" />
+      </div>
+
+      <app-engagement-bar
+        itemType="post"
+        [itemId]="post()!.id"
+        [likesCount]="post()!.likesCount"
+        [commentsCount]="post()!.commentsCount"
+      />
+
+      <app-comment-section itemType="post" [itemId]="post()!.id" />
+
+      @if (related().length > 0) {
+        <section class="post-detail__related" [attr.aria-label]="i18n.t('posts.relatedVideos')">
+          <h2>{{ i18n.t('posts.relatedVideos') }}</h2>
+          <div class="grid-cards">
+            @for (video of related(); track video.id) {
+              <app-video-card [post]="video" />
+            }
+          </div>
+        </section>
+      }
+    </article>
+  }
+</section>

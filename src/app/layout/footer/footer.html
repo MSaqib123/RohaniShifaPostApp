@@ -1,0 +1,64 @@
+<footer class="site-footer pattern-geo-gold">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <span class="row">
+        <app-brand-logo />
+        <span class="brand__name">{{ siteName() }}</span>
+      </span>
+      <p>{{ mission() }}</p>
+
+      @if (socialLinks().length > 0) {
+        <div class="site-footer__social">
+          @for (link of socialLinks(); track link.href) {
+            <a [href]="link.href" target="_blank" rel="noopener noreferrer">
+              @if (link.icon) {
+                <app-icon [name]="link.icon" />
+              }
+              {{ link.label }}
+            </a>
+          }
+        </div>
+      }
+    </div>
+
+    <nav [attr.aria-label]="i18n.t('nav.menu')">
+      <h2>{{ i18n.t('nav.menu') }}</h2>
+      <ul>
+        @for (link of exploreLinks; track link.route) {
+          <li>
+            <a [routerLink]="link.route">{{ i18n.t(link.key) }}</a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <nav [attr.aria-label]="i18n.t('profile.account')">
+      <h2>{{ i18n.t('profile.account') }}</h2>
+      <ul>
+        @for (link of accountLinks; track link.route) {
+          <li>
+            <a [routerLink]="link.route">{{ i18n.t(link.key) }}</a>
+          </li>
+        }
+        <li>
+          <a [routerLink]="['/profile']">{{ i18n.t('nav.profile') }}</a>
+        </li>
+      </ul>
+    </nav>
+
+    <nav [attr.aria-label]="i18n.t('common.moreInfo')">
+      <h2>{{ i18n.t('common.moreInfo') }}</h2>
+      <ul>
+        @for (link of infoLinks; track link.route) {
+          <li>
+            <a [routerLink]="link.route">{{ i18n.t(link.key) }}</a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <span>© {{ year }} {{ siteName() }}</span>
+  </div>
+</footer>

@@ -1,0 +1,68 @@
+.profile__grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.profile__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+
+  h2 {
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  &--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.profile__identity {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: center;
+
+  h2 {
+    margin-block-end: var(--sp-1);
+  }
+}
+
+.profile__email {
+  margin: 0 0 var(--sp-2);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.profile__favorites {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.profile__favorite {
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: 0 0 var(--sp-3);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    app-icon,
+    .icon {
+      inline-size: 1.1rem;
+      block-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      flex: none;
+    }
+  }
+}

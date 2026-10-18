@@ -1,0 +1,151 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// BASE — reset, document defaults, accessible focus, RTL-friendly primitives
+// ─────────────────────────────────────────────────────────────────────────────
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+
+  // Smooth scrolling is motion: only offer it when the visitor has not asked
+  // the OS to reduce motion (the rest of the motion budget lives in
+  // `_tokens.scss`, which zeroes durations under the same query).
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--c-bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Application shell: header + routed content + footer.
+app-root,
+app-public-layout,
+app-admin-layout {
+  display: block;
+  min-height: 100dvh;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: var(--lh-tight);
+  font-weight: 700;
+  color: var(--c-ink-900);
+}
+
+h1 {
+  font-size: var(--fs-3xl);
+}
+h2 {
+  font-size: var(--fs-2xl);
+}
+h3 {
+  font-size: var(--fs-xl);
+}
+h4 {
+  font-size: var(--fs-lg);
+}
+
+a {
+  color: var(--c-primary-700);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease);
+
+  &:hover {
+    color: var(--c-primary-600);
+    text-decoration: underline;
+  }
+}
+
+// Arabic-script documents get serif-flavoured headings for a classical feel.
+html[lang='ur'] h1,
+html[lang='ur'] h2,
+html[lang='ur'] h3,
+html[lang='ar'] h1,
+html[lang='ar'] h2,
+html[lang='ar'] h3 {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--c-line);
+}
+
+// ── Visible focus for keyboard users (§30) ──────────────────────────────────
+:focus-visible {
+  outline: 2px solid var(--c-primary-600);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+// Never remove outlines for mouse users of native controls.
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--c-primary-100);
+  color: var(--c-primary-900);
+}
+
+// ── Scrollbars (subtle, brand-tinted) ───────────────────────────────────────
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9c5b6;
+  border-radius: var(--r-full);
+  border: 2px solid var(--c-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-ink-300);
+}

@@ -1,0 +1,87 @@
+<section class="section container">
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (!video()) {
+    <app-content-state
+      kind="empty"
+      icon="video"
+      [title]="i18n.t('videos.notFound')"
+      [message]="i18n.t('videos.notFoundMessage')"
+    />
+  } @else {
+    <article class="video-detail">
+      <header class="video-detail__head">
+        <a class="video-detail__back" routerLink="/videos">
+          <app-icon name="arrow-left" />
+          {{ i18n.t('nav.videos') }}
+        </a>
+
+        <div class="video-detail__meta">
+          @if (video()!.publishedAt; as published) {
+            <span class="meta-item">
+              <app-icon name="calendar" />
+              {{ published | appDate: 'long' }}
+            </span>
+          }
+          @if (video()!.featured) {
+            <span class="badge badge--gold">{{ i18n.t('common.featured') }}</span>
+          }
+        </div>
+
+        <h1 class="video-detail__title">{{ i18n.localized(video()!.title) }}</h1>
+      </header>
+
+      <app-youtube-player [youtubeId]="video()!.youtubeId" />
+
+      @if (description(); as text) {
+        <div class="video-detail__body">
+          <p>{{ text }}</p>
+        </div>
+      }
+
+      @if (video()!.tags.length > 0) {
+        <div class="video-detail__tags">
+          <span class="video-detail__label">{{ i18n.t('posts.tags') }}</span>
+          <div class="chip-row">
+            @for (tag of video()!.tags; track tag) {
+              <span class="chip">{{ tag }}</span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="video-detail__share">
+        <span class="video-detail__label">{{ i18n.t('common.share') }}</span>
+        <app-share-bar [text]="i18n.localized(video()!.title)" />
+      </div>
+
+      <app-engagement-bar
+        itemType="video"
+        [itemId]="video()!.id"
+        [likesCount]="video()!.likesCount"
+        [commentsCount]="video()!.commentsCount"
+      />
+
+      <app-comment-section itemType="video" [itemId]="video()!.id" />
+
+      @if (related().length > 0) {
+        <section class="video-detail__related" [attr.aria-label]="i18n.t('videos.relatedPosts')">
+          <h2>{{ i18n.t('videos.relatedPosts') }}</h2>
+          <div class="grid-cards">
+            @for (item of related(); track item.id) {
+              <app-post-card [post]="item" />
+            }
+          </div>
+        </section>
+      }
+    </article>
+  }
+</section>

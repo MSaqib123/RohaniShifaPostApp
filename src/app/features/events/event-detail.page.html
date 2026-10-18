@@ -1,0 +1,131 @@
+<section class="section container">
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (!event()) {
+    <app-content-state
+      kind="empty"
+      icon="calendar"
+      [title]="i18n.t('events.notFound')"
+      [message]="i18n.t('events.notFoundMessage')"
+    />
+  } @else {
+    <article class="event-detail">
+      <header class="event-detail__head">
+        <a class="event-detail__back" routerLink="/events">
+          <app-icon name="arrow-left" />
+          {{ i18n.t('nav.events') }}
+        </a>
+
+        <div class="event-detail__meta">
+          @if (event()!.status === 'cancelled') {
+            <span class="badge badge--danger">{{ i18n.t('events.cancelled') }}</span>
+          } @else if (event()!.status === 'draft') {
+            <span class="badge badge--muted">{{ i18n.t('events.draft') }}</span>
+          } @else if (isPast()) {
+            <span class="badge badge--muted">{{ i18n.t('events.completed') }}</span>
+          } @else {
+            <span class="badge">{{ i18n.t('events.upcoming') }}</span>
+          }
+          <span class="meta-item">
+            <app-icon [name]="event()!.isOnline ? 'globe' : 'map-pin'" />
+            {{ event()!.isOnline ? i18n.t('events.online') : i18n.t('events.offline') }}
+          </span>
+        </div>
+
+        <h1 class="event-detail__title">{{ i18n.localized(event()!.title) }}</h1>
+      </header>
+
+      @if (event()!.status === 'cancelled') {
+        <div class="alert alert--danger" role="status">
+          <app-icon name="alert-triangle" />
+          <span>{{ i18n.t('events.cancelledNotice') }}</span>
+        </div>
+      } @else if (isPast()) {
+        <div class="alert alert--info" role="status">
+          <app-icon name="info" />
+          <span>{{ i18n.t('events.archiveNotice') }}</span>
+        </div>
+      }
+
+      <dl class="event-detail__facts">
+        <div>
+          <dt>{{ i18n.t('events.startDate') }}</dt>
+          <dd>{{ event()!.startDate | appDate: 'long' }}</dd>
+        </div>
+        @if (event()!.endDate; as endDate) {
+          <div>
+            <dt>{{ i18n.t('events.endDate') }}</dt>
+            <dd>{{ endDate | appDate: 'long' }}</dd>
+          </div>
+        }
+        <div>
+          <dt>{{ i18n.t('events.location') }}</dt>
+          <dd>
+            {{
+              event()!.isOnline
+                ? i18n.t('events.online')
+                : event()!.location || i18n.t('events.offline')
+            }}
+          </dd>
+        </div>
+      </dl>
+
+      @if (event()!.isOnline) {
+        @if (event()!.meetingUrl; as meetingUrl) {
+          <a class="btn btn--gold" [href]="meetingUrl" target="_blank" rel="noopener noreferrer">
+            <app-icon name="external" />
+            {{ i18n.t('events.joinOnline') }}
+          </a>
+        }
+      }
+
+      <div class="event-detail__body">
+        @for (paragraph of paragraphs(); track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+
+      <app-engagement-bar
+        itemType="event"
+        [itemId]="event()!.id"
+        [likesCount]="event()!.likesCount ?? 0"
+        [showComments]="false"
+      />
+
+      <div class="event-detail__share">
+        <span class="event-detail__label">{{ i18n.t('common.share') }}</span>
+        <app-share-bar [text]="i18n.localized(event()!.title)" />
+      </div>
+
+      @if (relatedPosts().length > 0) {
+        <section class="event-detail__related" [attr.aria-label]="i18n.t('events.relatedPosts')">
+          <h2>{{ i18n.t('events.relatedPosts') }}</h2>
+          <div class="grid-cards">
+            @for (post of relatedPosts(); track post.id) {
+              <app-post-card [post]="post" />
+            }
+          </div>
+        </section>
+      }
+
+      @if (relatedVideos().length > 0) {
+        <section class="event-detail__related" [attr.aria-label]="i18n.t('events.relatedVideos')">
+          <h2>{{ i18n.t('events.relatedVideos') }}</h2>
+          <div class="grid-cards">
+            @for (video of relatedVideos(); track video.id) {
+              <app-video-card [post]="video" />
+            }
+          </div>
+        </section>
+      }
+    </article>
+  }
+</section>

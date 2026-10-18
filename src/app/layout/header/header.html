@@ -1,0 +1,165 @@
+<header class="site-header" [class.site-header--scrolled]="scrolled()">
+  <div class="container site-header__inner">
+    <a class="brand" [routerLink]="['/']">
+      <app-brand-logo />
+      <span>
+        <span class="brand__name">{{ siteName() }}</span>
+      </span>
+    </a>
+
+    <nav class="nav-desktop" [attr.aria-label]="i18n.t('nav.menu')">
+      @for (link of navLinks; track link.route) {
+        <a
+          [routerLink]="link.route"
+          [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
+          routerLinkActive="is-active"
+        >
+          {{ i18n.t(link.key) }}
+        </a>
+      }
+    </nav>
+
+    <div class="site-header__actions">
+      <a
+        class="icon-btn"
+        routerLink="/search"
+        [attr.aria-label]="i18n.t('nav.search')"
+        [title]="i18n.t('nav.search')"
+      >
+        <app-icon name="search" />
+      </a>
+
+      <app-language-switcher />
+
+      @if (auth.isLoggedIn()) {
+        <div class="menu-anchor user-menu-anchor hide-mobile">
+          <button
+            type="button"
+            class="user-menu-btn"
+            (click)="userMenuOpen.set(!userMenuOpen())"
+            [attr.aria-expanded]="userMenuOpen()"
+            aria-haspopup="true"
+            [attr.aria-label]="i18n.t('profile.manageAccount')"
+          >
+            <span class="avatar" aria-hidden="true">{{ auth.initials() }}</span>
+            <app-icon [name]="userMenuOpen() ? 'chevron-up' : 'chevron-down'" />
+          </button>
+
+          @if (userMenuOpen()) {
+            <div class="menu-panel" role="menu">
+              <div class="menu-panel__group ellipsis">{{ auth.displayName() }}</div>
+              <a role="menuitem" routerLink="/profile" (click)="closeMenus()">
+                <app-icon name="user" />
+                {{ i18n.t('nav.profile') }}
+              </a>
+              @if (auth.isAdmin()) {
+                <a role="menuitem" routerLink="/admin" (click)="closeMenus()">
+                  <app-icon name="shield" />
+                  {{ i18n.t('nav.admin') }}
+                </a>
+              }
+              <hr class="menu-panel__divider" />
+              <button type="button" role="menuitem" (click)="logout()">
+                <app-icon name="logout" />
+                {{ i18n.t('nav.logout') }}
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a class="btn btn--sm btn--ghost hide-mobile" routerLink="/login">
+          {{ i18n.t('nav.login') }}
+        </a>
+        <a class="btn btn--sm btn--gold hide-mobile" routerLink="/signup">
+          {{ i18n.t('nav.signup') }}
+        </a>
+      }
+
+      <button
+        type="button"
+        class="icon-btn menu-toggle"
+        (click)="toggleDrawer()"
+        [attr.aria-expanded]="drawerOpen()"
+        aria-controls="mobile-nav"
+        [attr.aria-label]="drawerOpen() ? i18n.t('nav.closeMenu') : i18n.t('nav.openMenu')"
+      >
+        <app-icon [name]="drawerOpen() ? 'close' : 'menu'" />
+      </button>
+    </div>
+  </div>
+
+  @if (drawerOpen()) {
+    <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+    <nav
+      id="mobile-nav"
+      class="drawer"
+      [attr.aria-label]="i18n.t('nav.menu')"
+      [cdkTrapFocus]="true"
+      [cdkTrapFocusAutoCapture]="true"
+    >
+      <div class="drawer__head">
+        <strong>{{ i18n.t('nav.menu') }}</strong>
+        <button
+          type="button"
+          class="icon-btn"
+          (click)="closeDrawer()"
+          [attr.aria-label]="i18n.t('nav.closeMenu')"
+        >
+          <app-icon name="close" />
+        </button>
+      </div>
+
+      @for (link of navLinks; track link.route) {
+        <a
+          class="drawer__link"
+          [routerLink]="link.route"
+          [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
+          routerLinkActive="is-active"
+          (click)="closeDrawer()"
+        >
+          <app-icon [name]="link.icon" />
+          {{ i18n.t(link.key) }}
+        </a>
+      }
+
+      <a class="drawer__link" routerLink="/search" (click)="closeDrawer()">
+        <app-icon name="search" />
+        {{ i18n.t('nav.search') }}
+      </a>
+
+      <hr class="drawer__divider" />
+
+      @if (auth.isLoggedIn()) {
+        <a class="drawer__link" routerLink="/profile" (click)="closeDrawer()">
+          <app-icon name="user" />
+          {{ i18n.t('nav.profile') }}
+        </a>
+        @if (auth.isAdmin()) {
+          <a class="drawer__link" routerLink="/admin" (click)="closeDrawer()">
+            <app-icon name="shield" />
+            {{ i18n.t('nav.admin') }}
+          </a>
+        }
+        <div class="drawer__actions">
+          <button
+            type="button"
+            class="btn btn--outline btn--block"
+            (click)="closeDrawer(); logout()"
+          >
+            <app-icon name="logout" />
+            {{ i18n.t('nav.logout') }}
+          </button>
+        </div>
+      } @else {
+        <div class="drawer__actions">
+          <a class="btn btn--block" routerLink="/login" (click)="closeDrawer()">
+            {{ i18n.t('nav.login') }}
+          </a>
+          <a class="btn btn--outline btn--block" routerLink="/signup" (click)="closeDrawer()">
+            {{ i18n.t('nav.signup') }}
+          </a>
+        </div>
+      }
+    </nav>
+  }
+</header>

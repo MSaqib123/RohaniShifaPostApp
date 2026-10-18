@@ -1,0 +1,62 @@
+.engagement {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.eng-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-full);
+  background: var(--c-surface);
+  color: var(--c-ink-700);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+
+  .icon {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+  }
+
+  &:hover {
+    border-color: var(--c-primary-300);
+    background: var(--c-primary-50);
+    color: var(--c-primary-800);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  // Active (liked / bookmarked) state — colour is never the only signal.
+  &--active {
+    border-color: var(--c-primary-700);
+    background: var(--c-primary-700);
+    color: #fff;
+
+    &:hover {
+      background: var(--c-primary-800);
+      border-color: var(--c-primary-800);
+      color: #fff;
+    }
+  }
+
+  &__count {
+    padding: 0 0.4em;
+    border-radius: var(--r-full);
+    background: rgba(255, 255, 255, 0.18);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Non-active count sits on the light surface instead.
+.eng-btn:not(.eng-btn--active) .eng-btn__count {
+  background: var(--c-bg-deep);
+  color: var(--c-ink-500);
+}

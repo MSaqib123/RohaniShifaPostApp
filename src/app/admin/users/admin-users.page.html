@@ -1,0 +1,106 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.users') }}</h1>
+      <p>{{ i18n.t('admin.users.selfNotice') }}</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="toolbar">
+      <div class="toolbar__search">
+        <app-icon name="search" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="i18n.t('admin.searchUsers')"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+        />
+      </div>
+      <span class="result-count">{{ i18n.t('common.results', { count: filtered().length }) }}</span>
+    </div>
+
+    @if (users().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="users"
+        [title]="i18n.t('admin.users.empty')"
+        [message]="i18n.t('admin.listEmptyMessage')"
+      />
+    } @else if (filtered().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="search"
+        [title]="i18n.t('admin.listEmptyFiltered')"
+        [message]="i18n.t('common.noResultsMessage')"
+      />
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n.t('common.name') }}</th>
+              <th scope="col">{{ i18n.t('admin.users.role') }}</th>
+              <th scope="col">{{ i18n.t('admin.users.joined') }}</th>
+              <th scope="col">{{ i18n.t('common.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of filtered(); track user.uid) {
+              <tr>
+                <td class="cell-title">
+                  {{ nameOf(user) }}
+                  <span class="cell-sub">{{ user.email }}</span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.badge--gold]="user.role === 'admin'"
+                    [class.badge--muted]="user.role !== 'admin'"
+                  >
+                    {{
+                      user.role === 'admin'
+                        ? i18n.t('admin.users.roleAdmin')
+                        : i18n.t('admin.users.roleUser')
+                    }}
+                  </span>
+                </td>
+                <td>{{ user.createdAt | appDate: 'medium' }}</td>
+                <td class="cell-actions">
+                  @if (isSelf(user)) {
+                    <span class="cell-note">{{ i18n.t('admin.users.selfNotice') }}</span>
+                  } @else {
+                    <button
+                      type="button"
+                      class="btn btn--outline btn--sm"
+                      [disabled]="savingId() === user.uid"
+                      (click)="toggleRole(user)"
+                    >
+                      {{
+                        user.role === 'admin'
+                          ? i18n.t('admin.users.removeAdmin')
+                          : i18n.t('admin.users.makeAdmin')
+                      }}
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

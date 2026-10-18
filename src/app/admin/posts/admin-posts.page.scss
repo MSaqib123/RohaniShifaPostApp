@@ -1,0 +1,5 @@
+// Admin list pages share the toolbar/table vocabulary from `src/styles`;
+// only page-local adjustments belong here.
+:host {
+  display: block;
+}

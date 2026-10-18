@@ -1,0 +1,788 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYOUT — application shell: header, mobile drawer, footer, admin frame.
+// Global styles keep component SCSS tiny and within Angular's style budgets.
+// ─────────────────────────────────────────────────────────────────────────────
+
+public-layout {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+}
+
+.site-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// ═══ HEADER ════════════════════════════════════════════════════════════════
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  background: rgba(251, 250, 246, 0.93);
+  backdrop-filter: blur(10px);
+  border-block-end: 1px solid transparent;
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+
+  &--scrolled {
+    border-block-end-color: var(--c-line);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-block-size: var(--header-h);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex: none;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &__name {
+    display: block;
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--c-primary-800);
+    letter-spacing: -0.01em;
+  }
+
+  &__local {
+    display: block;
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+}
+
+.logo-mark {
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  flex: none;
+  border-radius: 0.65rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-img {
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  object-fit: contain;
+}
+
+.nav-desktop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-inline: auto;
+
+  a {
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--r-md);
+    color: var(--c-ink-700);
+    font-weight: 600;
+    font-size: var(--fs-base);
+    text-decoration: none;
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+
+    &:hover {
+      background: rgba(13, 92, 70, 0.07);
+      color: var(--c-primary-800);
+      text-decoration: none;
+    }
+
+    &.is-active {
+      background: var(--c-primary-50);
+      color: var(--c-primary-700);
+    }
+  }
+
+  @media (max-width: 1080px) {
+    a {
+      padding-inline: 0.6rem;
+      font-size: var(--fs-sm);
+    }
+  }
+
+  @media (max-width: 920px) {
+    display: none;
+  }
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-inline-start: auto;
+
+  @media (max-width: 920px) {
+    .hide-mobile {
+      display: none;
+    }
+  }
+}
+
+.menu-toggle {
+  display: none;
+
+  @media (max-width: 920px) {
+    display: inline-flex;
+  }
+}
+
+.menu-anchor {
+  position: relative;
+}
+
+// User avatar dropdown trigger.
+.user-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(13, 92, 70, 0.08);
+  }
+
+  .icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--c-ink-500);
+  }
+}
+
+.menu-panel {
+  .menu-panel__group {
+    padding: 0.45rem 0.7rem 0.3rem;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-400);
+  }
+
+  .menu-panel__divider {
+    block-size: 1px;
+    background: var(--c-line-soft);
+    margin: var(--sp-2) 0;
+    border: 0;
+  }
+}
+
+// Language switcher.
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  color: var(--c-ink-700);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+
+  .icon {
+    inline-size: 1.05rem;
+    block-size: 1.05rem;
+  }
+
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--c-primary-300);
+    color: var(--c-primary-800);
+  }
+
+  @media (max-width: 640px) {
+    .lang-btn__label {
+      display: none;
+    }
+  }
+}
+
+.lang-menu {
+  min-inline-size: 13.5rem;
+
+  [role='radio'] {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    inline-size: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: none;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--c-primary-50);
+    }
+
+    &[aria-checked='true'] {
+      background: var(--c-primary-50);
+      color: var(--c-primary-800);
+      font-weight: 700;
+    }
+  }
+
+  .lang-menu__en {
+    color: var(--text-faint);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    margin-inline-start: auto;
+  }
+
+  .icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--c-primary-700);
+  }
+}
+
+// ═══ MOBILE DRAWER ═════════════════════════════════════════════════════════
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+  background: rgba(5, 26, 20, 0.5);
+  animation: fade-in var(--dur) var(--ease);
+}
+
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: calc(var(--z-drawer) + 1);
+  inline-size: min(20.5rem, 86vw);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  animation: drawer-in var(--dur) var(--ease);
+
+  [dir='rtl'] & {
+    animation-name: drawer-in-rtl;
+  }
+}
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding-block-end: var(--sp-3);
+  margin-block-end: var(--sp-2);
+  border-block-end: 1px solid var(--c-line);
+
+  strong {
+    font-size: var(--fs-md);
+    color: var(--c-primary-800);
+  }
+}
+
+.drawer__link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--r-md);
+  color: var(--c-ink-800);
+  font-weight: 600;
+  text-decoration: none;
+  border-inline-start: 3px solid transparent;
+
+  .icon {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    color: var(--c-ink-400);
+  }
+
+  &:hover,
+  &.is-active {
+    background: var(--c-primary-50);
+    color: var(--c-primary-800);
+    text-decoration: none;
+  }
+
+  &.is-active {
+    border-inline-start-color: var(--c-primary-700);
+
+    .icon {
+      color: var(--c-primary-700);
+    }
+  }
+}
+
+.drawer__divider {
+  border: 0;
+  border-block-start: 1px solid var(--c-line);
+  margin-block: var(--sp-3);
+}
+
+.drawer__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drawer-in-rtl {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+// ═══ FOOTER ════════════════════════════════════════════════════════════════
+.site-footer {
+  position: relative;
+  margin-block-start: auto;
+  background: linear-gradient(180deg, var(--c-primary-900), var(--c-primary-950));
+  color: #cfe0d9;
+}
+
+.site-footer__grid {
+  display: grid;
+  gap: var(--sp-8);
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  padding-block: var(--sp-12) var(--sp-8);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+  }
+}
+
+// Column headings are `h2` so the page outline never skips a level (A8).
+.site-footer h2 {
+  color: var(--c-gold-200);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-block-end: var(--sp-3);
+}
+
+.site-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.site-footer a {
+  color: #cfe0d9;
+  font-size: var(--fs-sm);
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+
+  .brand__name {
+    color: #fff;
+  }
+
+  p {
+    color: #a9c3ba;
+    font-size: var(--fs-sm);
+    max-inline-size: 34rem;
+    line-height: var(--lh-relaxed);
+  }
+}
+
+.site-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--r-full);
+    color: #dbeae4;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+
+    .icon {
+      inline-size: 0.95rem;
+      block-size: 0.95rem;
+    }
+
+    &:hover {
+      border-color: var(--c-gold-400);
+      color: var(--c-gold-200);
+      text-decoration: none;
+    }
+  }
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding-block: var(--sp-4);
+  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+  color: #8fb0a5;
+  font-size: var(--fs-xs);
+}
+
+// ═══ AUTH PAGES (login / signup / reset) ═══════════════════════════════════
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.auth-card {
+  inline-size: min(100%, 26.5rem);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+
+  &__head {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-block-end: var(--sp-6);
+
+    .auth-card__badge {
+      inline-size: 3.5rem;
+      block-size: 3.5rem;
+      border-radius: var(--r-full);
+      background: rgba(201, 162, 39, 0.12);
+      border: 1px solid var(--c-gold-300);
+      color: var(--c-gold-600);
+      display: grid;
+      place-items: center;
+      margin-inline: auto;
+      margin-block-end: var(--sp-2);
+
+      .icon {
+        inline-size: 1.8rem;
+        block-size: 1.8rem;
+      }
+    }
+
+    h1 {
+      font-size: var(--fs-xl);
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: var(--fs-sm);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .auth-alt {
+    margin-block-start: var(--sp-5);
+    padding-block-start: var(--sp-4);
+    border-block-start: 1px solid var(--c-line-soft);
+    text-align: center;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+}
+
+// ═══ ADMIN FRAME ═══════════════════════════════════════════════════════════
+.admin-shell {
+  display: grid;
+  grid-template-columns: 15.5rem 1fr;
+  min-block-size: 100dvh;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4) var(--sp-3);
+  background: var(--c-primary-950);
+  color: #cfe0d9;
+  overflow-y: auto;
+
+  .admin-sidebar__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    padding: 0.35rem 0.5rem var(--sp-4);
+
+    strong {
+      color: #fff;
+      font-size: var(--fs-md);
+    }
+  }
+
+  .admin-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--r-md);
+    color: #b7cec6;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+
+    .icon {
+      inline-size: 1.1rem;
+      block-size: 1.1rem;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    &.is-active {
+      background: rgba(201, 162, 39, 0.16);
+      color: var(--c-gold-200);
+    }
+  }
+
+  @media (max-width: 900px) {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: calc(var(--z-drawer) + 1);
+    inline-size: min(15.5rem, 82vw);
+    transform: translateX(-105%);
+    transition: transform var(--dur) var(--ease);
+    box-shadow: var(--shadow-lg);
+
+    [dir='rtl'] & {
+      transform: translateX(105%);
+    }
+
+    &.is-open {
+      transform: none;
+    }
+  }
+}
+
+.admin-sidebar__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+  background: rgba(5, 26, 20, 0.5);
+}
+
+.admin-main {
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg);
+}
+
+.admin-topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) clamp(1rem, 3vw, 2rem);
+  background: var(--c-surface);
+  border-block-end: 1px solid var(--c-line);
+
+  &__title {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-inline-start: auto;
+  }
+
+  &__menu {
+    display: none;
+
+    @media (max-width: 900px) {
+      display: inline-flex;
+    }
+  }
+}
+
+.admin-sidebar__close {
+  display: none;
+  color: #cfe0d9;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 720px) {
+  .admin-topbar__site-label {
+    display: none;
+  }
+}
+
+.admin-content {
+  padding: clamp(1rem, 3vw, 2rem);
+  min-inline-size: 0;
+}
+
+// ═══ ADMIN PAGE FRAME (shared by every /admin route) ═══════════════════════
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.admin-page__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3);
+
+  h1 {
+    margin: 0.15rem 0 0;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--text);
+  }
+
+  p {
+    margin: var(--sp-1) 0 0;
+    color: var(--text-muted);
+    font-size: var(--fs-base);
+  }
+}
+
+.admin-page__kicker {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-primary-700);
+}
+
+// Section inside an admin page (quick actions, groups).
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+
+  h2 {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+}
+
+// Framed surface used by admin forms and grouped settings (§22).
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+
+  &__title {
+    margin: 0;
+    font-size: var(--fs-lg);
+    color: var(--text);
+  }
+}
+
+// Vertical stack of `admin-card` sections inside a form.
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+// Row of toolbar controls above an admin table.
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}

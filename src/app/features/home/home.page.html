@@ -1,0 +1,280 @@
+@if (isVisible('hero')) {
+  <section class="hero pattern-geo-gold" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <span class="hero__kicker">
+          <app-icon name="mosque" />
+          {{ i18n.t('home.heroKicker') }}
+        </span>
+        <h1 class="hero__title" id="hero-title">{{ siteName() }}</h1>
+        <p class="hero__tagline">{{ tagline() }}</p>
+        <p class="hero__sub">{{ i18n.t('home.heroSubtitle') }}</p>
+        <div class="hero__actions">
+          <a class="btn btn--gold btn--lg" routerLink="/videos">
+            <app-icon name="play" filled />
+            {{ i18n.t('home.heroPrimary') }}
+          </a>
+          <a class="btn btn--outline btn--lg" routerLink="/posts">
+            {{ i18n.t('home.heroSecondary') }}
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__art" aria-hidden="true">
+        <div class="hero__image-frame">
+          <img
+            src="images/islamic-hero.jpg"
+            alt="Rohani Shifa Islamic Art"
+            class="hero__image"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+}
+
+@if (!firebase.configured) {
+  <div class="section container">
+    <div class="alert alert--info" role="status">
+      <app-icon name="info" />
+      <span>{{ i18n.t('common.demoModeMessage') }}</span>
+    </div>
+  </div>
+}
+
+@if (loading()) {
+  <div class="section container">
+    <app-content-state kind="loading" />
+  </div>
+} @else if (error()) {
+  <div class="section container">
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  </div>
+} @else {
+  @if (isVisible('dailyReminder')) {
+    <section class="section container" aria-labelledby="daily-title">
+      <header class="section-head">
+        <div class="section-head__titles">
+          <span class="section-head__kicker">{{ i18n.t('home.dailyKicker') }}</span>
+          <h2 class="section-head__title" id="daily-title">
+            {{ i18n.t('home.dailyTitle') }}
+          </h2>
+        </div>
+      </header>
+
+      @if (todaysReminder(); as post) {
+        <article class="reminder">
+          <h3 class="reminder__title">{{ i18n.localized(post.title) }}</h3>
+          <p class="reminder__text">{{ reminderBody() }}</p>
+          <div class="reminder__actions">
+            <a class="btn btn--outline" [routerLink]="['/posts', post.id]">
+              {{ i18n.t('common.readMore') }}
+            </a>
+            <app-share-bar [text]="i18n.localized(post.title)" />
+          </div>
+        </article>
+      } @else {
+        <app-content-state
+          kind="empty"
+          icon="moon"
+          [title]="i18n.t('home.dailyTitle')"
+          [message]="i18n.t('home.dailyEmpty')"
+        />
+      }
+    </section>
+  }
+
+  @if (isVisible('featuredVideo')) {
+    <section class="section section--alt" aria-labelledby="featured-title">
+      <div class="container">
+        <header class="section-head">
+          <div class="section-head__titles">
+            <span class="section-head__kicker">{{ i18n.t('nav.videos') }}</span>
+            <h2 class="section-head__title" id="featured-title">
+              {{ i18n.t('home.featuredVideo') }}
+            </h2>
+          </div>
+          <a class="btn btn--ghost btn--sm" routerLink="/videos">
+            {{ i18n.t('common.viewAll') }}
+            <app-icon name="arrow-right" />
+          </a>
+        </header>
+
+        @if (featuredVideo(); as video) {
+          <div class="featured-video">
+            <app-youtube-player [youtubeId]="video.youtubeId" />
+            <div class="featured-video__meta">
+              <h3 class="featured-video__title">
+                <a [routerLink]="['/videos', video.id]">{{ i18n.localized(video.title) }}</a>
+              </h3>
+              @if (i18n.localized(video.description); as text) {
+                <p>{{ text }}</p>
+              }
+            </div>
+          </div>
+        } @else {
+          <app-content-state
+            kind="empty"
+            icon="video"
+            [title]="i18n.t('home.featuredVideo')"
+            [message]="i18n.t('home.featuredVideoEmpty')"
+          />
+        }
+      </div>
+    </section>
+  }
+
+  @if (isVisible('latestPosts')) {
+    <section class="section container" aria-labelledby="latest-posts-title">
+      <header class="section-head">
+        <div class="section-head__titles">
+          <span class="section-head__kicker">{{ i18n.t('nav.posts') }}</span>
+          <h2 class="section-head__title" id="latest-posts-title">
+            {{ i18n.t('home.latestPosts') }}
+          </h2>
+        </div>
+        <a class="btn btn--ghost btn--sm" routerLink="/posts">
+          {{ i18n.t('common.viewAll') }}
+          <app-icon name="arrow-right" />
+        </a>
+      </header>
+
+      @if (featuredPosts().length === 0) {
+        <app-content-state
+          kind="empty"
+          icon="post"
+          [title]="i18n.t('posts.empty')"
+          [message]="i18n.t('posts.emptyMessage')"
+        />
+      } @else {
+        <div class="grid-cards">
+          @for (post of featuredPosts(); track post.id) {
+            <app-post-card [post]="post" />
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (isVisible('latestVideos')) {
+    <section class="section section--alt" aria-labelledby="latest-videos-title">
+      <div class="container">
+        <header class="section-head">
+          <div class="section-head__titles">
+            <span class="section-head__kicker">{{ i18n.t('nav.videos') }}</span>
+            <h2 class="section-head__title" id="latest-videos-title">
+              {{ i18n.t('home.latestVideos') }}
+            </h2>
+          </div>
+          <a class="btn btn--ghost btn--sm" routerLink="/videos">
+            {{ i18n.t('common.viewAll') }}
+            <app-icon name="arrow-right" />
+          </a>
+        </header>
+
+        @if (videos().length === 0) {
+          <app-content-state
+            kind="empty"
+            icon="video"
+            [title]="i18n.t('videos.empty')"
+            [message]="i18n.t('videos.emptyMessage')"
+          />
+        } @else {
+          <div class="grid-cards">
+            @for (video of videos(); track video.id) {
+              <app-video-card [post]="video" />
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (isVisible('upcomingEvents')) {
+    <section class="section container" aria-labelledby="upcoming-title">
+      <header class="section-head">
+        <div class="section-head__titles">
+          <span class="section-head__kicker">{{ i18n.t('nav.events') }}</span>
+          <h2 class="section-head__title" id="upcoming-title">
+            {{ i18n.t('home.upcomingEvents') }}
+          </h2>
+        </div>
+        <a class="btn btn--ghost btn--sm" routerLink="/events">
+          {{ i18n.t('common.viewAll') }}
+          <app-icon name="arrow-right" />
+        </a>
+      </header>
+
+      @if (events().length === 0) {
+        <app-content-state
+          kind="empty"
+          icon="calendar"
+          [title]="i18n.t('events.noUpcoming')"
+          [message]="i18n.t('home.upcomingEventsEmpty')"
+        />
+      } @else {
+        <div class="grid-cards">
+          @for (event of events(); track event.id) {
+            <app-event-card [event]="event" />
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (isVisible('categories')) {
+    <section class="section section--alt" aria-labelledby="categories-title">
+      <div class="container">
+        <header class="section-head">
+          <div class="section-head__titles">
+            <span class="section-head__kicker">{{ i18n.t('nav.categories') }}</span>
+            <h2 class="section-head__title" id="categories-title">
+              {{ i18n.t('home.popularCategories') }}
+            </h2>
+            <p class="section-head__sub">{{ i18n.t('home.categoriesSub') }}</p>
+          </div>
+          <a class="btn btn--ghost btn--sm" routerLink="/categories">
+            {{ i18n.t('common.viewAll') }}
+            <app-icon name="arrow-right" />
+          </a>
+        </header>
+
+        @if (categories().length === 0) {
+          <app-content-state
+            kind="empty"
+            icon="grid"
+            [title]="i18n.t('categories.empty')"
+            [message]="i18n.t('categories.emptyMessage')"
+          />
+        } @else {
+          <div class="grid-cards">
+            @for (category of categories(); track category.id) {
+              <app-category-card [category]="category" />
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (isVisible('cta') && !auth.isLoggedIn()) {
+    <section class="section container" aria-labelledby="cta-title">
+      <div class="cta">
+        <div class="cta__text">
+          <h2 id="cta-title">{{ i18n.t('home.ctaTitle') }}</h2>
+          <p>{{ i18n.t('home.ctaText') }}</p>
+        </div>
+        <div class="cta__actions">
+          <a class="btn btn--gold" routerLink="/signup">{{ i18n.t('home.ctaButton') }}</a>
+          <a class="btn btn--outline" routerLink="/login">{{ i18n.t('nav.login') }}</a>
+        </div>
+      </div>
+    </section>
+  }
+}

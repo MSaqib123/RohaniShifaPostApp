@@ -1,0 +1,117 @@
+.event-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-block-end: var(--sp-5);
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+
+  &__label {
+    margin: 0;
+    font-size: var(--fs-lg);
+    text-transform: capitalize;
+  }
+
+  // Flex column of week rows: each `.calendar__row` is its own 7-column grid,
+  // which is what lets the ARIA `row`/`gridcell` structure match the visual one.
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-line);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 1px;
+  }
+
+  &__weekday {
+    padding: 0.5rem 0.25rem;
+    background: var(--c-bg-deep);
+    color: var(--c-ink-500);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-block-size: 5.5rem;
+    padding: 0.35rem;
+    background: var(--c-surface);
+
+    &--empty {
+      background: var(--c-bg-deep);
+    }
+
+    &--today {
+      outline: 2px solid var(--c-primary-600);
+      outline-offset: -2px;
+    }
+  }
+
+  &__num {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-ink-700);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__event {
+    display: block;
+    padding: 0.15rem 0.3rem;
+    border-radius: var(--r-sm);
+    background: var(--c-primary-50);
+    color: var(--c-primary-800);
+    font-size: var(--fs-xs);
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--c-primary-100);
+      text-decoration: none;
+    }
+  }
+
+  &__empty {
+    margin: 0;
+    text-align: center;
+    color: var(--text-muted);
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar__day {
+    min-block-size: 3.75rem;
+    padding: 0.2rem;
+  }
+
+  .calendar__event {
+    white-space: normal;
+    max-block-size: 2.7em;
+    overflow: hidden;
+  }
+}

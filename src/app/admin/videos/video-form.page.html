@@ -1,0 +1,177 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.videos') }}</span>
+      <h1>{{ isNew() ? i18n.t('admin.videoForm.new') : i18n.t('admin.videoForm.edit') }}</h1>
+      <p>{{ i18n.t('videos.embedNote') }}</p>
+    </div>
+    <a class="btn btn--ghost btn--sm" routerLink="/admin/videos">
+      <app-icon name="arrow-left" />
+      {{ i18n.t('common.back') }}
+    </a>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (loadError()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('videos.notFoundMessage')"
+      (retry)="retryLoad()"
+    />
+  } @else {
+    @if (error()) {
+      <div class="alert alert--danger" role="alert">
+        <app-icon name="alert-circle" />
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <form class="admin-form" (submit)="onSubmit($event)" novalidate>
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.videoForm.youtubeUrl')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.videoForm.youtubeUrl') }}</h2>
+
+        <div class="field">
+          <label class="field__label" for="video-url">
+            {{ i18n.t('admin.videoForm.youtubeUrl') }}
+            <span class="field__required" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="video-url"
+            class="input"
+            type="url"
+            inputmode="url"
+            autocomplete="off"
+            placeholder="https://www.youtube.com/watch?v=…"
+            [value]="form().youtubeUrl"
+            (input)="setText('youtubeUrl', $event)"
+          />
+          <p class="field__hint">{{ i18n.t('admin.videoForm.youtubeUrlHint') }}</p>
+        </div>
+
+        <div class="video-preview" [class.video-preview--empty]="!previewThumb()">
+          @if (previewThumb(); as thumb) {
+            <img [src]="thumb" [alt]="i18n.t('admin.videoForm.preview')" />
+            <span class="badge badge--gold video-preview__id">{{ previewId() }}</span>
+          } @else {
+            <app-icon name="youtube" />
+            <p>{{ i18n.t('admin.videoForm.previewNote') }}</p>
+          }
+        </div>
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.postForm.sectionContent')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.postForm.sectionContent') }}</h2>
+
+        <app-localized-input
+          labelKey="admin.postForm.title"
+          hintKey="admin.postForm.titleHint"
+          [value]="form().title"
+          (valueChange)="patch({ title: $event })"
+        />
+
+        <app-localized-input
+          labelKey="admin.postForm.description"
+          [multiline]="true"
+          [value]="form().description"
+          (valueChange)="patch({ description: $event })"
+        />
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field__label" for="video-thumb">
+              {{ i18n.t('admin.videoForm.preview') }}
+              <span class="field__hint"> ({{ i18n.t('common.optional') }})</span>
+            </label>
+            <input
+              id="video-thumb"
+              class="input"
+              type="url"
+              inputmode="url"
+              [value]="form().thumbnailUrl"
+              (input)="setText('thumbnailUrl', $event)"
+            />
+            <p class="field__hint">{{ i18n.t('admin.videoForm.previewNote') }}</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="video-tags">
+              {{ i18n.t('admin.postForm.tags') }}
+            </label>
+            <input
+              id="video-tags"
+              class="input"
+              type="text"
+              [value]="form().tags"
+              (input)="setText('tags', $event)"
+            />
+            <p class="field__hint">{{ i18n.t('admin.postForm.tagsHint') }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.postForm.sectionOrganize')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.postForm.sectionOrganize') }}</h2>
+
+        <div class="field">
+          <span class="field__label">{{ i18n.t('admin.postForm.categories') }}</span>
+          @if (categories().length === 0) {
+            <p class="field__hint">{{ i18n.t('categories.emptyMessage') }}</p>
+          } @else {
+            <div class="chip-row">
+              @for (category of categories(); track category.id) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.chip--active]="form().categoryIds.includes(category.id)"
+                  [attr.aria-pressed]="form().categoryIds.includes(category.id)"
+                  (click)="toggleCategory(category.id)"
+                >
+                  {{ i18n.localized(category.name) }}
+                </button>
+              }
+            </div>
+          }
+          <p class="field__hint">{{ i18n.t('admin.postForm.categoriesHint') }}</p>
+        </div>
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.postForm.sectionPublish')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.postForm.sectionPublish') }}</h2>
+
+        <label class="checkbox-row">
+          <input
+            type="checkbox"
+            [checked]="form().published"
+            (change)="setBool('published', $event)"
+          />
+          <span>{{ i18n.t('admin.postForm.published') }}</span>
+        </label>
+
+        <label class="checkbox-row">
+          <input
+            type="checkbox"
+            [checked]="form().featured"
+            (change)="setBool('featured', $event)"
+          />
+          <span>{{ i18n.t('admin.postForm.featured') }}</span>
+        </label>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn btn--gold" type="submit" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner spinner--sm" aria-hidden="true"></span>
+            {{ i18n.t('common.saving') }}
+          } @else {
+            <app-icon name="check" />
+            {{ isNew() ? i18n.t('admin.videoForm.create') : i18n.t('admin.videoForm.save') }}
+          }
+        </button>
+        <a class="btn btn--ghost" routerLink="/admin/videos">{{ i18n.t('common.cancel') }}</a>
+      </div>
+    </form>
+  }
+</section>

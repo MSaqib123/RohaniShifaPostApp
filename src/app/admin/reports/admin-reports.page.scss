@@ -1,0 +1,9 @@
+// Admin list pages share the `src/styles` vocabulary.
+:host {
+  display: block;
+}
+
+.cell-note {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}

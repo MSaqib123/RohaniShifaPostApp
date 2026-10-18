@@ -1,0 +1,326 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.events') }}</h1>
+      <p>{{ i18n.t('events.subtitle') }}</p>
+    </div>
+    <button type="button" class="btn btn--gold" [disabled]="editor() !== null" (click)="startNew()">
+      <app-icon name="plus" />
+      {{ i18n.t('admin.newEvent') }}
+    </button>
+  </header>
+
+  @if (editor(); as form) {
+    <form class="admin-form" (submit)="onSubmit($event)" novalidate>
+      <section
+        class="admin-card"
+        [attr.aria-label]="isNew() ? i18n.t('admin.eventForm.new') : i18n.t('admin.eventForm.edit')"
+      >
+        <h2 class="admin-card__title">
+          {{ isNew() ? i18n.t('admin.eventForm.new') : i18n.t('admin.eventForm.edit') }}
+        </h2>
+
+        @if (formError()) {
+          <div class="alert alert--danger" role="alert">
+            <app-icon name="alert-circle" />
+            <span>{{ formError() }}</span>
+          </div>
+        }
+
+        <app-localized-input
+          labelKey="admin.eventForm.title"
+          [value]="form.title"
+          (valueChange)="patchEditor({ title: $event })"
+        />
+
+        <app-localized-input
+          labelKey="admin.eventForm.description"
+          [multiline]="true"
+          [value]="form.description"
+          (valueChange)="patchEditor({ description: $event })"
+        />
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('common.date')">
+        <h2 class="admin-card__title">{{ i18n.t('common.date') }}</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field__label" for="event-start">
+              {{ i18n.t('admin.eventForm.startDate') }}
+              <span class="field__required" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="event-start"
+              class="input"
+              type="datetime-local"
+              [value]="form.start"
+              (input)="setDate('start', $event)"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="event-end">
+              {{ i18n.t('admin.eventForm.endDate') }}
+              <span class="field__hint"> ({{ i18n.t('common.optional') }})</span>
+            </label>
+            <input
+              id="event-end"
+              class="input"
+              type="datetime-local"
+              [value]="form.end"
+              (input)="setDate('end', $event)"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="event-status">
+              {{ i18n.t('common.status') }}
+            </label>
+            <select
+              id="event-status"
+              class="select"
+              [value]="form.status"
+              (change)="setEditorStatus($event)"
+            >
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">{{ statusLabel(option.value) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('common.moreInfo')">
+        <h2 class="admin-card__title">{{ i18n.t('common.moreInfo') }}</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field__label" for="event-location">
+              {{ i18n.t('admin.eventForm.location') }}
+            </label>
+            <input
+              id="event-location"
+              class="input"
+              type="text"
+              [value]="form.location"
+              (input)="setText('location', $event)"
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="event-category">
+              {{ i18n.t('admin.eventForm.category') }}
+            </label>
+            <select
+              id="event-category"
+              class="select"
+              [value]="form.categoryId ?? ''"
+              (change)="setCategoryId($event)"
+            >
+              <option value="">{{ i18n.t('common.none') }}</option>
+              @for (category of categories(); track category.id) {
+                <option [value]="category.id">{{ i18n.localized(category.name) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" [checked]="form.isOnline" (change)="setIsOnline($event)" />
+          <span>{{ i18n.t('admin.eventForm.isOnline') }}</span>
+        </label>
+
+        @if (form.isOnline) {
+          <div class="field">
+            <label class="field__label" for="event-meeting">
+              {{ i18n.t('admin.eventForm.meetingUrl') }}
+            </label>
+            <input
+              id="event-meeting"
+              class="input"
+              type="url"
+              inputmode="url"
+              [value]="form.meetingUrl"
+              (input)="setText('meetingUrl', $event)"
+            />
+          </div>
+        }
+      </section>
+
+      <div class="form-actions">
+        <button class="btn btn--gold" type="submit" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner spinner--sm" aria-hidden="true"></span>
+            {{ i18n.t('common.saving') }}
+          } @else {
+            <app-icon name="check" />
+            {{ i18n.t('common.save') }}
+          }
+        </button>
+        <button type="button" class="btn btn--ghost" (click)="cancelEdit()">
+          {{ i18n.t('common.cancel') }}
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="toolbar">
+      <div class="toolbar__search">
+        <app-icon name="search" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="i18n.t('admin.searchEvents')"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+        />
+      </div>
+
+      <label class="sr-only" for="event-status-filter">{{ i18n.t('admin.filterStatus') }}</label>
+      <select
+        id="event-status-filter"
+        class="select toolbar__status"
+        [value]="statusFilter() ?? ''"
+        (change)="setStatusFilter(toStatus($event))"
+      >
+        <option value="">{{ i18n.t('admin.filterAll') }}</option>
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ statusLabel(option.value) }}</option>
+        }
+      </select>
+
+      @if (hasFilters()) {
+        <button type="button" class="btn btn--ghost btn--sm" (click)="clearFilters()">
+          <app-icon name="close" />
+          {{ i18n.t('common.clear') }}
+        </button>
+      }
+
+      <span class="result-count">{{ i18n.t('common.results', { count: filtered().length }) }}</span>
+    </div>
+
+    @if (events().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="calendar"
+        [title]="i18n.t('events.noUpcoming')"
+        [message]="i18n.t('admin.listEmptyMessage')"
+      />
+    } @else if (filtered().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="search"
+        [title]="i18n.t('admin.listEmptyFiltered')"
+        [message]="i18n.t('common.noResultsMessage')"
+      />
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n.t('admin.eventForm.title') }}</th>
+              <th scope="col">{{ i18n.t('common.status') }}</th>
+              <th scope="col">{{ i18n.t('events.startDate') }}</th>
+              <th scope="col">{{ i18n.t('common.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of filtered(); track event.id) {
+              <tr>
+                <td class="cell-title">
+                  {{ titleOf(event) }}
+                  <span class="cell-sub">
+                    {{
+                      event.isOnline
+                        ? i18n.t('events.online')
+                        : event.location || i18n.t('events.offline')
+                    }}
+                  </span>
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.badge--success]="event.status === 'published'"
+                    [class.badge--danger]="event.status === 'cancelled'"
+                    [class.badge--muted]="event.status === 'draft' || event.status === 'completed'"
+                  >
+                    {{ statusLabel(event.status) }}
+                  </span>
+                </td>
+                <td>{{ event.startDate | appDate: 'medium' }}</td>
+                <td class="cell-actions">
+                  @if (event.status === 'published' && isPast(event)) {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="changeStatus(event, 'completed')"
+                      [attr.aria-label]="i18n.t('admin.events.markCompleted')"
+                      [title]="i18n.t('admin.events.markCompleted')"
+                    >
+                      <app-icon name="check-circle" />
+                    </button>
+                  }
+                  @if (event.status === 'published' && !isPast(event)) {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="changeStatus(event, 'cancelled')"
+                      [attr.aria-label]="i18n.t('admin.events.cancelEvent')"
+                      [title]="i18n.t('admin.events.cancelEvent')"
+                    >
+                      <app-icon name="close" />
+                    </button>
+                  }
+                  @if (event.status !== 'published' && !isPast(event)) {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="changeStatus(event, 'published')"
+                      [attr.aria-label]="i18n.t('admin.events.publishEvent')"
+                      [title]="i18n.t('admin.events.publishEvent')"
+                    >
+                      <app-icon name="eye" />
+                    </button>
+                  }
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    (click)="startEdit(event)"
+                    [attr.aria-label]="i18n.t('common.edit')"
+                    [title]="i18n.t('common.edit')"
+                  >
+                    <app-icon name="edit" />
+                  </button>
+                  @if (canDelete(event)) {
+                    <button
+                      type="button"
+                      class="icon-btn icon-btn--danger"
+                      (click)="remove(event)"
+                      [attr.aria-label]="i18n.t('common.delete')"
+                      [title]="i18n.t('common.delete')"
+                    >
+                      <app-icon name="trash" />
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

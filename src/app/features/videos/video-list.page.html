@@ -1,0 +1,71 @@
+<section class="section container">
+  <header class="section-head">
+    <div class="section-head__titles">
+      <span class="section-head__kicker">{{ i18n.t('nav.videos') }}</span>
+      <h1 class="section-head__title">{{ i18n.t('videos.title') }}</h1>
+      <p class="section-head__sub">{{ i18n.t('videos.subtitle') }}</p>
+    </div>
+  </header>
+
+  @if (categories().length > 0) {
+    <div class="toolbar">
+      <div class="chip-row" role="group" [attr.aria-label]="i18n.t('nav.categories')">
+        <button
+          type="button"
+          class="chip"
+          [class.chip--active]="selectedCategory() === null"
+          [attr.aria-pressed]="selectedCategory() === null"
+          (click)="setCategory(null)"
+        >
+          {{ i18n.t('common.all') }}
+        </button>
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            class="chip"
+            [class.chip--active]="selectedCategory() === category.id"
+            [attr.aria-pressed]="selectedCategory() === category.id"
+            (click)="setCategory(category.id)"
+          >
+            {{ i18n.localized(category.name) }}
+          </button>
+        }
+      </div>
+      <span class="result-count">{{ i18n.t('common.results', { count: resultCount() }) }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (resultCount() === 0) {
+    <app-content-state
+      kind="empty"
+      icon="video"
+      [title]="i18n.t('videos.empty')"
+      [message]="i18n.t('videos.emptyMessage')"
+    />
+  } @else {
+    <div class="grid-cards">
+      @for (video of visibleVideos(); track video.id) {
+        <app-video-card [post]="video" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="list-more">
+        <button type="button" class="btn btn--outline" (click)="showMore()">
+          <app-icon name="chevron-down" />
+          {{ i18n.t('common.next') }}
+        </button>
+      </div>
+    }
+  }
+</section>

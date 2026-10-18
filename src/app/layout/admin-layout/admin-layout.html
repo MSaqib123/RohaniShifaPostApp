@@ -1,0 +1,90 @@
+<div class="admin-shell">
+  <!-- Same keyboard escape hatch as the public shell: skip the sidebar. -->
+  <a class="skip-link" href="#admin-content">{{ i18n.t('nav.skipToContent') }}</a>
+
+  @if (sidebarOpen()) {
+    <div class="admin-sidebar__backdrop" (click)="closeSidebar()"></div>
+  }
+
+  <aside
+    class="admin-sidebar"
+    [class.is-open]="sidebarOpen()"
+    [attr.aria-label]="i18n.t('nav.menu')"
+  >
+    <div class="admin-sidebar__head">
+      <a class="row" [routerLink]="['/admin']" style="text-decoration: none">
+        <app-brand-logo />
+        <strong>{{ i18n.t('nav.admin') }}</strong>
+      </a>
+      <button
+        type="button"
+        class="icon-btn admin-sidebar__close"
+        (click)="closeSidebar()"
+        [attr.aria-label]="i18n.t('nav.closeMenu')"
+      >
+        <app-icon name="close" />
+      </button>
+    </div>
+
+    @for (link of links; track link.route) {
+      <a
+        class="admin-link"
+        [routerLink]="link.route"
+        [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
+        routerLinkActive="is-active"
+        (click)="closeSidebar()"
+      >
+        <app-icon [name]="link.icon" />
+        {{ i18n.t(link.key) }}
+      </a>
+    }
+
+    <a
+      class="admin-link"
+      [routerLink]="['/']"
+      (click)="closeSidebar()"
+      style="margin-block-start: auto"
+    >
+      <app-icon name="external" />
+      {{ i18n.t('admin.viewSite') }}
+    </a>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <button
+        type="button"
+        class="icon-btn admin-topbar__menu"
+        (click)="sidebarOpen.set(true)"
+        [attr.aria-label]="i18n.t('nav.openMenu')"
+      >
+        <app-icon name="menu" />
+      </button>
+
+      <span class="admin-topbar__title">{{ siteName() }}</span>
+
+      <div class="admin-topbar__actions">
+        <a class="btn btn--sm btn--ghost" [routerLink]="['/']">
+          <app-icon name="external" />
+          <span class="admin-topbar__site-label">{{ i18n.t('admin.viewSite') }}</span>
+        </a>
+        <span class="avatar" [attr.title]="auth.displayName()" aria-hidden="true">
+          {{ auth.initials() }}
+        </span>
+        <button
+          type="button"
+          class="icon-btn"
+          (click)="logout()"
+          [attr.aria-label]="i18n.t('nav.logout')"
+          [title]="i18n.t('nav.logout')"
+        >
+          <app-icon name="logout" />
+        </button>
+      </div>
+    </div>
+
+    <main id="admin-content" class="admin-content" tabindex="-1">
+      <router-outlet />
+    </main>
+  </div>
+</div>

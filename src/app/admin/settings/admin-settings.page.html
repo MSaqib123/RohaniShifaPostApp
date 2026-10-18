@@ -1,0 +1,130 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.settings.title') }}</h1>
+      <p>{{ i18n.t('admin.settings.sub') }}</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <form class="admin-form" (submit)="onSubmit($event)" novalidate>
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.featuredVideo')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.settings.featuredVideo') }}</h2>
+
+        <div class="field">
+          <label class="field__label" for="settings-video">
+            {{ i18n.t('admin.settings.featuredVideo') }}
+          </label>
+          <select
+            id="settings-video"
+            class="select"
+            [value]="featuredVideoId() ?? ''"
+            (change)="setFeaturedVideo($event)"
+          >
+            <option value="">{{ i18n.t('common.none') }}</option>
+            @for (video of videos(); track video.id) {
+              <option [value]="video.id">{{ videoTitle(video) }}</option>
+            }
+          </select>
+          @if (videos().length === 0) {
+            <p class="field__hint">{{ i18n.t('videos.emptyMessage') }}</p>
+          }
+        </div>
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.featuredPosts')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.settings.featuredPosts') }}</h2>
+
+        <div class="toolbar">
+          <div class="toolbar__search">
+            <app-icon name="search" />
+            <input
+              class="input"
+              type="search"
+              [placeholder]="i18n.t('admin.searchPosts')"
+              [value]="postSearch()"
+              (input)="onPostSearch($event)"
+            />
+          </div>
+          <span class="result-count">
+            {{ i18n.t('common.results', { count: featuredPostIds().length }) }}
+          </span>
+        </div>
+
+        @if (posts().length === 0) {
+          <app-content-state
+            kind="empty"
+            icon="post"
+            [title]="i18n.t('posts.empty')"
+            [message]="i18n.t('posts.emptyMessage')"
+          />
+        } @else if (filteredPosts().length === 0) {
+          <app-content-state
+            kind="empty"
+            icon="search"
+            [title]="i18n.t('admin.listEmptyFiltered')"
+            [message]="i18n.t('common.noResultsMessage')"
+          />
+        } @else {
+          <ul class="pick-list">
+            @for (post of filteredPosts(); track post.id) {
+              <li>
+                <label class="checkbox-row">
+                  <input
+                    type="checkbox"
+                    [checked]="isPostSelected(post.id)"
+                    (change)="togglePost(post.id)"
+                  />
+                  <span>{{ titleOf(post) }}</span>
+                </label>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.homeSections')">
+        <h2 class="admin-card__title">{{ i18n.t('admin.settings.homeSections') }}</h2>
+
+        <ul class="pick-list pick-list--grid">
+          @for (section of sections(); track section.id) {
+            <li>
+              <label class="checkbox-row">
+                <input
+                  type="checkbox"
+                  [checked]="section.enabled"
+                  (change)="toggleSection(section.id)"
+                />
+                <span>{{ sectionLabel(section.id) }}</span>
+              </label>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn btn--gold" type="submit" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner spinner--sm" aria-hidden="true"></span>
+            {{ i18n.t('common.saving') }}
+          } @else {
+            <app-icon name="check" />
+            {{ i18n.t('admin.settings.save') }}
+          }
+        </button>
+        <a class="btn btn--ghost" routerLink="/">{{ i18n.t('admin.viewSite') }}</a>
+      </div>
+    </form>
+  }
+</section>

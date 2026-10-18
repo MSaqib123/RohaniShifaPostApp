@@ -1,0 +1,41 @@
+<div class="engagement" [attr.aria-label]="i18n.t('common.like')">
+  <button
+    type="button"
+    class="eng-btn"
+    [class.eng-btn--active]="liked()"
+    [attr.aria-pressed]="liked()"
+    (click)="toggleLike()"
+  >
+    <app-icon name="heart" [filled]="liked()" />
+    <span>{{ liked() ? i18n.t('common.liked') : i18n.t('common.like') }}</span>
+    @if (likesCount() > 0) {
+      <span class="eng-btn__count">{{ likesCount() }}</span>
+    }
+  </button>
+
+  <button
+    type="button"
+    class="eng-btn"
+    [class.eng-btn--active]="bookmarked()"
+    [attr.aria-pressed]="bookmarked()"
+    (click)="toggleBookmark()"
+  >
+    <app-icon name="bookmark" [filled]="bookmarked()" />
+    <span>
+      {{ bookmarked() ? i18n.t('common.bookmarked') : i18n.t('common.bookmark') }}
+    </span>
+  </button>
+
+  @if (showComments()) {
+    <button type="button" class="eng-btn" (click)="focusComments()">
+      <app-icon name="comment" />
+      <span>
+        {{
+          commentsCount() > 0
+            ? i18n.t('comments.count', { count: commentsCount() })
+            : i18n.t('common.comment')
+        }}
+      </span>
+    </button>
+  }
+</div>

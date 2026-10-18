@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+// Rohani Shifa — global stylesheet entry point.
+// Order matters: tokens → base → utilities → components → patterns.
+@use 'styles/tokens';
+@use 'styles/base';
+@use 'styles/utilities';
+@use 'styles/components';
+@use 'styles/patterns';
+@use 'styles/layout';

@@ -1,0 +1,121 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.reports') }}</h1>
+      <p>
+        {{ i18n.t('admin.reports.reason') }} —
+        {{ i18n.t('common.results', { count: openCount() }) }}
+      </p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="toolbar">
+      <label class="sr-only" for="report-status-filter">{{ i18n.t('admin.filterStatus') }}</label>
+      <select
+        id="report-status-filter"
+        class="select toolbar__status"
+        [value]="statusFilter() ?? ''"
+        (change)="setStatusFilter(toStatus($event))"
+      >
+        @for (option of statusOptions; track option.value ?? 'all') {
+          <option [value]="option.value ?? ''">{{ option.label }}</option>
+        }
+      </select>
+      <span class="result-count">{{ i18n.t('common.results', { count: filtered().length }) }}</span>
+    </div>
+
+    @if (reports().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="flag"
+        [title]="i18n.t('admin.reports.empty')"
+        [message]="i18n.t('admin.reports.emptyMessage')"
+      />
+    } @else if (filtered().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="search"
+        [title]="i18n.t('admin.listEmptyFiltered')"
+        [message]="i18n.t('common.noResultsMessage')"
+      />
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n.t('admin.reports.reason') }}</th>
+              <th scope="col">{{ i18n.t('admin.reports.reportedBy') }}</th>
+              <th scope="col">{{ i18n.t('common.status') }}</th>
+              <th scope="col">{{ i18n.t('common.createdAt') }}</th>
+              <th scope="col">{{ i18n.t('common.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (report of filtered(); track report.id) {
+              <tr>
+                <td class="cell-title">
+                  {{ report.reason }}
+                  <span class="cell-sub">
+                    @if (targetLink(report); as link) {
+                      <a [routerLink]="link">{{ targetLabel(report) }}</a>
+                    } @else {
+                      {{ targetLabel(report) }}
+                    }
+                  </span>
+                </td>
+                <td>{{ report.reporterId }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.badge--danger]="report.status === 'open'"
+                    [class.badge--success]="report.status === 'reviewed'"
+                    [class.badge--muted]="report.status === 'dismissed'"
+                  >
+                    {{ statusLabel(report.status) }}
+                  </span>
+                </td>
+                <td>{{ report.createdAt | appDate: 'short' }}</td>
+                <td class="cell-actions">
+                  @if (report.status === 'open') {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="resolve(report, 'reviewed')"
+                      [attr.aria-label]="i18n.t('admin.reports.markReviewed')"
+                      [title]="i18n.t('admin.reports.markReviewed')"
+                    >
+                      <app-icon name="check-circle" />
+                    </button>
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="resolve(report, 'dismissed')"
+                      [attr.aria-label]="i18n.t('admin.reports.dismiss')"
+                      [title]="i18n.t('admin.reports.dismiss')"
+                    >
+                      <app-icon name="close" />
+                    </button>
+                  } @else {
+                    <span class="cell-note">{{ statusLabel(report.status) }}</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

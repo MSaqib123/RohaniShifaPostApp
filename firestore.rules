@@ -1,0 +1,91 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Rohani Shifa — Firestore Security Rules
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.get('admin', false) == true ||
+        request.auth.token.email == 'sain@gmail.com' ||
+        request.auth.token.email == 'Sain@gmail.com' ||
+        (request.auth.token.email != null && request.auth.token.email.lower() == 'sain@gmail.com') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function owns(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    // ── Content: posts ──
+    match /posts/{postId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    // ── Content: videos ──
+    match /videos/{videoId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    // ── Content: events ──
+    match /events/{eventId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    // ── Content: categories ──
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    // ── Platform settings ──
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if signedIn();
+    }
+
+    // ── User profiles ──
+    match /users/{uid} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+    }
+
+    // ── Engagement: likes & bookmarks ──
+    match /likes/{likeId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    match /bookmarks/{bookmarkId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    // ── Comments & Reports ──
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn();
+    }
+
+    match /reports/{reportId} {
+      allow read, write: if signedIn();
+    }
+
+    match /{document=**} {
+      allow read, write: if signedIn();
+    }
+  }
+}

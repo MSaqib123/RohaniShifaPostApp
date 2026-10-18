@@ -1,0 +1,22 @@
+.post-card__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+
+  .icon {
+    inline-size: 0.9rem;
+    block-size: 0.9rem;
+  }
+}
+
+.post-card__excerpt {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

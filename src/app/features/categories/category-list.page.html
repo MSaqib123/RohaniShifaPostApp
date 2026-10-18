@@ -1,0 +1,34 @@
+<section class="section container">
+  <header class="section-head">
+    <div class="section-head__titles">
+      <span class="section-head__kicker">{{ i18n.t('nav.categories') }}</span>
+      <h1 class="section-head__title">{{ i18n.t('categories.title') }}</h1>
+      <p class="section-head__sub">{{ i18n.t('categories.subtitle') }}</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else if (categories().length === 0) {
+    <app-content-state
+      kind="empty"
+      icon="grid"
+      [title]="i18n.t('categories.empty')"
+      [message]="i18n.t('categories.emptyMessage')"
+    />
+  } @else {
+    <div class="grid-cards">
+      @for (category of categories(); track category.id) {
+        <app-category-card [category]="category" />
+      }
+    </div>
+  }
+</section>

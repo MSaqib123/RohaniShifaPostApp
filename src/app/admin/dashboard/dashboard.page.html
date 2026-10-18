@@ -1,0 +1,69 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.welcome') }}</span>
+      <h1>{{ i18n.t('admin.dashboard') }}</h1>
+      <p>{{ i18n.t('admin.dashboardSub') }}</p>
+    </div>
+    <div class="admin-page__actions" style="display: flex; gap: 0.5rem; align-items: center;">
+      @if (firebase.configured) {
+        <button
+          type="button"
+          class="btn btn--outline btn--sm"
+          [disabled]="seeding()"
+          (click)="onSeedDemoData()"
+        >
+          <app-icon name="sparkle" />
+          {{ seeding() ? i18n.t('admin.seeding') : i18n.t('admin.seedDemoData') }}
+        </button>
+      }
+      <a class="btn btn--outline btn--sm" routerLink="/">
+        <app-icon name="external" />
+        {{ i18n.t('admin.viewSite') }}
+      </a>
+    </div>
+  </header>
+
+  @if (!firebase.configured) {
+    <div class="alert alert--info">
+      <app-icon name="info" />
+      <span>{{ i18n.t('common.demoModeMessage') }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="stat-grid">
+      @for (stat of stats(); track stat.key) {
+        <div class="stat-card">
+          <span class="stat-card__icon"><app-icon [name]="stat.icon" /></span>
+          <div>
+            <strong>{{ stat.value }}</strong>
+            <span>{{ i18n.t(stat.key) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <section class="admin-section" [attr.aria-label]="i18n.t('admin.quickActions')">
+      <h2>{{ i18n.t('admin.quickActions') }}</h2>
+      <div class="quick-actions">
+        @for (action of quickActions; track action.route) {
+          <a class="btn btn--outline" [routerLink]="action.route">
+            <app-icon [name]="action.icon" />
+            {{ i18n.t(action.key) }}
+          </a>
+        }
+      </div>
+    </section>
+  }
+</section>

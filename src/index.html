@@ -1,13 +1,67 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>RohaniShifa</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Rohani Shifa</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d5c46" />
+
+    <!-- Default SEO (SeoService overrides per route) -->
+    <meta
+      name="description"
+      content="Rohani Shifa — Islamic knowledge for a better life. Daily reminders, articles, videos and events in English, Urdu and Arabic."
+    />
+    <link rel="canonical" href="./" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rohani Shifa" />
+    <meta property="og:title" content="Rohani Shifa" />
+    <meta
+      property="og:description"
+      content="Islamic knowledge for a better life — daily reminders, videos and events."
+    />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Rohani Shifa" />
+    <meta
+      name="twitter:description"
+      content="Islamic knowledge for a better life — daily reminders, videos and events."
+    />
+
+    <!-- Favicon: replaced automatically when siteConfig.favicon is supplied (§3) -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Web app manifest (PWA-ready foundation, §32/§8) -->
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <!--
+      Typography: Latin (Inter), Arabic (Amiri), Urdu (Noto Nastaliq Urdu).
+      Self-host these fonts later if privacy rules require it — swap these
+      <link> tags only; the stacks live in src/styles/_tokens.scss.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <app-root>
+      <!-- Pre-hydration fallback (removed by Angular on bootstrap) -->
+      <div
+        style="
+          min-height: 100dvh;
+          display: grid;
+          place-items: center;
+          font-family: system-ui, sans-serif;
+          color: #0d5c46;
+        "
+      >
+        <strong>Rohani Shifa</strong>
+      </div>
+    </app-root>
+  </body>
 </html>

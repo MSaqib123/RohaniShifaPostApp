@@ -1,0 +1,71 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// ISLAMIC VISUAL LANGUAGE — subtle geometric patterns & ornamental details (§4)
+// Deliberately restrained: patterns are low-contrast background texture only.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 8-pointed star (rub el hizb inspired) tessellation — light surfaces.
+.pattern-geo {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%230d5c46' stroke-opacity='0.09' stroke-width='1'%3E%3Crect x='20' y='20' width='32' height='32' rx='2'/%3E%3Crect x='20' y='20' width='32' height='32' rx='2' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='4'/%3E%3Cpath d='M0 36h8M64 36h8M36 0v8M36 64v8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+}
+
+// Same tessellation rendered in gold for deep-green surfaces.
+.pattern-geo-gold {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23eecd75' stroke-opacity='0.18' stroke-width='1'%3E%3Crect x='20' y='20' width='32' height='32' rx='2'/%3E%3Crect x='20' y='20' width='32' height='32' rx='2' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='4'/%3E%3Cpath d='M0 36h8M64 36h8M36 0v8M36 64v8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+}
+
+// Soft radial glow used behind heroes / featured blocks.
+.glow-soft {
+  background-image:
+    radial-gradient(60rem 28rem at 85% -10%, rgba(201, 162, 39, 0.14), transparent 60%),
+    radial-gradient(50rem 30rem at -10% 110%, rgba(21, 145, 108, 0.12), transparent 60%);
+}
+
+// Ornamental gold divider between sections.
+.gold-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block: var(--sp-6);
+  color: var(--c-gold-500);
+
+  &::before,
+  &::after {
+    content: '';
+    block-size: 1px;
+    inline-size: min(7rem, 20vw);
+    background: linear-gradient(90deg, transparent, var(--c-gold-400));
+  }
+
+  &::after {
+    background: linear-gradient(90deg, var(--c-gold-400), transparent);
+  }
+
+  .icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+}
+
+// Pointed-arch silhouette (mihrab hint) for framed imagery — decorative only.
+.arch-frame {
+  border-radius: 50% 50% var(--r-lg) var(--r-lg) / 32% 32% var(--r-lg) var(--r-lg);
+  overflow: hidden;
+}
+
+// Thin double rule in gold — a classical manuscript accent.
+.rule-gold {
+  border: 0;
+  block-size: auto;
+  background:
+    linear-gradient(var(--c-gold-500), var(--c-gold-500)) center / 100% 1px no-repeat,
+    linear-gradient(var(--c-gold-500), var(--c-gold-500)) center / 100% 1px no-repeat;
+  background-position:
+    center 2px,
+    center 5px;
+  background-repeat: no-repeat;
+  block-size: 6px;
+  opacity: 0.7;
+}

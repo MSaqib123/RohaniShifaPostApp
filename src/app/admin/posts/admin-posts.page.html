@@ -1,0 +1,130 @@
+<section class="admin-page">
+  <header class="admin-page__head">
+    <div>
+      <span class="admin-page__kicker">{{ i18n.t('admin.dashboard') }}</span>
+      <h1>{{ i18n.t('admin.posts') }}</h1>
+    </div>
+    <a class="btn btn--gold" routerLink="/admin/posts/new">
+      <app-icon name="plus" />
+      {{ i18n.t('admin.newPost') }}
+    </a>
+  </header>
+
+  @if (loading()) {
+    <app-content-state kind="loading" />
+  } @else if (error()) {
+    <app-content-state
+      kind="error"
+      icon="alert-triangle"
+      [title]="i18n.t('common.errorTitle')"
+      [message]="i18n.t('common.errorMessage')"
+      (retry)="retry()"
+    />
+  } @else {
+    <div class="toolbar">
+      <div class="toolbar__search">
+        <app-icon name="search" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="i18n.t('admin.searchPosts')"
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+        />
+      </div>
+
+      <label class="sr-only" for="status-filter">{{ i18n.t('admin.filterStatus') }}</label>
+      <select
+        id="status-filter"
+        class="select toolbar__status"
+        [value]="statusFilter() ?? ''"
+        (change)="setStatus(toStatus($event))"
+      >
+        @for (option of statusOptions(); track option.value ?? 'all') {
+          <option [value]="option.value ?? ''">{{ option.label }}</option>
+        }
+      </select>
+
+      @if (hasFilters()) {
+        <button type="button" class="btn btn--ghost btn--sm" (click)="clearFilters()">
+          <app-icon name="close" />
+          {{ i18n.t('common.clear') }}
+        </button>
+      }
+
+      <span class="result-count">{{ i18n.t('common.results', { count: filtered().length }) }}</span>
+    </div>
+
+    @if (filtered().length === 0) {
+      <app-content-state
+        kind="empty"
+        icon="post"
+        [title]="hasFilters() ? i18n.t('admin.listEmptyFiltered') : i18n.t('admin.listEmpty')"
+        [message]="
+          hasFilters() ? i18n.t('common.noResultsMessage') : i18n.t('admin.listEmptyMessage')
+        "
+      />
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n.t('admin.postForm.title') }}</th>
+              <th scope="col">{{ i18n.t('common.type') }}</th>
+              <th scope="col">{{ i18n.t('common.status') }}</th>
+              <th scope="col">{{ i18n.t('common.updatedAt') }}</th>
+              <th scope="col">{{ i18n.t('common.actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (post of filtered(); track post.id) {
+              <tr>
+                <td class="cell-title">{{ titleOf(post) }}</td>
+                <td>{{ typeLabel(post.type) }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [class.badge--success]="post.status === 'published'"
+                    [class.badge--muted]="post.status !== 'published'"
+                  >
+                    {{ statusLabel(post.status) }}
+                  </span>
+                </td>
+                <td>{{ post.updatedAt | appDate: 'short' }}</td>
+                <td class="cell-actions">
+                  <a
+                    class="icon-btn"
+                    [routerLink]="['/admin/posts', post.id, 'edit']"
+                    [attr.aria-label]="i18n.t('common.edit')"
+                    [title]="i18n.t('common.edit')"
+                  >
+                    <app-icon name="edit" />
+                  </a>
+                  @if (post.status === 'published') {
+                    <a
+                      class="icon-btn"
+                      [routerLink]="['/posts', post.id]"
+                      [attr.aria-label]="i18n.t('common.viewDetails')"
+                      [title]="i18n.t('common.viewDetails')"
+                    >
+                      <app-icon name="eye" />
+                    </a>
+                  }
+                  <button
+                    type="button"
+                    class="icon-btn icon-btn--danger"
+                    (click)="remove(post)"
+                    [attr.aria-label]="i18n.t('common.delete')"
+                    [title]="i18n.t('common.delete')"
+                  >
+                    <app-icon name="trash" />
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>
