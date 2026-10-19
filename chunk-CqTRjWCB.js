@@ -1,0 +1,1 @@
+var n=[`article`,`reminder`,`hadith`,`quran`,`announcement`,`event`];function s(t,e,r){return`${t}_${e}_${r}`}export{s as n,n as t};
