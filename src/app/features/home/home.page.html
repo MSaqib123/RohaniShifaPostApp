@@ -1,29 +1,73 @@
 @if (isVisible('hero')) {
-  <section class="hero pattern-geo-gold" aria-labelledby="hero-title">
-    <div class="container hero__inner">
-      <div class="hero__content">
-        <span class="hero__kicker">
-          <app-icon name="mosque" />
-          {{ i18n.t('home.heroKicker') }}
-        </span>
-        <h1 class="hero__title" id="hero-title">{{ siteName() }}</h1>
-        <p class="hero__tagline">{{ tagline() }}</p>
-        <p class="hero__sub">{{ i18n.t('home.heroSubtitle') }}</p>
-        <div class="hero__actions">
-          <a class="btn btn--gold btn--lg" routerLink="/videos">
-            <app-icon name="play" filled />
-            {{ i18n.t('home.heroPrimary') }}
-          </a>
-          <a class="btn btn--outline btn--lg" routerLink="/posts">
-            {{ i18n.t('home.heroSecondary') }}
-          </a>
-        </div>
-      </div>
+  <section class="hero-showcase" aria-labelledby="hero-title">
+    <div class="container hero-showcase__container">
+      <div class="hero-showcase__frame" role="region" [attr.aria-label]="heroBannerAlt()">
+        <img [src]="heroBannerUrl()" [alt]="heroBannerAlt()" class="hero-showcase__img" />
 
-      <div class="hero__art" aria-hidden="true">
-        <div class="hero__image-frame">
-          <img [src]="heroBannerUrl()" [alt]="heroBannerAlt()" class="hero__image" />
-        </div>
+        @if (showOverlays()) {
+          <div class="hero-showcase__overlays" aria-hidden="false">
+            <!-- Left Side Quick Category Pills -->
+            @if (showPills()) {
+              <nav class="hero-pills" aria-label="Quick Categories">
+                <a routerLink="/posts" [queryParams]="{ search: 'quran' }" class="hero-pill">
+                  <span class="hero-pill__icon"><app-icon name="book" /></span>
+                  <span class="hero-pill__text">{{ pill1() }}</span>
+                </a>
+                <a routerLink="/posts" [queryParams]="{ search: 'hadith' }" class="hero-pill">
+                  <span class="hero-pill__icon"><app-icon name="mosque" /></span>
+                  <span class="hero-pill__text">{{ pill2() }}</span>
+                </a>
+                <a routerLink="/posts" [queryParams]="{ search: 'dua' }" class="hero-pill">
+                  <span class="hero-pill__icon"><app-icon name="heart" /></span>
+                  <span class="hero-pill__text">{{ pill3() }}</span>
+                </a>
+                <a routerLink="/posts" class="hero-pill">
+                  <span class="hero-pill__icon"><app-icon name="grid" /></span>
+                  <span class="hero-pill__text">{{ pill4() }}</span>
+                </a>
+              </nav>
+            }
+
+            <!-- Bottom Left Golden Quote Badge -->
+            @if (bannerQuote()) {
+              <div class="hero-quote-badge">
+                <div class="hero-quote-badge__inner">
+                  <span class="hero-quote-badge__ornament">✦</span>
+                  <div class="hero-quote-badge__content">
+                    <span class="hero-quote-badge__line1">{{ bannerQuoteLines().line1 }}</span>
+                    @if (bannerQuoteLines().line2) {
+                      <span class="hero-quote-badge__line2">{{ bannerQuoteLines().line2 }}</span>
+                    }
+                  </div>
+                  <span class="hero-quote-badge__ornament">✦</span>
+                </div>
+              </div>
+            }
+
+            <!-- Top Right Calligraphy, Ribbon & Tagline -->
+            <div class="hero-titles-block">
+              @if (bannerTitle()) {
+                <h1 class="hero-calligraphy" id="hero-title">
+                  {{ bannerTitle() }}
+                </h1>
+              }
+
+              @if (bannerSubtitle()) {
+                <div class="hero-ribbon">
+                  <span class="hero-ribbon__notch hero-ribbon__notch--start"></span>
+                  <span class="hero-ribbon__text">{{ bannerSubtitle() }}</span>
+                  <span class="hero-ribbon__notch hero-ribbon__notch--end"></span>
+                </div>
+              }
+
+              @if (bannerTagline()) {
+                <p class="hero-tagline-text">
+                  {{ bannerTagline() }}
+                </p>
+              }
+            </div>
+          </div>
+        }
       </div>
     </div>
   </section>

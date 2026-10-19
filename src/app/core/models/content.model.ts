@@ -152,5 +152,15 @@ export interface SiteSettings {
   homeSections?: Array<{ id: string; enabled: boolean }>;
   heroBannerUrl?: string | null;
   heroBannerAlt?: string | null;
+  heroBannerShowOverlays?: boolean;
+  heroBannerTitle?: string | null;
+  heroBannerSubtitle?: string | null;
+  heroBannerTagline?: string | null;
+  heroBannerQuote?: string | null;
+  heroBannerShowPills?: boolean;
+  heroBannerPill1?: string | null;
+  heroBannerPill2?: string | null;
+  heroBannerPill3?: string | null;
+  heroBannerPill4?: string | null;
   updatedAt?: Timestamp;
 }

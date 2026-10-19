@@ -123,6 +123,23 @@
                 [alt]="heroBannerAlt() || 'Banner preview'"
                 class="banner-preview-img"
               />
+              @if (heroBannerShowOverlays()) {
+                <div class="banner-live-preview-overlay">
+                  <div class="mini-top-right">
+                    <div class="mini-title">{{ heroBannerTitle() }}</div>
+                    <div class="mini-ribbon">{{ heroBannerSubtitle() }}</div>
+                    <div class="mini-tagline">{{ heroBannerTagline() }}</div>
+                  </div>
+                  @if (heroBannerShowPills()) {
+                    <div class="mini-pills">
+                      <span>{{ heroBannerPill1() }}</span>
+                      <span>{{ heroBannerPill2() }}</span>
+                      <span>{{ heroBannerPill3() }}</span>
+                    </div>
+                  }
+                  <div class="mini-quote">{{ heroBannerQuote() }}</div>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -156,6 +173,159 @@
               (input)="onBannerAltChange($event)"
             />
           </div>
+        </div>
+
+        <!-- Dynamic Overlay Objects Section -->
+        <div class="banner-overlays-panel">
+          <div class="banner-overlays-panel__head">
+            <div>
+              <h3 class="banner-overlays-panel__title">
+                {{ i18n.t('admin.settings.bannerOverlaysSection') }}
+              </h3>
+              <p class="banner-overlays-panel__desc">
+                {{ i18n.t('admin.settings.bannerOverlaysSub') }}
+              </p>
+            </div>
+            <label class="toggle-control">
+              <input
+                type="checkbox"
+                [checked]="heroBannerShowOverlays()"
+                (change)="onBannerShowOverlaysToggle($event)"
+              />
+              <span class="toggle-control__label">{{ i18n.t('admin.settings.showOverlays') }}</span>
+            </label>
+          </div>
+
+          @if (heroBannerShowOverlays()) {
+            <div class="fields-row">
+              <div class="field">
+                <label class="field__label" for="banner-title">
+                  {{ i18n.t('admin.settings.bannerTitle') }}
+                </label>
+                <input
+                  id="banner-title"
+                  class="input input--urdu"
+                  type="text"
+                  [value]="heroBannerTitle()"
+                  (input)="onBannerTitleChange($event)"
+                  placeholder="اسلامی تعلیمات"
+                />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="banner-subtitle">
+                  {{ i18n.t('admin.settings.bannerSubtitle') }}
+                </label>
+                <input
+                  id="banner-subtitle"
+                  class="input input--urdu"
+                  type="text"
+                  [value]="heroBannerSubtitle()"
+                  (input)="onBannerSubtitleChange($event)"
+                  placeholder="قرآن و حدیث کی روشنی میں"
+                />
+              </div>
+            </div>
+
+            <div class="fields-row">
+              <div class="field">
+                <label class="field__label" for="banner-tagline">
+                  {{ i18n.t('admin.settings.bannerTagline') }}
+                </label>
+                <input
+                  id="banner-tagline"
+                  class="input"
+                  type="text"
+                  [value]="heroBannerTagline()"
+                  (input)="onBannerTaglineChange($event)"
+                  placeholder="Islamic Knowledge for a Better Life"
+                />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="banner-quote">
+                  {{ i18n.t('admin.settings.bannerQuote') }}
+                </label>
+                <input
+                  id="banner-quote"
+                  class="input input--urdu"
+                  type="text"
+                  [value]="heroBannerQuote()"
+                  (input)="onBannerQuoteChange($event)"
+                  placeholder="اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے"
+                />
+              </div>
+            </div>
+
+            <!-- Quick Category Pills -->
+            <div class="pills-custom-block">
+              <div class="pills-custom-block__header">
+                <label class="toggle-control">
+                  <input
+                    type="checkbox"
+                    [checked]="heroBannerShowPills()"
+                    (change)="onBannerShowPillsToggle($event)"
+                  />
+                  <span class="toggle-control__label">{{
+                    i18n.t('admin.settings.showPills')
+                  }}</span>
+                </label>
+              </div>
+
+              @if (heroBannerShowPills()) {
+                <div class="pills-grid">
+                  <div class="field">
+                    <label class="field__label" for="pill-1">{{
+                      i18n.t('admin.settings.pill1')
+                    }}</label>
+                    <input
+                      id="pill-1"
+                      class="input"
+                      type="text"
+                      [value]="heroBannerPill1()"
+                      (input)="onBannerPill1Change($event)"
+                    />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pill-2">{{
+                      i18n.t('admin.settings.pill2')
+                    }}</label>
+                    <input
+                      id="pill-2"
+                      class="input"
+                      type="text"
+                      [value]="heroBannerPill2()"
+                      (input)="onBannerPill2Change($event)"
+                    />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pill-3">{{
+                      i18n.t('admin.settings.pill3')
+                    }}</label>
+                    <input
+                      id="pill-3"
+                      class="input"
+                      type="text"
+                      [value]="heroBannerPill3()"
+                      (input)="onBannerPill3Change($event)"
+                    />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pill-4">{{
+                      i18n.t('admin.settings.pill4')
+                    }}</label>
+                    <input
+                      id="pill-4"
+                      class="input"
+                      type="text"
+                      [value]="heroBannerPill4()"
+                      (input)="onBannerPill4Change($event)"
+                    />
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
       </section>
 

@@ -566,6 +566,19 @@ export const en = {
   'admin.settings.imageSize': 'File size: {size}',
   'admin.settings.bannerUploaded': 'Banner loaded successfully',
   'admin.settings.invalidImage': 'Please select a valid image file (JPG, PNG, or WebP) under 2 MB.',
+  'admin.settings.bannerOverlaysSection': 'Banner Dynamic Overlays & Text',
+  'admin.settings.bannerOverlaysSub':
+    'Customize the dynamic calligraphy title, ribbon subtitle, tagline, quick pills, and quote badge overlaid on top of the hero banner.',
+  'admin.settings.showOverlays': 'Show text and badge overlays on banner',
+  'admin.settings.bannerTitle': 'Main Title (Calligraphy)',
+  'admin.settings.bannerSubtitle': 'Ribbon Subtitle',
+  'admin.settings.bannerTagline': 'English Tagline / Subtitle',
+  'admin.settings.bannerQuote': 'Bottom Quote / Plaque',
+  'admin.settings.showPills': 'Show Category Quick-Pills',
+  'admin.settings.pill1': 'Pill 1 Label (Quran)',
+  'admin.settings.pill2': 'Pill 2 Label (Hadith)',
+  'admin.settings.pill3': 'Pill 3 Label (Dua)',
+  'admin.settings.pill4': 'Pill 4 Label (Islamic Education)',
 
   // ── Errors / not found ────────────────────────────────────────────────────
   'error.notFoundTitle': 'Page not found',

@@ -20,23 +20,23 @@ describe('I18nService', () => {
     localStorage.removeItem(STORAGE_KEY);
   });
 
-  it('starts in English, LTR, with the document tagged accordingly', () => {
-    expect(i18n.language()).toBe('en');
-    expect(i18n.dir()).toBe('ltr');
-    expect(i18n.t('nav.home')).toBe(en['nav.home']);
-    expect(document.documentElement.lang).toBe('en');
-    expect(document.documentElement.dir).toBe('ltr');
-  });
-
-  it('switches to Urdu: dictionary, direction, <html lang> and persistence', async () => {
-    await i18n.setLanguage('ur');
-
+  it('starts in Urdu, RTL, with the document tagged accordingly', () => {
     expect(i18n.language()).toBe('ur');
     expect(i18n.dir()).toBe('rtl');
     expect(i18n.t('nav.home')).toBe(ur['nav.home']);
     expect(document.documentElement.lang).toBe('ur');
     expect(document.documentElement.dir).toBe('rtl');
-    expect(localStorage.getItem(STORAGE_KEY)).toBe('ur');
+  });
+
+  it('switches to English: dictionary, direction, <html lang> and persistence', async () => {
+    await i18n.setLanguage('en');
+
+    expect(i18n.language()).toBe('en');
+    expect(i18n.dir()).toBe('ltr');
+    expect(i18n.t('nav.home')).toBe(en['nav.home']);
+    expect(document.documentElement.lang).toBe('en');
+    expect(document.documentElement.dir).toBe('ltr');
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('en');
   });
 
   it('switches to Arabic: dictionary, direction, <html lang> and persistence', async () => {
@@ -50,24 +50,25 @@ describe('I18nService', () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBe('ar');
   });
 
-  it('returns to English and clears the RTL direction', async () => {
-    await i18n.setLanguage('ar');
+  it('switches to Urdu and restores the RTL direction', async () => {
     await i18n.setLanguage('en');
+    await i18n.setLanguage('ur');
 
-    expect(i18n.language()).toBe('en');
-    expect(i18n.dir()).toBe('ltr');
-    expect(i18n.t('nav.posts')).toBe(en['nav.posts']);
-    expect(document.documentElement.dir).toBe('ltr');
+    expect(i18n.language()).toBe('ur');
+    expect(i18n.dir()).toBe('rtl');
+    expect(i18n.t('nav.posts')).toBe(ur['nav.posts']);
+    expect(document.documentElement.dir).toBe('rtl');
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('ur');
   });
 
   it('ignores a repeat switch to the active language', async () => {
-    await i18n.setLanguage('en');
-    expect(i18n.language()).toBe('en');
-    expect(i18n.t('nav.home')).toBe(en['nav.home']);
+    await i18n.setLanguage('ur');
+    expect(i18n.language()).toBe('ur');
+    expect(i18n.t('nav.home')).toBe(ur['nav.home']);
   });
 
   it('interpolates parameters and echoes unknown keys', () => {
-    expect(i18n.t('common.results', { count: 7 })).toBe('7 results');
+    expect(i18n.t('common.results', { count: 7 })).toBe('7 نتائج');
     expect(i18n.t('no.such.key')).toBe('no.such.key');
   });
 

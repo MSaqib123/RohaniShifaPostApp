@@ -8,14 +8,18 @@ import {
   TranslationParams,
 } from './language.types';
 import { en } from './translations/en';
+import { ur } from './translations/ur';
 
 export type TranslationKey = keyof typeof en;
 
 const STORAGE_KEY = 'rohani-shifa.lang';
 
-/** Dictionaries are cached across the session; `en` is bundled synchronously
- *  (no flash of raw keys), other languages load as lazy chunks. */
-const cache = new Map<SupportedLanguage, Record<string, string>>([['en', en]]);
+/** Dictionaries are cached across the session; `ur` (default) and `en` are
+ *  bundled synchronously (no flash of raw keys), other languages load as lazy chunks. */
+const cache = new Map<SupportedLanguage, Record<string, string>>([
+  ['en', en],
+  ['ur', ur],
+]);
 
 function isSupportedLanguage(value: unknown): value is SupportedLanguage {
   return siteConfig.languages.some((l) => l.code === value);
@@ -70,7 +74,9 @@ export class I18nService {
   readonly dir = computed<TextDirection>(() => this.dirOf(this.language()));
 
   /** Loaded dictionary; signal reads inside `t()` re-render bound views. */
-  private readonly dict = signal<Record<string, string>>(en);
+  private readonly dict = signal<Record<string, string>>(
+    cache.get(readStoredLanguage() ?? siteConfig.defaultLanguage) ?? ur,
+  );
 
   /** Available languages come from siteConfig (§3 — replaceable branding). */
   readonly languages = siteConfig.languages;
@@ -81,8 +87,11 @@ export class I18nService {
 
   constructor() {
     this.applyDocumentLanguage(this.language());
-    if (this.language() !== 'en' || !cache.has(this.language())) {
+    if (!cache.has(this.language())) {
       void this.loadIntoView(this.language());
+    } else {
+      const hit = cache.get(this.language());
+      if (hit) this.dict.set(hit);
     }
   }
 

@@ -59,6 +59,16 @@ export class AdminSettingsPage {
 
   readonly heroBannerUrl = signal<string>('');
   readonly heroBannerAlt = signal<string>('');
+  readonly heroBannerShowOverlays = signal<boolean>(true);
+  readonly heroBannerTitle = signal<string>('اسلامی تعلیمات');
+  readonly heroBannerSubtitle = signal<string>('قرآن و حدیث کی روشنی میں');
+  readonly heroBannerTagline = signal<string>('Islamic Knowledge for a Better Life');
+  readonly heroBannerQuote = signal<string>('اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
+  readonly heroBannerShowPills = signal<boolean>(true);
+  readonly heroBannerPill1 = signal<string>('Quran');
+  readonly heroBannerPill2 = signal<string>('Hadith');
+  readonly heroBannerPill3 = signal<string>('Dua');
+  readonly heroBannerPill4 = signal<string>('Islamic Education');
   readonly bannerDimensions = signal<{ width: number; height: number; sizeStr: string } | null>(
     null,
   );
@@ -66,7 +76,7 @@ export class AdminSettingsPage {
 
   readonly currentBannerPreview = computed(() => {
     const custom = this.heroBannerUrl().trim();
-    return custom || 'images/islamic-hero.jpg';
+    return custom || 'images/hero-banner.jpg';
   });
 
   readonly postSearch = signal('');
@@ -139,10 +149,60 @@ export class AdminSettingsPage {
     this.heroBannerAlt.set((event.target as HTMLInputElement).value);
   }
 
+  onBannerShowOverlaysToggle(event: Event): void {
+    this.heroBannerShowOverlays.set((event.target as HTMLInputElement).checked);
+  }
+
+  onBannerTitleChange(event: Event): void {
+    this.heroBannerTitle.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerSubtitleChange(event: Event): void {
+    this.heroBannerSubtitle.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerTaglineChange(event: Event): void {
+    this.heroBannerTagline.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerQuoteChange(event: Event): void {
+    this.heroBannerQuote.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerShowPillsToggle(event: Event): void {
+    this.heroBannerShowPills.set((event.target as HTMLInputElement).checked);
+  }
+
+  onBannerPill1Change(event: Event): void {
+    this.heroBannerPill1.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerPill2Change(event: Event): void {
+    this.heroBannerPill2.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerPill3Change(event: Event): void {
+    this.heroBannerPill3.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerPill4Change(event: Event): void {
+    this.heroBannerPill4.set((event.target as HTMLInputElement).value);
+  }
+
   resetDefaultBanner(): void {
     this.heroBannerUrl.set('');
     this.heroBannerAlt.set('');
     this.bannerDimensions.set(null);
+    this.heroBannerShowOverlays.set(true);
+    this.heroBannerTitle.set('اسلامی تعلیمات');
+    this.heroBannerSubtitle.set('قرآن و حدیث کی روشنی میں');
+    this.heroBannerTagline.set('Islamic Knowledge for a Better Life');
+    this.heroBannerQuote.set('اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
+    this.heroBannerShowPills.set(true);
+    this.heroBannerPill1.set('Quran');
+    this.heroBannerPill2.set('Hadith');
+    this.heroBannerPill3.set('Dua');
+    this.heroBannerPill4.set('Islamic Education');
   }
 
   onBannerDragOver(event: DragEvent): void {
@@ -259,6 +319,16 @@ export class AdminSettingsPage {
       homeSections: this.sections(),
       heroBannerUrl: this.heroBannerUrl().trim() || null,
       heroBannerAlt: this.heroBannerAlt().trim() || null,
+      heroBannerShowOverlays: this.heroBannerShowOverlays(),
+      heroBannerTitle: this.heroBannerTitle().trim() || null,
+      heroBannerSubtitle: this.heroBannerSubtitle().trim() || null,
+      heroBannerTagline: this.heroBannerTagline().trim() || null,
+      heroBannerQuote: this.heroBannerQuote().trim() || null,
+      heroBannerShowPills: this.heroBannerShowPills(),
+      heroBannerPill1: this.heroBannerPill1().trim() || null,
+      heroBannerPill2: this.heroBannerPill2().trim() || null,
+      heroBannerPill3: this.heroBannerPill3().trim() || null,
+      heroBannerPill4: this.heroBannerPill4().trim() || null,
     };
     try {
       await this.adminService.saveSettings(patch);
@@ -326,6 +396,38 @@ export class AdminSettingsPage {
     }
     if (settings.heroBannerAlt !== undefined) {
       this.heroBannerAlt.set(settings.heroBannerAlt ?? '');
+    }
+    if (settings.heroBannerShowOverlays !== undefined) {
+      this.heroBannerShowOverlays.set(settings.heroBannerShowOverlays);
+    }
+    if (settings.heroBannerTitle !== undefined) {
+      this.heroBannerTitle.set(settings.heroBannerTitle ?? 'اسلامی تعلیمات');
+    }
+    if (settings.heroBannerSubtitle !== undefined) {
+      this.heroBannerSubtitle.set(settings.heroBannerSubtitle ?? 'قرآن و حدیث کی روشنی میں');
+    }
+    if (settings.heroBannerTagline !== undefined) {
+      this.heroBannerTagline.set(
+        settings.heroBannerTagline ?? 'Islamic Knowledge for a Better Life',
+      );
+    }
+    if (settings.heroBannerQuote !== undefined) {
+      this.heroBannerQuote.set(settings.heroBannerQuote ?? 'اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
+    }
+    if (settings.heroBannerShowPills !== undefined) {
+      this.heroBannerShowPills.set(settings.heroBannerShowPills);
+    }
+    if (settings.heroBannerPill1 !== undefined) {
+      this.heroBannerPill1.set(settings.heroBannerPill1 ?? 'Quran');
+    }
+    if (settings.heroBannerPill2 !== undefined) {
+      this.heroBannerPill2.set(settings.heroBannerPill2 ?? 'Hadith');
+    }
+    if (settings.heroBannerPill3 !== undefined) {
+      this.heroBannerPill3.set(settings.heroBannerPill3 ?? 'Dua');
+    }
+    if (settings.heroBannerPill4 !== undefined) {
+      this.heroBannerPill4.set(settings.heroBannerPill4 ?? 'Islamic Education');
     }
 
     if (settings.homeSections?.length) {

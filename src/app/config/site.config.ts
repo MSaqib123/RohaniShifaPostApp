@@ -90,7 +90,7 @@ export const siteConfig: SiteConfig = {
     { code: 'ur', label: 'Urdu', nativeLabel: 'اردو', dir: 'rtl' },
     { code: 'ar', label: 'Arabic', nativeLabel: 'العربية', dir: 'rtl' },
   ],
-  defaultLanguage: 'en',
+  defaultLanguage: 'ur',
   homeSections: [
     { id: 'hero', enabled: true },
     { id: 'dailyReminder', enabled: true },
