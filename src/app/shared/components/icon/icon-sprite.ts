@@ -260,6 +260,23 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <path d="M12 3.5 13.8 9l5.7 1.8-5.7 1.8L12 18.5l-1.8-5.9-5.7-1.8L10.2 9Z" />
         <path d="M19 3v3M20.5 4.5h-3" />
       </symbol>
+      <symbol id="i-quran-open" viewBox="0 0 24 24">
+        <path
+          d="M2 5.5C3.5 4.5 6 4 9 4c2.5 0 4 .8 5 1.5 1-.7 2.5-1.5 5-1.5 3 0 5.5.5 7 1.5v13c-1.5-1-4-1.5-7-1.5-2.5 0-4 .8-5 1.5-1-.7-2.5-1.5-5-1.5-3 0-5.5.5-7 1.5Z"
+        />
+        <path d="M14 5.5v13" />
+        <path d="M5 8h4M5 11h4M19 8h-4M19 11h-4" />
+      </symbol>
+      <symbol id="i-hands-dua" viewBox="0 0 24 24">
+        <path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v5" />
+        <path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8" />
+        <path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7.5" />
+        <path d="M6 12V9a2 2 0 0 0-2-2 2 2 0 0 0-2 2v6c0 4.5 3.5 8 8 8h1c4 0 7-3 8-7l1-5" />
+      </symbol>
+      <symbol id="i-graduation-cap" viewBox="0 0 24 24">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5Z" />
+        <path d="M6 12.5v5c3 3 9 3 12 0v-5" />
+      </symbol>
     </svg>
   `,
 })

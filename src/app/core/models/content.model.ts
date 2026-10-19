@@ -153,14 +153,14 @@ export interface SiteSettings {
   heroBannerUrl?: string | null;
   heroBannerAlt?: string | null;
   heroBannerShowOverlays?: boolean;
-  heroBannerTitle?: string | null;
-  heroBannerSubtitle?: string | null;
-  heroBannerTagline?: string | null;
-  heroBannerQuote?: string | null;
+  heroBannerTitle?: LocalizedText | string | null;
+  heroBannerSubtitle?: LocalizedText | string | null;
+  heroBannerTagline?: LocalizedText | string | null;
+  heroBannerQuote?: LocalizedText | string | null;
   heroBannerShowPills?: boolean;
-  heroBannerPill1?: string | null;
-  heroBannerPill2?: string | null;
-  heroBannerPill3?: string | null;
-  heroBannerPill4?: string | null;
+  heroBannerPill1?: LocalizedText | string | null;
+  heroBannerPill2?: LocalizedText | string | null;
+  heroBannerPill3?: LocalizedText | string | null;
+  heroBannerPill4?: LocalizedText | string | null;
   updatedAt?: Timestamp;
 }

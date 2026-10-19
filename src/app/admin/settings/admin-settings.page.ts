@@ -6,9 +6,30 @@ import { PostService } from '../../core/services/post.service';
 import { VideoService } from '../../core/services/video.service';
 import { ToastService } from '../../core/services/toast.service';
 import { I18nService, TranslationKey } from '../../i18n/i18n.service';
+import { LocalizedText, SupportedLanguage } from '../../i18n/language.types';
 import { siteConfig } from '../../config/site.config';
 import { ContentStateComponent } from '../../shared/components/content-state';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { DEFAULT_BANNER_OVERLAYS } from '../../features/home/home.page';
+
+function parseLocalizedField(
+  val: unknown,
+  fallback: Record<'en' | 'ur' | 'ar', string>,
+): LocalizedText {
+  if (!val) return { ...fallback };
+  if (typeof val === 'string') {
+    return { en: fallback.en, ur: val, ar: fallback.ar };
+  }
+  if (typeof val === 'object') {
+    const o = val as Record<string, string>;
+    return {
+      en: o['en'] ?? fallback.en,
+      ur: o['ur'] ?? fallback.ur,
+      ar: o['ar'] ?? fallback.ar,
+    };
+  }
+  return { ...fallback };
+}
 
 /** Human labels for the section ids defined in `siteConfig.homeSections`. */
 const SECTION_KEYS: Record<string, TranslationKey> = {
@@ -60,19 +81,90 @@ export class AdminSettingsPage {
   readonly heroBannerUrl = signal<string>('');
   readonly heroBannerAlt = signal<string>('');
   readonly heroBannerShowOverlays = signal<boolean>(true);
-  readonly heroBannerTitle = signal<string>('اسلامی تعلیمات');
-  readonly heroBannerSubtitle = signal<string>('قرآن و حدیث کی روشنی میں');
-  readonly heroBannerTagline = signal<string>('Islamic Knowledge for a Better Life');
-  readonly heroBannerQuote = signal<string>('اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
+
+  /** Currently selected language tab for editing the overlay fields */
+  readonly overlayEditingLang = signal<SupportedLanguage>('ur');
+
+  readonly heroBannerTitle = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.title.ur,
+    en: DEFAULT_BANNER_OVERLAYS.title.en,
+    ar: DEFAULT_BANNER_OVERLAYS.title.ar,
+  });
+  readonly heroBannerSubtitle = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.subtitle.ur,
+    en: DEFAULT_BANNER_OVERLAYS.subtitle.en,
+    ar: DEFAULT_BANNER_OVERLAYS.subtitle.ar,
+  });
+  readonly heroBannerTagline = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.tagline.ur,
+    en: DEFAULT_BANNER_OVERLAYS.tagline.en,
+    ar: DEFAULT_BANNER_OVERLAYS.tagline.ar,
+  });
+  readonly heroBannerQuote = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.quote.ur,
+    en: DEFAULT_BANNER_OVERLAYS.quote.en,
+    ar: DEFAULT_BANNER_OVERLAYS.quote.ar,
+  });
   readonly heroBannerShowPills = signal<boolean>(true);
-  readonly heroBannerPill1 = signal<string>('Quran');
-  readonly heroBannerPill2 = signal<string>('Hadith');
-  readonly heroBannerPill3 = signal<string>('Dua');
-  readonly heroBannerPill4 = signal<string>('Islamic Education');
+  readonly heroBannerPill1 = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.pill1.ur,
+    en: DEFAULT_BANNER_OVERLAYS.pill1.en,
+    ar: DEFAULT_BANNER_OVERLAYS.pill1.ar,
+  });
+  readonly heroBannerPill2 = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.pill2.ur,
+    en: DEFAULT_BANNER_OVERLAYS.pill2.en,
+    ar: DEFAULT_BANNER_OVERLAYS.pill2.ar,
+  });
+  readonly heroBannerPill3 = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.pill3.ur,
+    en: DEFAULT_BANNER_OVERLAYS.pill3.en,
+    ar: DEFAULT_BANNER_OVERLAYS.pill3.ar,
+  });
+  readonly heroBannerPill4 = signal<LocalizedText>({
+    ur: DEFAULT_BANNER_OVERLAYS.pill4.ur,
+    en: DEFAULT_BANNER_OVERLAYS.pill4.en,
+    ar: DEFAULT_BANNER_OVERLAYS.pill4.ar,
+  });
   readonly bannerDimensions = signal<{ width: number; height: number; sizeStr: string } | null>(
     null,
   );
   readonly isDragging = signal<boolean>(false);
+
+  readonly languages = siteConfig.languages;
+
+  readonly previewTitle = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerTitle()[lang] || this.heroBannerTitle()['ur'] || '';
+  });
+  readonly previewSubtitle = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerSubtitle()[lang] || this.heroBannerSubtitle()['ur'] || '';
+  });
+  readonly previewTagline = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerTagline()[lang] || this.heroBannerTagline()['en'] || '';
+  });
+  readonly previewQuote = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerQuote()[lang] || this.heroBannerQuote()['ur'] || '';
+  });
+  readonly previewPill1 = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerPill1()[lang] || this.heroBannerPill1()['en'] || '';
+  });
+  readonly previewPill2 = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerPill2()[lang] || this.heroBannerPill2()['en'] || '';
+  });
+  readonly previewPill3 = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerPill3()[lang] || this.heroBannerPill3()['en'] || '';
+  });
+  readonly previewPill4 = computed(() => {
+    const lang = this.overlayEditingLang();
+    return this.heroBannerPill4()[lang] || this.heroBannerPill4()['en'] || '';
+  });
 
   readonly currentBannerPreview = computed(() => {
     const custom = this.heroBannerUrl().trim();
@@ -153,40 +245,86 @@ export class AdminSettingsPage {
     this.heroBannerShowOverlays.set((event.target as HTMLInputElement).checked);
   }
 
-  onBannerTitleChange(event: Event): void {
-    this.heroBannerTitle.set((event.target as HTMLInputElement).value);
-  }
-
-  onBannerSubtitleChange(event: Event): void {
-    this.heroBannerSubtitle.set((event.target as HTMLInputElement).value);
-  }
-
-  onBannerTaglineChange(event: Event): void {
-    this.heroBannerTagline.set((event.target as HTMLInputElement).value);
-  }
-
-  onBannerQuoteChange(event: Event): void {
-    this.heroBannerQuote.set((event.target as HTMLInputElement).value);
-  }
-
   onBannerShowPillsToggle(event: Event): void {
     this.heroBannerShowPills.set((event.target as HTMLInputElement).checked);
   }
 
-  onBannerPill1Change(event: Event): void {
-    this.heroBannerPill1.set((event.target as HTMLInputElement).value);
+  setOverlayEditingLang(lang: SupportedLanguage): void {
+    this.overlayEditingLang.set(lang);
   }
 
-  onBannerPill2Change(event: Event): void {
-    this.heroBannerPill2.set((event.target as HTMLInputElement).value);
+  getOverlayVal(
+    field:
+      | 'title'
+      | 'subtitle'
+      | 'tagline'
+      | 'quote'
+      | 'pill1'
+      | 'pill2'
+      | 'pill3'
+      | 'pill4',
+  ): string {
+    const lang = this.overlayEditingLang();
+    switch (field) {
+      case 'title':
+        return this.heroBannerTitle()[lang] ?? '';
+      case 'subtitle':
+        return this.heroBannerSubtitle()[lang] ?? '';
+      case 'tagline':
+        return this.heroBannerTagline()[lang] ?? '';
+      case 'quote':
+        return this.heroBannerQuote()[lang] ?? '';
+      case 'pill1':
+        return this.heroBannerPill1()[lang] ?? '';
+      case 'pill2':
+        return this.heroBannerPill2()[lang] ?? '';
+      case 'pill3':
+        return this.heroBannerPill3()[lang] ?? '';
+      case 'pill4':
+        return this.heroBannerPill4()[lang] ?? '';
+    }
   }
 
-  onBannerPill3Change(event: Event): void {
-    this.heroBannerPill3.set((event.target as HTMLInputElement).value);
-  }
-
-  onBannerPill4Change(event: Event): void {
-    this.heroBannerPill4.set((event.target as HTMLInputElement).value);
+  setOverlayVal(
+    field:
+      | 'title'
+      | 'subtitle'
+      | 'tagline'
+      | 'quote'
+      | 'pill1'
+      | 'pill2'
+      | 'pill3'
+      | 'pill4',
+    event: Event,
+  ): void {
+    const val = (event.target as HTMLInputElement).value;
+    const lang = this.overlayEditingLang();
+    switch (field) {
+      case 'title':
+        this.heroBannerTitle.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'subtitle':
+        this.heroBannerSubtitle.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'tagline':
+        this.heroBannerTagline.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'quote':
+        this.heroBannerQuote.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill1':
+        this.heroBannerPill1.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill2':
+        this.heroBannerPill2.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill3':
+        this.heroBannerPill3.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill4':
+        this.heroBannerPill4.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+    }
   }
 
   resetDefaultBanner(): void {
@@ -194,15 +332,15 @@ export class AdminSettingsPage {
     this.heroBannerAlt.set('');
     this.bannerDimensions.set(null);
     this.heroBannerShowOverlays.set(true);
-    this.heroBannerTitle.set('اسلامی تعلیمات');
-    this.heroBannerSubtitle.set('قرآن و حدیث کی روشنی میں');
-    this.heroBannerTagline.set('Islamic Knowledge for a Better Life');
-    this.heroBannerQuote.set('اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
     this.heroBannerShowPills.set(true);
-    this.heroBannerPill1.set('Quran');
-    this.heroBannerPill2.set('Hadith');
-    this.heroBannerPill3.set('Dua');
-    this.heroBannerPill4.set('Islamic Education');
+    this.heroBannerTitle.set({ ...DEFAULT_BANNER_OVERLAYS.title });
+    this.heroBannerSubtitle.set({ ...DEFAULT_BANNER_OVERLAYS.subtitle });
+    this.heroBannerTagline.set({ ...DEFAULT_BANNER_OVERLAYS.tagline });
+    this.heroBannerQuote.set({ ...DEFAULT_BANNER_OVERLAYS.quote });
+    this.heroBannerPill1.set({ ...DEFAULT_BANNER_OVERLAYS.pill1 });
+    this.heroBannerPill2.set({ ...DEFAULT_BANNER_OVERLAYS.pill2 });
+    this.heroBannerPill3.set({ ...DEFAULT_BANNER_OVERLAYS.pill3 });
+    this.heroBannerPill4.set({ ...DEFAULT_BANNER_OVERLAYS.pill4 });
   }
 
   onBannerDragOver(event: DragEvent): void {
@@ -320,15 +458,15 @@ export class AdminSettingsPage {
       heroBannerUrl: this.heroBannerUrl().trim() || null,
       heroBannerAlt: this.heroBannerAlt().trim() || null,
       heroBannerShowOverlays: this.heroBannerShowOverlays(),
-      heroBannerTitle: this.heroBannerTitle().trim() || null,
-      heroBannerSubtitle: this.heroBannerSubtitle().trim() || null,
-      heroBannerTagline: this.heroBannerTagline().trim() || null,
-      heroBannerQuote: this.heroBannerQuote().trim() || null,
+      heroBannerTitle: this.heroBannerTitle(),
+      heroBannerSubtitle: this.heroBannerSubtitle(),
+      heroBannerTagline: this.heroBannerTagline(),
+      heroBannerQuote: this.heroBannerQuote(),
       heroBannerShowPills: this.heroBannerShowPills(),
-      heroBannerPill1: this.heroBannerPill1().trim() || null,
-      heroBannerPill2: this.heroBannerPill2().trim() || null,
-      heroBannerPill3: this.heroBannerPill3().trim() || null,
-      heroBannerPill4: this.heroBannerPill4().trim() || null,
+      heroBannerPill1: this.heroBannerPill1(),
+      heroBannerPill2: this.heroBannerPill2(),
+      heroBannerPill3: this.heroBannerPill3(),
+      heroBannerPill4: this.heroBannerPill4(),
     };
     try {
       await this.adminService.saveSettings(patch);
@@ -401,33 +539,47 @@ export class AdminSettingsPage {
       this.heroBannerShowOverlays.set(settings.heroBannerShowOverlays);
     }
     if (settings.heroBannerTitle !== undefined) {
-      this.heroBannerTitle.set(settings.heroBannerTitle ?? 'اسلامی تعلیمات');
+      this.heroBannerTitle.set(
+        parseLocalizedField(settings.heroBannerTitle, DEFAULT_BANNER_OVERLAYS.title),
+      );
     }
     if (settings.heroBannerSubtitle !== undefined) {
-      this.heroBannerSubtitle.set(settings.heroBannerSubtitle ?? 'قرآن و حدیث کی روشنی میں');
+      this.heroBannerSubtitle.set(
+        parseLocalizedField(settings.heroBannerSubtitle, DEFAULT_BANNER_OVERLAYS.subtitle),
+      );
     }
     if (settings.heroBannerTagline !== undefined) {
       this.heroBannerTagline.set(
-        settings.heroBannerTagline ?? 'Islamic Knowledge for a Better Life',
+        parseLocalizedField(settings.heroBannerTagline, DEFAULT_BANNER_OVERLAYS.tagline),
       );
     }
     if (settings.heroBannerQuote !== undefined) {
-      this.heroBannerQuote.set(settings.heroBannerQuote ?? 'اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے');
+      this.heroBannerQuote.set(
+        parseLocalizedField(settings.heroBannerQuote, DEFAULT_BANNER_OVERLAYS.quote),
+      );
     }
     if (settings.heroBannerShowPills !== undefined) {
       this.heroBannerShowPills.set(settings.heroBannerShowPills);
     }
     if (settings.heroBannerPill1 !== undefined) {
-      this.heroBannerPill1.set(settings.heroBannerPill1 ?? 'Quran');
+      this.heroBannerPill1.set(
+        parseLocalizedField(settings.heroBannerPill1, DEFAULT_BANNER_OVERLAYS.pill1),
+      );
     }
     if (settings.heroBannerPill2 !== undefined) {
-      this.heroBannerPill2.set(settings.heroBannerPill2 ?? 'Hadith');
+      this.heroBannerPill2.set(
+        parseLocalizedField(settings.heroBannerPill2, DEFAULT_BANNER_OVERLAYS.pill2),
+      );
     }
     if (settings.heroBannerPill3 !== undefined) {
-      this.heroBannerPill3.set(settings.heroBannerPill3 ?? 'Dua');
+      this.heroBannerPill3.set(
+        parseLocalizedField(settings.heroBannerPill3, DEFAULT_BANNER_OVERLAYS.pill3),
+      );
     }
     if (settings.heroBannerPill4 !== undefined) {
-      this.heroBannerPill4.set(settings.heroBannerPill4 ?? 'Islamic Education');
+      this.heroBannerPill4.set(
+        parseLocalizedField(settings.heroBannerPill4, DEFAULT_BANNER_OVERLAYS.pill4),
+      );
     }
 
     if (settings.homeSections?.length) {

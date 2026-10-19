@@ -29,14 +29,60 @@ function isSameLocalDay(a: Date, b: Date): boolean {
   );
 }
 
-/**
- * Home page (§53).
- *
- * Section order and visibility come from `siteConfig.homeSections`, overridden
- * by `settings/site` when the administrator curates them — so the toggles on
- * the settings screen really change this page. Every section renders real
- * Firestore content or an honest empty state, never filler (§61).
- */
+export interface BannerOverlaysConfig {
+  title: Record<'en' | 'ur' | 'ar', string>;
+  subtitle: Record<'en' | 'ur' | 'ar', string>;
+  tagline: Record<'en' | 'ur' | 'ar', string>;
+  quote: Record<'en' | 'ur' | 'ar', string>;
+  pill1: Record<'en' | 'ur' | 'ar', string>;
+  pill2: Record<'en' | 'ur' | 'ar', string>;
+  pill3: Record<'en' | 'ur' | 'ar', string>;
+  pill4: Record<'en' | 'ur' | 'ar', string>;
+}
+
+export const DEFAULT_BANNER_OVERLAYS: BannerOverlaysConfig = {
+  title: {
+    ur: 'اسلامی تعلیمات',
+    en: 'Islamic Teachings',
+    ar: 'التعاليم الإسلامية',
+  },
+  subtitle: {
+    ur: 'قرآن و حدیث کی روشنی میں',
+    en: 'In the Light of Quran & Hadith',
+    ar: 'في ضوء القرآن والحديث',
+  },
+  tagline: {
+    ur: 'Islamic Knowledge for a Better Life',
+    en: 'Islamic Knowledge for a Better Life',
+    ar: 'المعرفة الإسلامية لحياة أفضل',
+  },
+  quote: {
+    ur: 'اللہ کی رضا\nہمیشہ کامیابی کی کنجی ہے',
+    en: 'Pleasing Allah\nis the key to eternal success',
+    ar: 'رضا الله\nهو مفتاح النجاح الدائم',
+  },
+  pill1: {
+    ur: 'قرآن',
+    en: 'Quran',
+    ar: 'القرآن',
+  },
+  pill2: {
+    ur: 'حدیث',
+    en: 'Hadith',
+    ar: 'الحديث',
+  },
+  pill3: {
+    ur: 'دعا',
+    en: 'Dua',
+    ar: 'الدعاء',
+  },
+  pill4: {
+    ur: 'اسلامی تعلیم',
+    en: 'Islamic Education',
+    ar: 'التعليم الإسلامي',
+  },
+};
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -101,39 +147,43 @@ export class HomePage {
   });
 
   readonly bannerTitle = computed(() => {
-    const s = this.settings();
-    return s?.heroBannerTitle !== undefined &&
-      s.heroBannerTitle !== null &&
-      s.heroBannerTitle.trim() !== ''
-      ? s.heroBannerTitle.trim()
-      : 'اسلامی تعلیمات';
+    const custom = this.settings()?.heroBannerTitle;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.title[lang] ?? DEFAULT_BANNER_OVERLAYS.title.ur;
   });
 
   readonly bannerSubtitle = computed(() => {
-    const s = this.settings();
-    return s?.heroBannerSubtitle !== undefined &&
-      s.heroBannerSubtitle !== null &&
-      s.heroBannerSubtitle.trim() !== ''
-      ? s.heroBannerSubtitle.trim()
-      : 'قرآن و حدیث کی روشنی میں';
+    const custom = this.settings()?.heroBannerSubtitle;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.subtitle[lang] ?? DEFAULT_BANNER_OVERLAYS.subtitle.ur;
   });
 
   readonly bannerTagline = computed(() => {
-    const s = this.settings();
-    return s?.heroBannerTagline !== undefined &&
-      s.heroBannerTagline !== null &&
-      s.heroBannerTagline.trim() !== ''
-      ? s.heroBannerTagline.trim()
-      : 'Islamic Knowledge for a Better Life';
+    const custom = this.settings()?.heroBannerTagline;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.tagline[lang] ?? DEFAULT_BANNER_OVERLAYS.tagline.en;
   });
 
   readonly bannerQuote = computed(() => {
-    const s = this.settings();
-    return s?.heroBannerQuote !== undefined &&
-      s.heroBannerQuote !== null &&
-      s.heroBannerQuote.trim() !== ''
-      ? s.heroBannerQuote.trim()
-      : 'اللہ کی رضا ہمیشہ کامیابی کی کنجی ہے';
+    const custom = this.settings()?.heroBannerQuote;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.quote[lang] ?? DEFAULT_BANNER_OVERLAYS.quote.ur;
   });
 
   readonly bannerQuoteLines = computed(() => {
@@ -144,8 +194,9 @@ export class HomePage {
       return { line1: parts[0].trim(), line2: parts.slice(1).join(' ').trim() };
     }
     const words = q.split(' ');
-    if (words.length >= 4 && words.length <= 8) {
-      return { line1: words.slice(0, 3).join(' '), line2: words.slice(3).join(' ') };
+    if (words.length >= 3 && words.length <= 8) {
+      const half = Math.ceil(words.length / 2);
+      return { line1: words.slice(0, half).join(' '), line2: words.slice(half).join(' ') };
     }
     return { line1: q, line2: '' };
   });
@@ -155,10 +206,45 @@ export class HomePage {
     return s?.heroBannerShowPills !== false;
   });
 
-  readonly pill1 = computed(() => this.settings()?.heroBannerPill1?.trim() || 'Quran');
-  readonly pill2 = computed(() => this.settings()?.heroBannerPill2?.trim() || 'Hadith');
-  readonly pill3 = computed(() => this.settings()?.heroBannerPill3?.trim() || 'Dua');
-  readonly pill4 = computed(() => this.settings()?.heroBannerPill4?.trim() || 'Islamic Education');
+  readonly pill1 = computed(() => {
+    const custom = this.settings()?.heroBannerPill1;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.pill1[lang] ?? DEFAULT_BANNER_OVERLAYS.pill1.ur;
+  });
+
+  readonly pill2 = computed(() => {
+    const custom = this.settings()?.heroBannerPill2;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.pill2[lang] ?? DEFAULT_BANNER_OVERLAYS.pill2.ur;
+  });
+
+  readonly pill3 = computed(() => {
+    const custom = this.settings()?.heroBannerPill3;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.pill3[lang] ?? DEFAULT_BANNER_OVERLAYS.pill3.ur;
+  });
+
+  readonly pill4 = computed(() => {
+    const custom = this.settings()?.heroBannerPill4;
+    if (custom) {
+      const text = this.i18n.localized(custom);
+      if (text.trim()) return text.trim();
+    }
+    const lang = this.i18n.language();
+    return DEFAULT_BANNER_OVERLAYS.pill4[lang] ?? DEFAULT_BANNER_OVERLAYS.pill4.ur;
+  });
 
   /** Config order + enabled flags, overridden by the saved settings (§22). */
   readonly enabledSections = computed(() => {

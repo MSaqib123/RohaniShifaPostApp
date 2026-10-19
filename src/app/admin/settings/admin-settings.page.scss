@@ -288,6 +288,82 @@
   direction: rtl;
 }
 
+.input--arabic {
+  font-family: var(--font-arabic, 'Amiri', serif);
+  font-size: 1.05rem;
+  direction: rtl;
+}
+
+.field__lang-badge {
+  display: inline-block;
+  margin-inline-start: 0.35rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  background: var(--c-primary-100, #e6f4ea);
+  color: var(--c-primary-800, #0d533f);
+  border: 1px solid rgba(13, 83, 63, 0.2);
+}
+
+// ── Language Tab Switcher in Overlays Panel ──────────────────────────────────
+.overlay-lang-tabs {
+  display: flex;
+  gap: var(--sp-2);
+  margin-block-end: var(--sp-3);
+  padding: 0.35rem;
+  background: var(--c-bg-deep);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  overflow-x: auto;
+}
+
+.overlay-lang-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--c-ink-600);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all var(--t-fast);
+
+  &:hover {
+    color: var(--c-ink-900);
+    background: var(--c-surface);
+  }
+
+  &--active {
+    background: var(--c-surface);
+    color: var(--c-primary-700);
+    border-color: #d4af37;
+    box-shadow: 0 1px 4px rgba(212, 175, 55, 0.2);
+
+    .overlay-lang-tab__tag {
+      background: #d4af37;
+      color: #0d3b2e;
+      font-weight: 700;
+    }
+  }
+
+  &__label {
+    font-size: 0.95rem;
+  }
+
+  &__tag {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    background: var(--c-line);
+    color: var(--c-ink-600);
+  }
+}
+
 .pills-custom-block {
   margin-block-start: var(--sp-4);
   padding-block-start: var(--sp-3);

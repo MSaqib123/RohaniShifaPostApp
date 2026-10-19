@@ -10,19 +10,58 @@
             @if (showPills()) {
               <nav class="hero-pills" aria-label="Quick Categories">
                 <a routerLink="/posts" [queryParams]="{ search: 'quran' }" class="hero-pill">
-                  <span class="hero-pill__icon"><app-icon name="book" /></span>
+                  <svg class="hero-pill__svg" viewBox="0 0 220 46" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pillGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#042a1e" stop-opacity="0.95" />
+                        <stop offset="100%" stop-color="#094734" stop-opacity="0.95" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 23 2 L 204 2 L 217 23 L 204 44 L 23 44 A 21 21 0 0 1 23 2 Z" fill="url(#pillGrad1)" stroke="#d4af37" stroke-width="2" />
+                  </svg>
+                  <span class="hero-pill__icon"><app-icon name="quran-open" /></span>
                   <span class="hero-pill__text">{{ pill1() }}</span>
                 </a>
+
                 <a routerLink="/posts" [queryParams]="{ search: 'hadith' }" class="hero-pill">
+                  <svg class="hero-pill__svg" viewBox="0 0 220 46" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pillGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#042a1e" stop-opacity="0.95" />
+                        <stop offset="100%" stop-color="#094734" stop-opacity="0.95" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 23 2 L 204 2 L 217 23 L 204 44 L 23 44 A 21 21 0 0 1 23 2 Z" fill="url(#pillGrad2)" stroke="#d4af37" stroke-width="2" />
+                  </svg>
                   <span class="hero-pill__icon"><app-icon name="mosque" /></span>
                   <span class="hero-pill__text">{{ pill2() }}</span>
                 </a>
+
                 <a routerLink="/posts" [queryParams]="{ search: 'dua' }" class="hero-pill">
-                  <span class="hero-pill__icon"><app-icon name="heart" /></span>
+                  <svg class="hero-pill__svg" viewBox="0 0 220 46" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pillGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#042a1e" stop-opacity="0.95" />
+                        <stop offset="100%" stop-color="#094734" stop-opacity="0.95" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 23 2 L 204 2 L 217 23 L 204 44 L 23 44 A 21 21 0 0 1 23 2 Z" fill="url(#pillGrad3)" stroke="#d4af37" stroke-width="2" />
+                  </svg>
+                  <span class="hero-pill__icon"><app-icon name="hands-dua" /></span>
                   <span class="hero-pill__text">{{ pill3() }}</span>
                 </a>
+
                 <a routerLink="/posts" class="hero-pill">
-                  <span class="hero-pill__icon"><app-icon name="grid" /></span>
+                  <svg class="hero-pill__svg" viewBox="0 0 220 46" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pillGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#042a1e" stop-opacity="0.95" />
+                        <stop offset="100%" stop-color="#094734" stop-opacity="0.95" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 23 2 L 204 2 L 217 23 L 204 44 L 23 44 A 21 21 0 0 1 23 2 Z" fill="url(#pillGrad4)" stroke="#d4af37" stroke-width="2" />
+                  </svg>
+                  <span class="hero-pill__icon"><app-icon name="graduation-cap" /></span>
                   <span class="hero-pill__text">{{ pill4() }}</span>
                 </a>
               </nav>
@@ -30,38 +69,85 @@
 
             <!-- Bottom Left Golden Quote Badge -->
             @if (bannerQuote()) {
-              <div class="hero-quote-badge">
+              <div
+                class="hero-quote-badge"
+                [class.hero-quote-badge--urdu]="i18n.language() === 'ur'"
+                [class.hero-quote-badge--arabic]="i18n.language() === 'ar'"
+                [class.hero-quote-badge--latin]="i18n.language() === 'en'"
+              >
+                <svg class="hero-quote-badge__svg" viewBox="0 0 340 100" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="quoteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#073829" />
+                      <stop offset="100%" stop-color="#031e15" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 28 4 L 312 4 C 320 4, 326 10, 326 18 C 326 24, 336 32, 336 50 C 336 68, 326 76, 326 82 C 326 90, 320 96, 312 96 L 28 96 C 20 96, 14 90, 14 82 C 14 76, 4 68, 4 50 C 4 32, 14 24, 14 18 C 14 10, 20 4, 28 4 Z" fill="url(#quoteGrad)" stroke="#d4af37" stroke-width="2.5" />
+                  <path d="M 30 8 L 310 8 C 316 8, 321 13, 321 20 C 321 26, 329 34, 329 50 C 329 66, 321 74, 321 80 C 321 87, 316 92, 310 92 L 30 92 C 24 92, 19 87, 19 80 C 19 74, 11 66, 11 50 C 11 34, 19 26, 19 20 C 19 13, 24 8, 30 8 Z" fill="none" stroke="#ecd98c" stroke-width="1" opacity="0.7" />
+                </svg>
                 <div class="hero-quote-badge__inner">
-                  <span class="hero-quote-badge__ornament">✦</span>
+                  <span class="hero-quote-badge__ornament">❖</span>
                   <div class="hero-quote-badge__content">
                     <span class="hero-quote-badge__line1">{{ bannerQuoteLines().line1 }}</span>
                     @if (bannerQuoteLines().line2) {
                       <span class="hero-quote-badge__line2">{{ bannerQuoteLines().line2 }}</span>
                     }
                   </div>
-                  <span class="hero-quote-badge__ornament">✦</span>
+                  <span class="hero-quote-badge__ornament">❖</span>
                 </div>
               </div>
             }
 
             <!-- Top Right Calligraphy, Ribbon & Tagline -->
-            <div class="hero-titles-block">
+            <div
+              class="hero-titles-block"
+              [class.hero-titles-block--urdu]="i18n.language() === 'ur'"
+              [class.hero-titles-block--arabic]="i18n.language() === 'ar'"
+              [class.hero-titles-block--latin]="i18n.language() === 'en'"
+            >
               @if (bannerTitle()) {
-                <h1 class="hero-calligraphy" id="hero-title">
+                <h1
+                  class="hero-calligraphy"
+                  id="hero-title"
+                  [class.hero-calligraphy--urdu]="i18n.language() === 'ur'"
+                  [class.hero-calligraphy--arabic]="i18n.language() === 'ar'"
+                  [class.hero-calligraphy--latin]="i18n.language() === 'en'"
+                >
                   {{ bannerTitle() }}
                 </h1>
               }
 
               @if (bannerSubtitle()) {
                 <div class="hero-ribbon">
-                  <span class="hero-ribbon__notch hero-ribbon__notch--start"></span>
-                  <span class="hero-ribbon__text">{{ bannerSubtitle() }}</span>
-                  <span class="hero-ribbon__notch hero-ribbon__notch--end"></span>
+                  <svg class="hero-ribbon__svg" viewBox="0 0 480 66" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#0a4a37" />
+                        <stop offset="50%" stop-color="#063526" />
+                        <stop offset="100%" stop-color="#04251a" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 32 4 L 448 4 C 456 4, 464 10, 464 20 C 464 26, 476 33, 476 33 C 476 33, 464 40, 464 46 C 464 56, 456 62, 448 62 L 32 62 C 24 62, 16 56, 16 46 C 16 40, 4 33, 4 33 C 4 33, 16 26, 16 20 C 16 10, 24 4, 32 4 Z" fill="url(#ribbonGrad)" stroke="#d4af37" stroke-width="3" />
+                    <path d="M 34 8 L 446 8 C 452 8, 458 13, 458 21 C 458 26, 468 33, 468 33 C 468 33, 458 40, 458 45 C 458 53, 452 58, 446 58 L 34 58 C 28 58, 22 53, 22 45 C 22 40, 12 33, 12 33 C 12 33, 22 26, 22 21 C 22 13, 28 8, 34 8 Z" fill="none" stroke="#f3df93" stroke-width="1" opacity="0.8" />
+                  </svg>
+                  <span
+                    class="hero-ribbon__text"
+                    [class.hero-ribbon__text--urdu]="i18n.language() === 'ur'"
+                    [class.hero-ribbon__text--arabic]="i18n.language() === 'ar'"
+                    [class.hero-ribbon__text--latin]="i18n.language() === 'en'"
+                  >
+                    {{ bannerSubtitle() }}
+                  </span>
                 </div>
               }
 
               @if (bannerTagline()) {
-                <p class="hero-tagline-text">
+                <p
+                  class="hero-tagline-text"
+                  [class.hero-tagline-text--urdu]="i18n.language() === 'ur'"
+                  [class.hero-tagline-text--arabic]="i18n.language() === 'ar'"
+                  [class.hero-tagline-text--latin]="i18n.language() === 'en'"
+                >
                   {{ bannerTagline() }}
                 </p>
               }
