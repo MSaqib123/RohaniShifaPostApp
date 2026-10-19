@@ -224,42 +224,50 @@
 .hero-titles-block {
   position: absolute;
   right: clamp(0.75rem, 3.8vw, 3.2rem);
-  top: clamp(1rem, 3.8vw, 2.8rem);
+  top: clamp(1rem, 3.8vw, 2.5rem);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  direction: rtl;
   z-index: 5;
   pointer-events: auto;
+
+  &--latin {
+    direction: ltr;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  &--arabic {
+    direction: rtl;
+    align-items: flex-start; // Right side in RTL column
+    text-align: right;
+  }
+
+  &--urdu {
+    direction: rtl;
+    align-items: flex-start; // Right side in RTL column
+    text-align: right;
+  }
 
   @media (max-width: 680px) {
     top: clamp(0.35rem, 1.8vw, 0.75rem);
     right: clamp(0.4rem, 2vw, 0.85rem);
     left: auto;
     max-inline-size: 58%;
-    align-items: flex-end;
-    text-align: right;
-  }
 
-  &--latin {
-    direction: ltr;
-    text-align: right;
-  }
+    &--latin {
+      align-items: flex-end;
+      text-align: right;
+    }
 
-  &--arabic {
-    direction: rtl;
-    text-align: right;
-  }
-
-  &--urdu {
-    direction: rtl;
-    text-align: right;
+    &--arabic,
+    &--urdu {
+      align-items: flex-start;
+      text-align: right;
+    }
   }
 }
 
 .hero-calligraphy {
-  font-size: clamp(2.6rem, 6vw, 5.2rem);
   font-weight: 800;
   color: #ffffff;
   margin: 0;
@@ -267,12 +275,14 @@
   filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
 
   @media (max-width: 680px) {
-    font-size: clamp(1.15rem, 4.4vw, 1.55rem);
+    font-size: clamp(1.1rem, 4vw, 1.45rem);
     line-height: 1.2;
   }
 
   &--urdu {
+    // Decreased title size
     font-family: var(--font-urdu);
+    font-size: clamp(1.9rem, 4.2vw, 3.4rem);
     font-weight: 700;
     line-height: 1.35;
     text-shadow:
@@ -286,6 +296,7 @@
 
   &--arabic {
     font-family: var(--font-arabic, 'Amiri', serif);
+    font-size: clamp(1.9rem, 4.2vw, 3.4rem);
     text-shadow:
       -1.5px -1.5px 0 #053324,
       1.5px -1.5px 0 #053324,
@@ -295,7 +306,9 @@
   }
 
   &--latin {
+    // English: decreased title size
     font-family: var(--font-sans);
+    font-size: clamp(1.85rem, 3.6vw, 2.9rem);
     letter-spacing: -0.02em;
     text-shadow:
       -1.5px -1.5px 0 #053324,
@@ -311,14 +324,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-block-start: clamp(0.25rem, 0.8vw, 0.6rem);
-  padding: clamp(0.45rem, 0.9vw, 0.75rem) clamp(2.2rem, 4vw, 3.8rem);
+  // Move 2nd title further down
+  margin-block-start: clamp(0.75rem, 1.8vw, 1.5rem);
+  // Decreased padding to fit decreased font
+  padding: clamp(0.35rem, 0.75vw, 0.55rem) clamp(1.8rem, 3.2vw, 2.8rem);
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55));
   transition: transform 0.22s ease;
 
   @media (max-width: 680px) {
-    margin-block-start: 0.15rem;
-    padding: 0.18rem 0.65rem;
+    margin-block-start: 0.2rem;
+    padding: 0.16rem 0.55rem;
   }
 
   &__svg {
@@ -333,7 +348,8 @@
   &__text {
     position: relative;
     z-index: 2;
-    font-size: clamp(1.15rem, 2.2vw, 1.95rem);
+    // Decreased text size for 2nd title
+    font-size: clamp(0.95rem, 1.7vw, 1.45rem);
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
@@ -341,7 +357,7 @@
     white-space: nowrap;
 
     @media (max-width: 680px) {
-      font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+      font-size: clamp(0.62rem, 2.4vw, 0.8rem);
       line-height: 1.25;
     }
 
@@ -361,8 +377,8 @@
 }
 
 .hero-tagline-text {
-  margin-block-start: clamp(0.35rem, 0.9vw, 0.85rem);
-  font-size: clamp(1rem, 2.1vw, 1.75rem);
+  margin-block-start: clamp(0.45rem, 1.1vw, 0.85rem);
+  font-size: clamp(0.9rem, 1.6vw, 1.35rem);
   font-weight: 800;
   color: #072e21;
   text-shadow:
@@ -370,11 +386,26 @@
     0 0 16px rgba(255, 255, 255, 0.9);
   line-height: 1.25;
   letter-spacing: -0.01em;
-  margin-inline-end: 0.25rem;
+  margin-inline: 0;
+  text-align: right;
+
+  // 3rd title moved flush to the right side with no gap
+  &--urdu,
+  &--arabic {
+    align-self: flex-start; // Flush right in RTL
+    text-align: right;
+    margin-inline-start: 0;
+    margin-inline-end: 0.25rem;
+  }
+
+  &--latin {
+    align-self: flex-end;
+    text-align: right;
+    margin-inline-end: 0.25rem;
+  }
 
   @media (max-width: 680px) {
-    margin-block-start: 0.12rem;
-    margin-inline-end: 0;
+    margin-block-start: 0.15rem;
     font-size: clamp(0.55rem, 2vw, 0.72rem);
     line-height: 1.2;
     text-align: right;
