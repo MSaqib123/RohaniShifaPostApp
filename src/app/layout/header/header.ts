@@ -104,7 +104,8 @@ export class Header {
     }
   }
 
-  toggleDrawer(): void {
+  toggleDrawer(event?: Event): void {
+    event?.stopPropagation();
     this.drawerOpen.update((open) => !open);
   }
 

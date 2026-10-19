@@ -84,7 +84,7 @@
       <button
         type="button"
         class="icon-btn menu-toggle"
-        (click)="toggleDrawer()"
+        (click)="toggleDrawer($event)"
         [attr.aria-expanded]="drawerOpen()"
         aria-controls="mobile-nav"
         [attr.aria-label]="drawerOpen() ? i18n.t('nav.closeMenu') : i18n.t('nav.openMenu')"

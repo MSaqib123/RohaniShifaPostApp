@@ -25,8 +25,7 @@ public-layout {
   position: sticky;
   inset-block-start: 0;
   z-index: var(--z-header);
-  background: rgba(251, 250, 246, 0.93);
-  backdrop-filter: blur(10px);
+  background: rgba(251, 250, 246, 0.98);
   border-block-end: 1px solid transparent;
   transition:
     border-color var(--dur) var(--ease),
@@ -35,6 +34,10 @@ public-layout {
   &--scrolled {
     border-block-end-color: var(--c-line);
     box-shadow: var(--shadow-sm);
+  }
+
+  &:has(.drawer) {
+    z-index: calc(var(--z-drawer) + 10);
   }
 }
 
@@ -273,16 +276,20 @@ public-layout {
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  z-index: var(--z-drawer);
-  background: rgba(5, 26, 20, 0.5);
+  inline-size: 100vw;
+  block-size: 100dvh;
+  z-index: calc(var(--z-drawer) + 1);
+  background: rgba(5, 26, 20, 0.55);
   animation: fade-in var(--dur) var(--ease);
 }
 
 .drawer {
   position: fixed;
-  inset-block: 0;
+  top: 0;
+  bottom: 0;
+  block-size: 100dvh;
   inset-inline-end: 0;
-  z-index: calc(var(--z-drawer) + 1);
+  z-index: calc(var(--z-drawer) + 2);
   inline-size: min(20.5rem, 86vw);
   display: flex;
   flex-direction: column;
@@ -291,6 +298,7 @@ public-layout {
   background: var(--c-surface);
   box-shadow: var(--shadow-lg);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation: drawer-in var(--dur) var(--ease);
 
   [dir='rtl'] & {
