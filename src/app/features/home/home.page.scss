@@ -249,10 +249,10 @@
   }
 
   @media (max-width: 680px) {
-    top: clamp(0.35rem, 1.8vw, 0.75rem);
-    right: clamp(0.4rem, 2vw, 0.85rem);
+    top: clamp(0.45rem, 2.2vw, 0.9rem);
+    right: clamp(0.5rem, 2.2vw, 1rem);
     left: auto;
-    max-inline-size: 58%;
+    max-inline-size: 64%;
 
     &--latin {
       align-items: flex-end;
@@ -324,16 +324,26 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   // Move 2nd title further down
   margin-block-start: clamp(0.75rem, 1.8vw, 1.5rem);
-  // Decreased padding to fit decreased font
-  padding: clamp(0.35rem, 0.75vw, 0.55rem) clamp(1.8rem, 3.2vw, 2.8rem);
+  // Generous horizontal padding so text NEVER touches decorative notch ends
+  padding: clamp(0.45rem, 0.9vw, 0.75rem) clamp(3rem, 5.5vw, 5rem);
+  min-inline-size: clamp(18rem, 28vw, 32rem);
+  max-inline-size: 100%;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55));
   transition: transform 0.22s ease;
 
   @media (max-width: 680px) {
-    margin-block-start: 0.2rem;
-    padding: 0.16rem 0.55rem;
+    margin-block-start: 0.25rem;
+    padding: 0.22rem 0.85rem;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    // On mobile, use sleek CSS rounded pill instead of stretched SVG
+    background: linear-gradient(135deg, rgba(12, 83, 62, 0.95) 0%, rgba(7, 58, 42, 0.98) 100%);
+    border: 1px solid #d4af37;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 
   &__svg {
@@ -343,35 +353,47 @@
     block-size: 100%;
     z-index: 1;
     pointer-events: none;
+
+    @media (max-width: 680px) {
+      display: none; // Hidden on mobile in favor of sleek CSS rounded pill
+    }
   }
 
   &__text {
     position: relative;
     z-index: 2;
-    // Decreased text size for 2nd title
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
     font-size: clamp(0.95rem, 1.7vw, 1.45rem);
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
     line-height: 1.35;
     white-space: nowrap;
+    padding-inline: 0.35rem;
 
     @media (max-width: 680px) {
-      font-size: clamp(0.62rem, 2.4vw, 0.8rem);
+      font-size: clamp(0.68rem, 2.7vw, 0.85rem);
       line-height: 1.25;
+      padding-inline: 0;
     }
 
     &--urdu {
       font-family: var(--font-urdu);
+      direction: rtl;
     }
 
     &--arabic {
       font-family: var(--font-arabic, 'Amiri', serif);
+      direction: rtl;
     }
 
     &--latin {
       font-family: var(--font-sans);
       letter-spacing: -0.01em;
+      direction: ltr;
     }
   }
 }
@@ -405,10 +427,19 @@
   }
 
   @media (max-width: 680px) {
-    margin-block-start: 0.15rem;
-    font-size: clamp(0.55rem, 2vw, 0.72rem);
-    line-height: 1.2;
+    margin-block-start: 0.25rem;
+    font-size: clamp(0.6rem, 2.4vw, 0.75rem);
+    line-height: 1.25;
     text-align: right;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    background: rgba(4, 28, 20, 0.65);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 9999px;
+    backdrop-filter: blur(4px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
   }
 
   &--urdu {
@@ -429,26 +460,40 @@
   display: none;
 
   @media (max-width: 680px) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-block-start: var(--sp-3);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.35rem;
+    margin-block-start: var(--sp-2);
+    padding: 0.25rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
 .hero-mobile-pill {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.6rem;
-  background: linear-gradient(135deg, #073a2b 0%, #032117 100%);
-  border: 1.5px solid #d4af37;
-  border-radius: var(--r-md);
+  gap: 0.35rem;
+  flex: 1 1 auto;
+  justify-content: center;
+  padding: 0.35rem 0.55rem;
+  background: linear-gradient(135deg, #094532 0%, #042419 100%);
+  border: 1px solid rgba(212, 175, 55, 0.75);
+  border-radius: 9999px;
   color: #ffffff;
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: transform 0.18s ease;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: transform 0.18s ease, border-color 0.18s ease;
 
   &:hover,
   &:active {
@@ -458,11 +503,11 @@
   }
 
   &__icon {
-    inline-size: 1.6rem;
-    block-size: 1.6rem;
+    inline-size: 1.35rem;
+    block-size: 1.35rem;
     border-radius: 50%;
     background: radial-gradient(circle, #0e563f 0%, #042419 100%);
-    border: 1.5px solid #d4af37;
+    border: 1px solid #d4af37;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -470,18 +515,17 @@
     flex-shrink: 0;
 
     .icon {
-      inline-size: 65%;
-      block-size: 65%;
+      inline-size: 60%;
+      block-size: 60%;
     }
   }
 
   &__text {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     line-height: 1.2;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #ffffff;
   }
 }
 
@@ -493,20 +537,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin-block-start: 0.65rem;
-    padding: 0.45rem 0.85rem;
-    border-radius: var(--r-md);
-    background: linear-gradient(90deg, #05261b 0%, #0a4f39 50%, #05261b 100%);
-    border: 1.5px solid #d4af37;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    gap: 0.45rem;
+    margin-block-start: 0.35rem;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgba(5, 38, 27, 0.9) 0%, rgba(10, 79, 57, 0.94) 50%, rgba(5, 38, 27, 0.9) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
     text-align: center;
     direction: rtl;
   }
 
   &__star {
     color: #f7df96;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    flex-shrink: 0;
   }
 
   &__text {
@@ -514,6 +559,12 @@
     font-weight: 700;
     color: #f7df96;
     line-height: 1.35;
+    white-space: normal;
+    font-family: var(--font-urdu);
+
+    :host-context([dir="ltr"]) & {
+      font-family: var(--font-sans);
+    }
   }
 }
 
