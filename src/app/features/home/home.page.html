@@ -243,13 +243,62 @@
       </header>
 
       @if (todaysReminder(); as post) {
-        <article class="reminder">
+        <article class="reminder" [class.reminder--ai]="isAiReminder()">
+          <div class="reminder__header">
+            @if (isAiReminder()) {
+              <div class="reminder__badges">
+                <span class="badge badge--gold reminder__badge-ai">
+                  <app-icon name="sparkle" />
+                  <span>{{ i18n.t('home.aiReminderBadge') }}</span>
+                </span>
+                @if (post.reference || post.source) {
+                  <span class="badge badge--outline reminder__badge-source">
+                    <app-icon name="book" />
+                    <span>{{ post.reference || post.source }}</span>
+                  </span>
+                }
+              </div>
+            } @else if (post.reference || post.source) {
+              <div class="reminder__badges">
+                <span class="badge badge--outline reminder__badge-source">
+                  <app-icon name="book" />
+                  <span>{{ post.reference || post.source }}</span>
+                </span>
+              </div>
+            }
+          </div>
+
           <h3 class="reminder__title">{{ i18n.localized(post.title) }}</h3>
           <p class="reminder__text">{{ reminderBody() }}</p>
+
           <div class="reminder__actions">
-            <a class="btn btn--outline" [routerLink]="['/posts', post.id]">
-              {{ i18n.t('common.readMore') }}
-            </a>
+            @if (!isAiReminder()) {
+              <a class="btn btn--outline" [routerLink]="['/posts', post.id]">
+                {{ i18n.t('common.readMore') }}
+              </a>
+            } @else {
+              <button
+                type="button"
+                class="btn btn--outline"
+                (click)="copyReminderText(post)"
+              >
+                <app-icon name="copy" />
+                <span>{{ i18n.t('home.copyReflection') }}</span>
+              </button>
+
+              @if (auth.isAdmin()) {
+                <button
+                  type="button"
+                  class="btn btn--primary"
+                  [disabled]="publishingAiReminder()"
+                  (click)="publishAiReminder()"
+                >
+                  <app-icon name="upload" />
+                  <span>{{ publishingAiReminder() ? i18n.t('common.saving') : i18n.t('home.publishAiReminder') }}</span>
+                </button>
+              }
+            }
+
             <app-share-bar [text]="i18n.localized(post.title)" />
           </div>
         </article>

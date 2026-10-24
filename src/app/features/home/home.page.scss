@@ -639,6 +639,43 @@
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg), var(--shadow-glow-gold);
   }
+
+  &--ai {
+    background: linear-gradient(135deg, var(--c-surface) 0%, rgba(201, 162, 39, 0.05) 100%);
+    border-color: rgba(201, 162, 39, 0.35);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+
+  &__badges {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  &__badge-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding-inline: 0.65rem;
+    padding-block: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  &__badge-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
 }
 
 .reminder__title {

@@ -122,6 +122,11 @@ export const ur: Record<TranslationKey, string> = {
   'home.dailyKicker': 'آج',
   'home.dailyTitle': 'آج کی اسلامی یاد دہانی',
   'home.dailyEmpty': 'آج کوئی یاد دہانی شائع نہیں ہوئی۔ انشاءاللہ جلدی دوبارہ دیکھیں۔',
+  'home.aiReminderBadge': 'روزانہ اسلامی نصیحت (خودکار AI)',
+  'home.copyReflection': 'نصیحت کاپی کریں',
+  'home.reflectionCopied': 'نصیحت کلپ بورڈ پر کاپی ہو گئی',
+  'home.publishAiReminder': 'پوسٹ کے طور پر شائع کریں',
+  'home.aiReminderPublished': 'آج کی AI اسلامی نصیحت کامیابی سے پوسٹ کے طور پر شائع ہو گئی!',
   'home.featuredVideo': 'نمایاں ویڈیو',
   'home.featuredVideoEmpty': 'ابھی کوئی نمایاں ویڈیو نہیں۔',
   'home.latestPosts': 'حالیہ پوسٹس',
@@ -604,6 +609,12 @@ export const ur: Record<TranslationKey, string> = {
   'admin.settings.pill2': 'پِل 2 لیبل (حدیث)',
   'admin.settings.pill3': 'پِل 3 لیبل (دعا)',
   'admin.settings.pill4': 'پِل 4 لیبل (اسلامک ایجوکیشن)',
+  'admin.settings.aiReminderSection': 'خودکار AI روزانہ اسلامی نصیحت (Daily Reminder)',
+  'admin.settings.aiReminderSub':
+    'اگر ایڈمن یا یوزر نے اس دن کی کوئی نصیحت پوسٹ نہ کی ہو، تو سسٹم خودکار طریقے سے مستند قرآنی آیت یا حدیث پر مبنی نصیحت شائع کرے۔',
+  'admin.settings.autoAiReminderToggle': 'اگر کوئی پوسٹ نہ ہو تو خودکار AI نصیحت دکھائیں',
+  'admin.settings.publishTodayAiNow': 'آج کی AI نصیحت کو ابھی ڈیٹابیس میں پوسٹ بنائیں',
+  'admin.settings.aiReminderPreview': 'آج کی خودکار AI نصیحت کا پیش نظارہ (Preview)',
 
   // ── خرابیاں / توست ──────────────────────────────────────────────────────
   'error.notFoundTitle': 'صفحہ نہیں ملا',

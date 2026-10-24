@@ -123,6 +123,11 @@ export const en = {
   'home.dailyKicker': 'Today',
   'home.dailyTitle': "Today's Islamic reminder",
   'home.dailyEmpty': 'No reminder published today. Check back soon, in shā’ Allāh.',
+  'home.aiReminderBadge': 'Daily Islamic AI Reflection',
+  'home.copyReflection': 'Copy Reflection',
+  'home.reflectionCopied': 'Reflection copied to clipboard',
+  'home.publishAiReminder': 'Publish as Official Post',
+  'home.aiReminderPublished': 'Today\'s AI reminder successfully published as an official post!',
   'home.featuredVideo': 'Featured video',
   'home.featuredVideoEmpty': 'No featured video yet.',
   'home.latestPosts': 'Latest posts',
@@ -614,6 +619,12 @@ export const en = {
   'admin.settings.pill2': 'Pill 2 Label (Hadith)',
   'admin.settings.pill3': 'Pill 3 Label (Dua)',
   'admin.settings.pill4': 'Pill 4 Label (Islamic Education)',
+  'admin.settings.aiReminderSection': 'AI Daily Islamic Reminder Automation',
+  'admin.settings.aiReminderSub':
+    'Automatically generate and display an authentic daily Quran or Hadith reflection when no reminder has been published for the day.',
+  'admin.settings.autoAiReminderToggle': 'Auto-generate Daily Reminder if none created for the day',
+  'admin.settings.publishTodayAiNow': 'Publish Today\'s AI Reminder as a Post Now',
+  'admin.settings.aiReminderPreview': 'Today\'s AI Reminder Preview',
 
   // ── Errors / not found ────────────────────────────────────────────────────
   'error.notFoundTitle': 'Page not found',

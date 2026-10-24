@@ -5,6 +5,8 @@ import { AdminService } from '../../core/services/admin.service';
 import { PostService } from '../../core/services/post.service';
 import { VideoService } from '../../core/services/video.service';
 import { ToastService } from '../../core/services/toast.service';
+import { AiReminderService } from '../../core/services/ai-reminder.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { I18nService, TranslationKey } from '../../i18n/i18n.service';
 import { LocalizedText, SupportedLanguage } from '../../i18n/language.types';
 import { siteConfig } from '../../config/site.config';
@@ -64,10 +66,15 @@ export class AdminSettingsPage {
   private readonly postService = inject(PostService);
   private readonly videoService = inject(VideoService);
   private readonly toast = inject(ToastService);
+  private readonly aiReminderService = inject(AiReminderService);
+  private readonly auth = inject(AuthService);
 
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly saving = signal(false);
+  readonly publishingAi = signal<boolean>(false);
+  readonly autoAiReminderEnabled = signal<boolean>(true);
+  readonly todayAiReminder = computed(() => this.aiReminderService.getTodayAiReminder());
 
   readonly posts = signal<Post[]>([]);
   readonly videos = signal<Video[]>([]);
@@ -634,6 +641,7 @@ export class AdminSettingsPage {
         heroBannerPill2: this.heroBannerPill2(),
         heroBannerPill3: this.heroBannerPill3(),
         heroBannerPill4: this.heroBannerPill4(),
+        autoAiReminderEnabled: this.autoAiReminderEnabled(),
       };
 
       await this.adminService.saveSettings(patch);
@@ -769,6 +777,9 @@ export class AdminSettingsPage {
         parseLocalizedField(settings.heroBannerPill4, DEFAULT_BANNER_OVERLAYS.pill4),
       );
     }
+    if (settings.autoAiReminderEnabled !== undefined) {
+      this.autoAiReminderEnabled.set(settings.autoAiReminderEnabled);
+    }
 
     if (settings.homeSections?.length) {
       const stored = new Map(settings.homeSections.map((section) => [section.id, section.enabled]));
@@ -779,6 +790,27 @@ export class AdminSettingsPage {
           enabled: stored.get(section.id) ?? section.enabled,
         })),
       );
+    }
+  }
+
+  onAutoAiReminderToggle(event: Event): void {
+    this.autoAiReminderEnabled.set((event.target as HTMLInputElement).checked);
+  }
+
+  async publishTodayAiReminder(): Promise<void> {
+    const user = this.auth.user();
+    this.publishingAi.set(true);
+    try {
+      await this.aiReminderService.publishAiReminderToDatabase(
+        user?.uid ?? 'admin',
+        this.todayAiReminder(),
+      );
+      this.toast.success(this.i18n.t('home.aiReminderPublished'));
+    } catch (err) {
+      console.error('Failed to publish AI reminder from settings:', err);
+      this.toast.error(this.i18n.t('common.errorMessage'));
+    } finally {
+      this.publishingAi.set(false);
     }
   }
 }

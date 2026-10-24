@@ -479,6 +479,62 @@
         </div>
       </section>
 
+      <!-- AI Daily Islamic Reminder Automation Section -->
+      <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.aiReminderSection')">
+        <div class="admin-card__head-row">
+          <div>
+            <h2 class="admin-card__title">
+              <span class="sparkle-title"><app-icon name="sparkle" /> {{ i18n.t('admin.settings.aiReminderSection') }}</span>
+            </h2>
+            <p class="admin-card__desc">
+              {{ i18n.t('admin.settings.aiReminderSub') }}
+            </p>
+          </div>
+          <label class="toggle-control">
+            <input
+              type="checkbox"
+              [checked]="autoAiReminderEnabled()"
+              (change)="onAutoAiReminderToggle($event)"
+            />
+            <span class="toggle-control__label">{{ i18n.t('admin.settings.autoAiReminderToggle') }}</span>
+          </label>
+        </div>
+
+        @if (autoAiReminderEnabled()) {
+          <div class="ai-reminder-preview-box">
+            <div class="ai-reminder-preview-box__head">
+              <span class="badge badge--gold">
+                <app-icon name="sparkle" />
+                {{ i18n.t('admin.settings.aiReminderPreview') }}
+              </span>
+              <span class="badge badge--outline">
+                <app-icon name="book" />
+                {{ todayAiReminder().reference }}
+              </span>
+            </div>
+
+            <h3 class="ai-reminder-preview-box__title">
+              {{ i18n.localized(todayAiReminder().title) }}
+            </h3>
+            <p class="ai-reminder-preview-box__content">
+              {{ i18n.localized(todayAiReminder().content) }}
+            </p>
+
+            <div class="ai-reminder-preview-box__actions">
+              <button
+                type="button"
+                class="btn btn--primary btn--sm"
+                [disabled]="publishingAi()"
+                (click)="publishTodayAiReminder()"
+              >
+                <app-icon name="upload" />
+                <span>{{ publishingAi() ? i18n.t('common.saving') : i18n.t('admin.settings.publishTodayAiNow') }}</span>
+              </button>
+            </div>
+          </div>
+        }
+      </section>
+
       <section class="admin-card" [attr.aria-label]="i18n.t('admin.settings.featuredVideo')">
         <h2 class="admin-card__title">{{ i18n.t('admin.settings.featuredVideo') }}</h2>
 

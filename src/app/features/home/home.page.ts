@@ -8,6 +8,8 @@ import { CategoryService } from '../../core/services/category.service';
 import { EventService } from '../../core/services/event.service';
 import { PostService } from '../../core/services/post.service';
 import { VideoService } from '../../core/services/video.service';
+import { AiReminderService } from '../../core/services/ai-reminder.service';
+import { ToastService } from '../../core/services/toast.service';
 import { FirebaseService } from '../../core/firebase/firebase.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService } from '../../i18n/i18n.service';
@@ -112,6 +114,8 @@ export class HomePage implements OnDestroy {
   private readonly eventService = inject(EventService);
   private readonly categoryService = inject(CategoryService);
   private readonly adminService = inject(AdminService);
+  private readonly aiReminderService = inject(AiReminderService);
+  private readonly toast = inject(ToastService);
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -282,12 +286,55 @@ export class HomePage implements OnDestroy {
     return this.posts().slice(0, 6);
   });
 
-  /** Today's reminder only — older ones belong to the archive, not "today". */
+  /** Today's reminder — if no human created one today, fallback to Auto AI */
   readonly todaysReminder = computed<Post | null>(() => {
     const post = this.reminder();
-    if (!post?.publishedAt) return null;
-    return isSameLocalDay(post.publishedAt.toDate(), new Date()) ? post : null;
+    if (post?.publishedAt && isSameLocalDay(post.publishedAt.toDate(), new Date())) {
+      return post;
+    }
+    const autoAiEnabled = this.settings()?.autoAiReminderEnabled !== false;
+    if (autoAiEnabled) {
+      return this.aiReminderService.getTodayAiReminder();
+    }
+    return null;
   });
+
+  readonly isAiReminder = computed<boolean>(() => {
+    const r = this.todaysReminder();
+    return !!(r && r.id?.startsWith('ai-reminder-'));
+  });
+
+  readonly publishingAiReminder = signal(false);
+
+  async publishAiReminder(): Promise<void> {
+    const user = this.auth.user();
+    const item = this.todaysReminder();
+    if (!item) return;
+
+    this.publishingAiReminder.set(true);
+    try {
+      await this.aiReminderService.publishAiReminderToDatabase(user?.uid ?? 'admin', item);
+      this.toast.success(this.i18n.t('home.aiReminderPublished'));
+      this.load();
+    } catch (err) {
+      console.error('Failed to publish AI reminder:', err);
+      this.toast.error(this.i18n.t('common.errorMessage'));
+    } finally {
+      this.publishingAiReminder.set(false);
+    }
+  }
+
+  async copyReminderText(post: Post): Promise<void> {
+    const title = this.i18n.localized(post.title);
+    const content = this.i18n.localized(post.content);
+    const textToCopy = `${title}\n\n${content}\n\nSource: ${post.reference || post.source || 'Rohani Shifa'}`;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      this.toast.success(this.i18n.t('home.reflectionCopied'));
+    } catch {
+      this.toast.error(this.i18n.t('common.errorMessage'));
+    }
+  }
 
   readonly reminderBody = computed(() => this.i18n.localized(this.todaysReminder()?.content ?? ''));
 

@@ -123,6 +123,11 @@ export const ar: Record<TranslationKey, string> = {
   'home.dailyKicker': 'اليوم',
   'home.dailyTitle': 'تذكيرك الإسلامي لليوم',
   'home.dailyEmpty': 'لم يُنشر تذكير اليوم. عد قريبًا إن شاء الله.',
+  'home.aiReminderBadge': 'تذكرة إسلامية يومية ذكية',
+  'home.copyReflection': 'نسخ التذكرة',
+  'home.reflectionCopied': 'تم نسخ التذكرة إلى الحافظة',
+  'home.publishAiReminder': 'نشر كمنشور رسمي',
+  'home.aiReminderPublished': 'تم نشر التذكرة الذكية اليومية بنجاح كمنشور رسمي!',
   'home.featuredVideo': 'فيديو مميز',
   'home.featuredVideoEmpty': 'لا يوجد فيديو مميز بعد.',
   'home.latestPosts': 'أحدث المقالات',
@@ -603,6 +608,12 @@ export const ar: Record<TranslationKey, string> = {
   'admin.settings.pill2': 'الزر 2 (الحديث)',
   'admin.settings.pill3': 'الزر 3 (الدعاء)',
   'admin.settings.pill4': 'الزر 4 (التعليم الإسلامي)',
+  'admin.settings.aiReminderSection': 'أتمتة التذكرة الإسلامية اليومية بالذكاء الاصطناعي',
+  'admin.settings.aiReminderSub':
+    'توليد وعرض تذكرة إسلامية يومية أصيلة تلقائياً من القرآن والسنة عند عدم نشر أي تذكرة لليوم.',
+  'admin.settings.autoAiReminderToggle': 'تفعيل التذكرة الذكية اليومية تلقائياً عند عدم وجود منشور',
+  'admin.settings.publishTodayAiNow': 'نشر تذكرة اليوم الذكية في قاعدة البيانات الآن',
+  'admin.settings.aiReminderPreview': 'معاينة تذكرة اليوم الذكية',
 
   // ── الأخطاء / التنبيهات ──────────────────────────────────────────────────
   'error.notFoundTitle': 'الصفحة غير موجودة',

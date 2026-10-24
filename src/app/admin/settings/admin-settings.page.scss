@@ -668,3 +668,70 @@
     font-family: var(--font-urdu);
   }
 }
+
+// ── AI Daily Reminder Automation Card ──────────────────────────────────────
+.admin-card__head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-block-end: var(--sp-4);
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.sparkle-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--c-primary-800);
+
+  app-icon {
+    color: var(--c-gold-500);
+  }
+}
+
+.ai-reminder-preview-box {
+  margin-block-start: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-xl);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, var(--c-surface) 0%, rgba(201, 162, 39, 0.06) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-family: var(--font-display);
+    color: var(--c-primary-900);
+    margin: 0;
+  }
+
+  &__content {
+    font-size: 0.95rem;
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-700);
+    white-space: pre-line;
+    padding-inline-start: var(--sp-3);
+    border-inline-start: 3px solid var(--c-gold-500);
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding-block-start: var(--sp-2);
+  }
+}

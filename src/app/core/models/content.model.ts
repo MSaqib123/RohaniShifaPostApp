@@ -164,5 +164,7 @@ export interface SiteSettings {
   heroBannerPill2?: LocalizedText | string | null;
   heroBannerPill3?: LocalizedText | string | null;
   heroBannerPill4?: LocalizedText | string | null;
+  /** Automatically generate and display a daily Islamic reminder if none was posted for the day (§22). */
+  autoAiReminderEnabled?: boolean;
   updatedAt?: Timestamp;
 }
