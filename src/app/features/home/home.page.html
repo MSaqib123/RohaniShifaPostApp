@@ -9,7 +9,7 @@
         <div class="hero-showcase__frame" role="region" [attr.aria-label]="heroBannerAlt()">
           <img [src]="heroBannerUrl()" [alt]="heroBannerAlt()" class="hero-showcase__img" fetchpriority="high" />
 
-          @if (showOverlays()) {
+          @if (showOverlays() || showPills()) {
           <div class="hero-showcase__overlays" aria-hidden="false">
             <!-- Left Side Quick Category Pills (Desktop / Tablet) -->
             @if (showPills()) {
@@ -73,7 +73,7 @@
             }
 
             <!-- Bottom Left Golden Quote Badge (Desktop / Tablet) -->
-            @if (bannerQuote()) {
+            @if (showOverlays() && bannerQuote()) {
               <div
                 class="hero-quote-badge"
                 [class.hero-quote-badge--urdu]="i18n.language() === 'ur'"
@@ -104,70 +104,72 @@
             }
 
             <!-- Top Right Calligraphy, Ribbon & Tagline -->
-            <div
-              class="hero-titles-block"
-              [class.hero-titles-block--urdu]="i18n.language() === 'ur'"
-              [class.hero-titles-block--arabic]="i18n.language() === 'ar'"
-              [class.hero-titles-block--latin]="i18n.language() === 'en'"
-            >
-              @if (bannerTitle()) {
-                <h1
-                  class="hero-calligraphy"
-                  id="hero-title"
-                  [class.hero-calligraphy--urdu]="i18n.language() === 'ur'"
-                  [class.hero-calligraphy--arabic]="i18n.language() === 'ar'"
-                  [class.hero-calligraphy--latin]="i18n.language() === 'en'"
-                >
-                  {{ bannerTitle() }}
-                </h1>
-              }
-
-              @if (bannerSubtitle()) {
-                <div class="hero-ribbon">
-                  <svg class="hero-ribbon__svg" viewBox="0 0 520 72" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#0c533e" />
-                        <stop offset="50%" stop-color="#073a2a" />
-                        <stop offset="100%" stop-color="#03251a" />
-                      </linearGradient>
-                      <linearGradient id="goldBorderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#f5e6a3" />
-                        <stop offset="50%" stop-color="#d4af37" />
-                        <stop offset="100%" stop-color="#f5e6a3" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M 22 6 L 498 6 C 506 6, 512 14, 512 24 C 512 30, 516 36, 516 36 C 516 36, 512 42, 512 48 C 512 58, 506 66, 498 66 L 22 66 C 14 66, 8 58, 8 48 C 8 42, 4 36, 4 36 C 4 36, 8 30, 8 24 C 8 14, 14 6, 22 6 Z" fill="url(#ribbonGrad)" stroke="url(#goldBorderGrad)" stroke-width="2.5" />
-                    <path d="M 24 10 L 496 10 C 502 10, 507 16, 507 25 C 507 29, 511 36, 511 36 C 511 36, 507 43, 507 47 C 507 56, 502 62, 496 62 L 24 62 C 18 62, 13 56, 13 47 C 13 43, 9 36, 9 36 C 9 36, 13 29, 13 25 C 13 16, 18 10, 24 10 Z" fill="none" stroke="#fbe8a6" stroke-width="1" opacity="0.85" />
-                  </svg>
-                  <span
-                    class="hero-ribbon__text"
-                    [class.hero-ribbon__text--urdu]="i18n.language() === 'ur'"
-                    [class.hero-ribbon__text--arabic]="i18n.language() === 'ar'"
-                    [class.hero-ribbon__text--latin]="i18n.language() === 'en'"
+            @if (showOverlays()) {
+              <div
+                class="hero-titles-block"
+                [class.hero-titles-block--urdu]="i18n.language() === 'ur'"
+                [class.hero-titles-block--arabic]="i18n.language() === 'ar'"
+                [class.hero-titles-block--latin]="i18n.language() === 'en'"
+              >
+                @if (bannerTitle()) {
+                  <h1
+                    class="hero-calligraphy"
+                    id="hero-title"
+                    [class.hero-calligraphy--urdu]="i18n.language() === 'ur'"
+                    [class.hero-calligraphy--arabic]="i18n.language() === 'ar'"
+                    [class.hero-calligraphy--latin]="i18n.language() === 'en'"
                   >
-                    {{ bannerSubtitle() }}
-                  </span>
-                </div>
-              }
+                    {{ bannerTitle() }}
+                  </h1>
+                }
 
-              @if (bannerTagline()) {
-                <p
-                  class="hero-tagline-text"
-                  [class.hero-tagline-text--urdu]="i18n.language() === 'ur'"
-                  [class.hero-tagline-text--arabic]="i18n.language() === 'ar'"
-                  [class.hero-tagline-text--latin]="i18n.language() === 'en'"
-                >
-                  {{ bannerTagline() }}
-                </p>
-              }
-            </div>
+                @if (bannerSubtitle()) {
+                  <div class="hero-ribbon">
+                    <svg class="hero-ribbon__svg" viewBox="0 0 520 72" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="ribbonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#0c533e" />
+                          <stop offset="50%" stop-color="#073a2a" />
+                          <stop offset="100%" stop-color="#03251a" />
+                        </linearGradient>
+                        <linearGradient id="goldBorderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#f5e6a3" />
+                          <stop offset="50%" stop-color="#d4af37" />
+                          <stop offset="100%" stop-color="#f5e6a3" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 22 6 L 498 6 C 506 6, 512 14, 512 24 C 512 30, 516 36, 516 36 C 516 36, 512 42, 512 48 C 512 58, 506 66, 498 66 L 22 66 C 14 66, 8 58, 8 48 C 8 42, 4 36, 4 36 C 4 36, 8 30, 8 24 C 8 14, 14 6, 22 6 Z" fill="url(#ribbonGrad)" stroke="url(#goldBorderGrad)" stroke-width="2.5" />
+                      <path d="M 24 10 L 496 10 C 502 10, 507 16, 507 25 C 507 29, 511 36, 511 36 C 511 36, 507 43, 507 47 C 507 56, 502 62, 496 62 L 24 62 C 18 62, 13 56, 13 47 C 13 43, 9 36, 9 36 C 9 36, 13 29, 13 25 C 13 16, 18 10, 24 10 Z" fill="none" stroke="#fbe8a6" stroke-width="1" opacity="0.85" />
+                    </svg>
+                    <span
+                      class="hero-ribbon__text"
+                      [class.hero-ribbon__text--urdu]="i18n.language() === 'ur'"
+                      [class.hero-ribbon__text--arabic]="i18n.language() === 'ar'"
+                      [class.hero-ribbon__text--latin]="i18n.language() === 'en'"
+                    >
+                      {{ bannerSubtitle() }}
+                    </span>
+                  </div>
+                }
+
+                @if (bannerTagline()) {
+                  <p
+                    class="hero-tagline-text"
+                    [class.hero-tagline-text--urdu]="i18n.language() === 'ur'"
+                    [class.hero-tagline-text--arabic]="i18n.language() === 'ar'"
+                    [class.hero-tagline-text--latin]="i18n.language() === 'en'"
+                  >
+                    {{ bannerTagline() }}
+                  </p>
+                }
+              </div>
+            }
           </div>
         }
       </div>
 
       <!-- Mobile Quick Bar (Rendered only on screens <680px) -->
-      @if (showOverlays() && showPills()) {
+      @if (showPills()) {
         <nav class="hero-mobile-pills" aria-label="Quick Categories">
           <a routerLink="/posts" [queryParams]="{ search: 'quran' }" class="hero-mobile-pill">
             <span class="hero-mobile-pill__icon"><app-icon name="quran-open" /></span>

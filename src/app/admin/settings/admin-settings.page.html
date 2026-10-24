@@ -208,13 +208,15 @@
                 [alt]="heroBannerAlt() || 'Banner preview'"
                 class="banner-preview-img"
               />
-              @if (heroBannerShowOverlays()) {
+              @if (heroBannerShowOverlays() || heroBannerShowPills()) {
                 <div class="banner-live-preview-overlay">
-                  <div class="mini-top-right">
-                    <div class="mini-title">{{ previewTitle() }}</div>
-                    <div class="mini-ribbon">{{ previewSubtitle() }}</div>
-                    <div class="mini-tagline">{{ previewTagline() }}</div>
-                  </div>
+                  @if (heroBannerShowOverlays()) {
+                    <div class="mini-top-right">
+                      <div class="mini-title">{{ previewTitle() }}</div>
+                      <div class="mini-ribbon">{{ previewSubtitle() }}</div>
+                      <div class="mini-tagline">{{ previewTagline() }}</div>
+                    </div>
+                  }
                   @if (heroBannerShowPills()) {
                     <div class="mini-pills">
                       <span>{{ previewPill1() }}</span>
@@ -223,7 +225,9 @@
                       <span>{{ previewPill4() }}</span>
                     </div>
                   }
-                  <div class="mini-quote">{{ previewQuote() }}</div>
+                  @if (heroBannerShowOverlays()) {
+                    <div class="mini-quote">{{ previewQuote() }}</div>
+                  }
                 </div>
               }
             </div>
@@ -261,7 +265,7 @@
           </div>
         </div>
 
-        <!-- Dynamic Overlay Objects Section -->
+        <!-- Dynamic Overlay Objects Section: Titles & Badges -->
         <div class="banner-overlays-panel">
           <div class="banner-overlays-panel__head">
             <div>
@@ -369,86 +373,107 @@
                 />
               </div>
             </div>
+          }
+        </div>
 
-            <!-- Quick Category Pills -->
-            <div class="pills-custom-block">
-              <div class="pills-custom-block__header">
-                <label class="toggle-control">
-                  <input
-                    type="checkbox"
-                    [checked]="heroBannerShowPills()"
-                    (change)="onBannerShowPillsToggle($event)"
-                  />
-                  <span class="toggle-control__label">{{
-                    i18n.t('admin.settings.showPills')
-                  }}</span>
-                </label>
-              </div>
+        <!-- Separate Category Quick-Pills Section -->
+        <div class="banner-overlays-panel banner-overlays-panel--pills">
+          <div class="banner-overlays-panel__head">
+            <div>
+              <h3 class="banner-overlays-panel__title">
+                {{ i18n.t('admin.settings.bannerPillsSection') }}
+              </h3>
+              <p class="banner-overlays-panel__desc">
+                {{ i18n.t('admin.settings.bannerPillsSub') }}
+              </p>
+            </div>
+            <label class="toggle-control">
+              <input
+                type="checkbox"
+                [checked]="heroBannerShowPills()"
+                (change)="onBannerShowPillsToggle($event)"
+              />
+              <span class="toggle-control__label">{{ i18n.t('admin.settings.showPills') }}</span>
+            </label>
+          </div>
 
-              @if (heroBannerShowPills()) {
-                <div class="pills-grid">
-                  <div class="field">
-                    <label class="field__label" for="pill-1">
-                      {{ i18n.t('admin.settings.pill1') }}
-                      <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
-                    </label>
-                    <input
-                      id="pill-1"
-                      class="input"
-                      [class.input--urdu]="overlayEditingLang() === 'ur'"
-                      [class.input--arabic]="overlayEditingLang() === 'ar'"
-                      type="text"
-                      [value]="getOverlayVal('pill1')"
-                      (input)="setOverlayVal('pill1', $event)"
-                    />
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="pill-2">
-                      {{ i18n.t('admin.settings.pill2') }}
-                      <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
-                    </label>
-                    <input
-                      id="pill-2"
-                      class="input"
-                      [class.input--urdu]="overlayEditingLang() === 'ur'"
-                      [class.input--arabic]="overlayEditingLang() === 'ar'"
-                      type="text"
-                      [value]="getOverlayVal('pill2')"
-                      (input)="setOverlayVal('pill2', $event)"
-                    />
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="pill-3">
-                      {{ i18n.t('admin.settings.pill3') }}
-                      <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
-                    </label>
-                    <input
-                      id="pill-3"
-                      class="input"
-                      [class.input--urdu]="overlayEditingLang() === 'ur'"
-                      [class.input--arabic]="overlayEditingLang() === 'ar'"
-                      type="text"
-                      [value]="getOverlayVal('pill3')"
-                      (input)="setOverlayVal('pill3', $event)"
-                    />
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="pill-4">
-                      {{ i18n.t('admin.settings.pill4') }}
-                      <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
-                    </label>
-                    <input
-                      id="pill-4"
-                      class="input"
-                      [class.input--urdu]="overlayEditingLang() === 'ur'"
-                      [class.input--arabic]="overlayEditingLang() === 'ar'"
-                      type="text"
-                      [value]="getOverlayVal('pill4')"
-                      (input)="setOverlayVal('pill4', $event)"
-                    />
-                  </div>
-                </div>
+          @if (heroBannerShowPills()) {
+            <!-- Language tab switcher for pills -->
+            <div class="overlay-lang-tabs" role="tablist">
+              @for (lang of languages; track lang.code) {
+                <button
+                  type="button"
+                  class="overlay-lang-tab"
+                  [class.overlay-lang-tab--active]="overlayEditingLang() === lang.code"
+                  (click)="setOverlayEditingLang(lang.code)"
+                >
+                  <span class="overlay-lang-tab__label">{{ lang.nativeLabel }}</span>
+                  <span class="overlay-lang-tab__tag">{{ lang.label }}</span>
+                </button>
               }
+            </div>
+
+            <div class="pills-grid">
+              <div class="field">
+                <label class="field__label" for="pill-1">
+                  {{ i18n.t('admin.settings.pill1') }}
+                  <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
+                </label>
+                <input
+                  id="pill-1"
+                  class="input"
+                  [class.input--urdu]="overlayEditingLang() === 'ur'"
+                  [class.input--arabic]="overlayEditingLang() === 'ar'"
+                  type="text"
+                  [value]="getOverlayVal('pill1')"
+                  (input)="setOverlayVal('pill1', $event)"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" for="pill-2">
+                  {{ i18n.t('admin.settings.pill2') }}
+                  <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
+                </label>
+                <input
+                  id="pill-2"
+                  class="input"
+                  [class.input--urdu]="overlayEditingLang() === 'ur'"
+                  [class.input--arabic]="overlayEditingLang() === 'ar'"
+                  type="text"
+                  [value]="getOverlayVal('pill2')"
+                  (input)="setOverlayVal('pill2', $event)"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" for="pill-3">
+                  {{ i18n.t('admin.settings.pill3') }}
+                  <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
+                </label>
+                <input
+                  id="pill-3"
+                  class="input"
+                  [class.input--urdu]="overlayEditingLang() === 'ur'"
+                  [class.input--arabic]="overlayEditingLang() === 'ar'"
+                  type="text"
+                  [value]="getOverlayVal('pill3')"
+                  (input)="setOverlayVal('pill3', $event)"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" for="pill-4">
+                  {{ i18n.t('admin.settings.pill4') }}
+                  <span class="field__lang-badge">{{ overlayEditingLang().toUpperCase() }}</span>
+                </label>
+                <input
+                  id="pill-4"
+                  class="input"
+                  [class.input--urdu]="overlayEditingLang() === 'ur'"
+                  [class.input--arabic]="overlayEditingLang() === 'ar'"
+                  type="text"
+                  [value]="getOverlayVal('pill4')"
+                  (input)="setOverlayVal('pill4', $event)"
+                />
+              </div>
             </div>
           }
         </div>

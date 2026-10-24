@@ -587,14 +587,17 @@ export const ar: Record<TranslationKey, string> = {
   'admin.settings.bannerUploaded': 'تم تحميل البانر بنجاح',
   'admin.settings.invalidImage':
     'يرجى تحديد ملف صورة صالح (JPG أو PNG أو WebP) بحجم أقل من 2 ميجابايت.',
-  'admin.settings.bannerOverlaysSection': 'عناصر ونصوص البانر الديناميكية',
+  'admin.settings.bannerOverlaysSection': 'عناوين وخطوط البانر الديناميكية',
   'admin.settings.bannerOverlaysSub':
-    'تخصيص العنوان الخطي والشريط والعبارة والأزرار السريعة والاقتباس أعلى البانر الرئيسي.',
-  'admin.settings.showOverlays': 'إظهار النصوص والعناصر فوق البانر',
+    'تخصيص العنوان الخطي والشريط والعبارة التعريفية وشارة الاقتباس المعروضة على البانر.',
+  'admin.settings.showOverlays': 'إظهار النصوص والشارات على البانر',
   'admin.settings.bannerTitle': 'العنوان الرئيسي (خط)',
   'admin.settings.bannerSubtitle': 'العنوان الفرعي في الشريط',
   'admin.settings.bannerTagline': 'الشعار باللغة الإنجليزية',
   'admin.settings.bannerQuote': 'بطاقة الاقتباس السفلية',
+  'admin.settings.bannerPillsSection': 'أزرار الفئات السريعة للبانر',
+  'admin.settings.bannerPillsSub':
+    'تخصيص أزرار التنقل السريع للأقسام (القرآن، الحديث، الدعاء، التعليم الإسلامي) على البانر.',
   'admin.settings.showPills': 'إظهار أزرار الأقسام السريعة',
   'admin.settings.pill1': 'الزر 1 (القرآن)',
   'admin.settings.pill2': 'الزر 2 (الحديث)',

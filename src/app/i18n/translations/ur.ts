@@ -588,14 +588,17 @@ export const ur: Record<TranslationKey, string> = {
   'admin.settings.bannerUploaded': 'بینر کامیابی سے لوڈ ہو گیا',
   'admin.settings.invalidImage':
     'براہِ کرم درست تصویر منتخب کریں (JPG, PNG یا WebP) جس کا سائز 2 MB سے کم ہو۔',
-  'admin.settings.bannerOverlaysSection': 'بینر کے متحرک ٹیکسٹ اور اشیاء',
+  'admin.settings.bannerOverlaysSection': 'بینر کے عنوانات اور خطاطی اوورلیز',
   'admin.settings.bannerOverlaysSub':
-    'ہیرو بینر کے اوپر ظاہر ہونے والا خطاطی عنوان، ربن پٹی، انگریزی ٹیگ لائن، کیٹیگری پِلز اور کوٹ بیج تبدیل کریں۔',
-  'admin.settings.showOverlays': 'بینر پر متحرک ٹیکسٹ اور بیجز دکھائیں',
+    'ہیرو بینر کے اوپر ظاہر ہونے والا خطاطی عنوان، ربن پٹی، انگریزی ٹیگ لائن اور کوٹ بیج تبدیل کریں۔',
+  'admin.settings.showOverlays': 'بینر پر تحریر اور نشانات دکھائیں',
   'admin.settings.bannerTitle': 'مرکزی خطاطی عنوان',
   'admin.settings.bannerSubtitle': 'ربن پٹی کا ذیلی عنوان',
   'admin.settings.bannerTagline': 'انگریزی ٹیگ لائن / ذیلی عنوان',
   'admin.settings.bannerQuote': 'نیچے کا اقوالِ زریں / کوٹ بیج',
+  'admin.settings.bannerPillsSection': 'بینر کیٹیگری کوئیک پِلز (Quick Pills)',
+  'admin.settings.bannerPillsSub':
+    'بینر پر قرآن، حدیث، دعا اور اسلامی تعلیم کے فوری کیٹیگری لنکس ترتیب دیں۔',
   'admin.settings.showPills': 'کیٹیگری فوری پِلز دکھائیں',
   'admin.settings.pill1': 'پِل 1 لیبل (قرآن)',
   'admin.settings.pill2': 'پِل 2 لیبل (حدیث)',
