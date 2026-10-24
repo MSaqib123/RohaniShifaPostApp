@@ -137,6 +137,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <symbol id="i-plus" viewBox="0 0 24 24">
         <path d="M12 5v14M5 12h14" />
       </symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="17 8 12 3 7 8" />
+        <line x1="12" y1="3" x2="12" y2="15" />
+      </symbol>
       <symbol id="i-edit" viewBox="0 0 24 24">
         <path d="M4 20h4L20.5 7.5a2.1 2.1 0 0 0-3-3L5 17Z" />
         <path d="m14.5 6.5 3 3" />

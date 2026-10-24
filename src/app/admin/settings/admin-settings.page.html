@@ -60,6 +60,91 @@
           </div>
         </div>
 
+        <!-- ── 5 Banner Pictures Options & Selector ── -->
+        <div class="banner-slots-section">
+          <div class="banner-slots-section__head">
+            <div>
+              <h3 class="banner-slots-title">
+                <app-icon name="image" />
+                {{ i18n.t('admin.settings.bannerSlots') }}
+              </h3>
+              <p class="banner-slots-desc">{{ i18n.t('admin.settings.bannerSlotsDesc') }}</p>
+            </div>
+            <span class="active-slot-pill">
+              <span class="status-dot"></span>
+              {{ i18n.t('admin.settings.slotActive') }}: #{{ activeBannerSlotIndex() + 1 }}
+            </span>
+          </div>
+
+          <div class="banner-slots-grid">
+            @for (slotImg of bannerSlots(); track $index; let idx = $index) {
+              <div
+                class="banner-slot-card"
+                [class.banner-slot-card--active]="activeBannerSlotIndex() === idx"
+                (click)="selectActiveBannerSlot(idx)"
+              >
+                <div class="banner-slot-card__top">
+                  <span class="slot-number-badge">#{{ idx + 1 }}</span>
+                  @if (activeBannerSlotIndex() === idx) {
+                    <span class="badge badge--success slot-active-tag">
+                      <app-icon name="check" />
+                      {{ i18n.t('admin.settings.slotActive') }}
+                    </span>
+                  } @else {
+                    <button
+                      type="button"
+                      class="btn btn--xs btn--outline"
+                      (click)="selectActiveBannerSlot(idx); $event.stopPropagation()"
+                    >
+                      {{ i18n.t('admin.settings.setAsActive') }}
+                    </button>
+                  }
+                </div>
+
+                <div class="banner-slot-card__thumb">
+                  @if (slotImg) {
+                    <img [src]="slotImg" [alt]="'Banner slot ' + (idx + 1)" loading="lazy" />
+                  } @else {
+                    <div class="banner-slot-empty">
+                      <app-icon name="image" />
+                      <span>{{ i18n.t('admin.settings.slotEmpty') }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="banner-slot-card__actions" (click)="$event.stopPropagation()">
+                  <input
+                    #slotFileInput
+                    type="file"
+                    class="sr-only"
+                    accept="image/jpeg,image/png,image/webp"
+                    (change)="onSlotFileSelected(idx, $event)"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn--xs btn--outline slot-upload-btn"
+                    (click)="slotFileInput.click()"
+                    [title]="i18n.t('admin.settings.uploadSlot')"
+                  >
+                    <app-icon name="upload" />
+                    {{ slotImg ? 'Change' : i18n.t('admin.settings.uploadSlot') }}
+                  </button>
+                  @if (slotImg) {
+                    <button
+                      type="button"
+                      class="btn-icon-subtle slot-trash-btn"
+                      (click)="clearBannerSlot(idx, $event)"
+                      [title]="i18n.t('admin.settings.clearSlot')"
+                    >
+                      <app-icon name="trash" />
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
         <!-- Dropzone & Live preview area -->
         <div class="banner-upload-grid">
           <!-- Interactive Upload Dropzone -->

@@ -574,6 +574,15 @@ export const en = {
   'admin.settings.heroBanner': 'Home Page Hero Banner',
   'admin.settings.heroBannerSub':
     'Upload or customize the hero banner image displayed on the home page.',
+  'admin.settings.bannerSlots': 'Banner Image Slots (5 Pictures)',
+  'admin.settings.bannerSlotsDesc':
+    'Upload up to 5 pictures and select any picture as the default active banner for the website.',
+  'admin.settings.slotNumber': 'Banner #{number}',
+  'admin.settings.slotActive': 'Active Banner',
+  'admin.settings.setAsActive': 'Set as Active',
+  'admin.settings.slotEmpty': 'Empty Slot',
+  'admin.settings.uploadSlot': 'Upload Picture',
+  'admin.settings.clearSlot': 'Remove',
   'admin.settings.heroBannerPlaceholder':
     'Recommended dimensions: 1200 × 750 px (16:10 aspect ratio) or 1920 × 1080 px (16:9). Maximum size: 2 MB. Formats: JPG, PNG, WebP.',
   'admin.settings.uploadBanner': 'Upload banner image',

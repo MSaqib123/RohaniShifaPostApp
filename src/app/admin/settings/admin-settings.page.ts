@@ -82,6 +82,16 @@ export class AdminSettingsPage {
   readonly heroBannerAlt = signal<string>('');
   readonly heroBannerShowOverlays = signal<boolean>(true);
 
+  /** 5 Banner picture slots available for admin to upload & toggle */
+  readonly bannerSlots = signal<string[]>([
+    'images/hero-banner.jpg',
+    'images/islamic-hero.png',
+    '',
+    '',
+    '',
+  ]);
+  readonly activeBannerSlotIndex = signal<number>(0);
+
   /** Currently selected language tab for editing the overlay fields */
   readonly overlayEditingLang = signal<SupportedLanguage>('ur');
 
@@ -167,6 +177,8 @@ export class AdminSettingsPage {
   });
 
   readonly currentBannerPreview = computed(() => {
+    const activeSlotImg = this.bannerSlots()[this.activeBannerSlotIndex()];
+    if (activeSlotImg && activeSlotImg.trim()) return activeSlotImg.trim();
     const custom = this.heroBannerUrl().trim();
     return custom || 'images/hero-banner.jpg';
   });
@@ -230,6 +242,11 @@ export class AdminSettingsPage {
   onBannerUrlChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.heroBannerUrl.set(value);
+    this.bannerSlots.update((slots) => {
+      const next = [...slots];
+      next[this.activeBannerSlotIndex()] = value;
+      return next;
+    });
     if (value.trim()) {
       this.probeImageDimensions(value.trim());
     } else {
@@ -237,98 +254,115 @@ export class AdminSettingsPage {
     }
   }
 
-  onBannerAltChange(event: Event): void {
-    this.heroBannerAlt.set((event.target as HTMLInputElement).value);
-  }
-
-  onBannerShowOverlaysToggle(event: Event): void {
-    this.heroBannerShowOverlays.set((event.target as HTMLInputElement).checked);
-  }
-
-  onBannerShowPillsToggle(event: Event): void {
-    this.heroBannerShowPills.set((event.target as HTMLInputElement).checked);
-  }
-
-  setOverlayEditingLang(lang: SupportedLanguage): void {
-    this.overlayEditingLang.set(lang);
-  }
-
-  getOverlayVal(
-    field:
-      | 'title'
-      | 'subtitle'
-      | 'tagline'
-      | 'quote'
-      | 'pill1'
-      | 'pill2'
-      | 'pill3'
-      | 'pill4',
-  ): string {
-    const lang = this.overlayEditingLang();
-    switch (field) {
-      case 'title':
-        return this.heroBannerTitle()[lang] ?? '';
-      case 'subtitle':
-        return this.heroBannerSubtitle()[lang] ?? '';
-      case 'tagline':
-        return this.heroBannerTagline()[lang] ?? '';
-      case 'quote':
-        return this.heroBannerQuote()[lang] ?? '';
-      case 'pill1':
-        return this.heroBannerPill1()[lang] ?? '';
-      case 'pill2':
-        return this.heroBannerPill2()[lang] ?? '';
-      case 'pill3':
-        return this.heroBannerPill3()[lang] ?? '';
-      case 'pill4':
-        return this.heroBannerPill4()[lang] ?? '';
+  selectActiveBannerSlot(index: number): void {
+    this.activeBannerSlotIndex.set(index);
+    const chosen = this.bannerSlots()[index];
+    if (chosen) {
+      this.heroBannerUrl.set(chosen);
+      this.probeImageDimensions(chosen);
     }
+    this.toast.success(`${this.i18n.t('admin.settings.slotActive')}: #${index + 1}`);
   }
 
-  setOverlayVal(
-    field:
-      | 'title'
-      | 'subtitle'
-      | 'tagline'
-      | 'quote'
-      | 'pill1'
-      | 'pill2'
-      | 'pill3'
-      | 'pill4',
-    event: Event,
-  ): void {
-    const val = (event.target as HTMLInputElement).value;
-    const lang = this.overlayEditingLang();
-    switch (field) {
-      case 'title':
-        this.heroBannerTitle.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'subtitle':
-        this.heroBannerSubtitle.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'tagline':
-        this.heroBannerTagline.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'quote':
-        this.heroBannerQuote.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'pill1':
-        this.heroBannerPill1.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'pill2':
-        this.heroBannerPill2.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'pill3':
-        this.heroBannerPill3.update((prev) => ({ ...prev, [lang]: val }));
-        break;
-      case 'pill4':
-        this.heroBannerPill4.update((prev) => ({ ...prev, [lang]: val }));
-        break;
+  onSlotFileSelected(slotIndex: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (files && files.length > 0) {
+      void this.processSlotFile(slotIndex, files[0]);
+    }
+    input.value = '';
+  }
+
+  private async processSlotFile(slotIndex: number, file: File): Promise<void> {
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      return;
+    }
+
+    const sizeStr =
+      file.size > 1024 * 1024
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        : `${Math.round(file.size / 1024)} KB`;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const img = new Image();
+      img.onload = () => {
+        let finalUrl = result;
+        const maxW = 1600;
+        if (img.naturalWidth > maxW) {
+          const canvas = document.createElement('canvas');
+          const scale = maxW / img.naturalWidth;
+          canvas.width = maxW;
+          canvas.height = Math.round(img.naturalHeight * scale);
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            finalUrl = canvas.toDataURL('image/jpeg', 0.88);
+          }
+        }
+        this.bannerSlots.update((slots) => {
+          const next = [...slots];
+          next[slotIndex] = finalUrl;
+          return next;
+        });
+        if (this.activeBannerSlotIndex() === slotIndex || !this.heroBannerUrl()) {
+          this.heroBannerUrl.set(finalUrl);
+          this.activeBannerSlotIndex.set(slotIndex);
+          this.bannerDimensions.set({
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+            sizeStr,
+          });
+        }
+        this.toast.success(
+          `${this.i18n.t('admin.settings.bannerUploaded')} (#${slotIndex + 1})`,
+        );
+      };
+      img.onerror = () => {
+        this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+      };
+      img.src = result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  clearBannerSlot(slotIndex: number, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.bannerSlots.update((slots) => {
+      const next = [...slots];
+      next[slotIndex] = '';
+      return next;
+    });
+    if (this.activeBannerSlotIndex() === slotIndex) {
+      const remainingIdx = this.bannerSlots().findIndex((s) => !!s);
+      const fallbackIdx = remainingIdx >= 0 ? remainingIdx : 0;
+      this.activeBannerSlotIndex.set(fallbackIdx);
+      const fallbackUrl = this.bannerSlots()[fallbackIdx] || 'images/hero-banner.jpg';
+      this.heroBannerUrl.set(fallbackUrl);
+      this.probeImageDimensions(fallbackUrl);
     }
   }
 
   resetDefaultBanner(): void {
-    this.heroBannerUrl.set('');
+    this.bannerSlots.set([
+      'images/hero-banner.jpg',
+      'images/islamic-hero.png',
+      '',
+      '',
+      '',
+    ]);
+    this.activeBannerSlotIndex.set(0);
+    this.heroBannerUrl.set('images/hero-banner.jpg');
     this.heroBannerAlt.set('');
     this.bannerDimensions.set(null);
     this.heroBannerShowOverlays.set(true);
@@ -457,6 +491,8 @@ export class AdminSettingsPage {
       homeSections: this.sections(),
       heroBannerUrl: this.heroBannerUrl().trim() || null,
       heroBannerAlt: this.heroBannerAlt().trim() || null,
+      heroBannerImages: this.bannerSlots(),
+      heroBannerActiveIndex: this.activeBannerSlotIndex(),
       heroBannerShowOverlays: this.heroBannerShowOverlays(),
       heroBannerTitle: this.heroBannerTitle(),
       heroBannerSubtitle: this.heroBannerSubtitle(),
@@ -526,6 +562,25 @@ export class AdminSettingsPage {
   private applySettings(settings: SiteSettings): void {
     if (settings.featuredPostIds) this.featuredPostIds.set(settings.featuredPostIds);
     if (settings.featuredVideoId !== undefined) this.featuredVideoId.set(settings.featuredVideoId);
+    if (
+      settings.heroBannerImages &&
+      Array.isArray(settings.heroBannerImages) &&
+      settings.heroBannerImages.length > 0
+    ) {
+      const padded = [...settings.heroBannerImages];
+      while (padded.length < 5) padded.push('');
+      this.bannerSlots.set(padded.slice(0, 5));
+    } else {
+      const defaultUrl = settings.heroBannerUrl || 'images/hero-banner.jpg';
+      this.bannerSlots.set([defaultUrl, 'images/islamic-hero.png', '', '', '']);
+    }
+    if (
+      settings.heroBannerActiveIndex !== undefined &&
+      settings.heroBannerActiveIndex >= 0 &&
+      settings.heroBannerActiveIndex < 5
+    ) {
+      this.activeBannerSlotIndex.set(settings.heroBannerActiveIndex);
+    }
     if (settings.heroBannerUrl !== undefined) {
       this.heroBannerUrl.set(settings.heroBannerUrl ?? '');
       if (settings.heroBannerUrl) {

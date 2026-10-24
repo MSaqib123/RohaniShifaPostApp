@@ -563,6 +563,15 @@ export const ur: Record<TranslationKey, string> = {
   'admin.settings.save': 'ترتیبات محفوظ کریں',
   'admin.settings.heroBanner': 'مرکزی صفحہ کا ہیرو بینر',
   'admin.settings.heroBannerSub': 'ہوم پیج پر دکھائے جانے والے بینر کی تصویر اپ لوڈ یا تبدیل کریں۔',
+  'admin.settings.bannerSlots': 'بینر تصاویر کے 5 سلاٹس (کوئی بھی فعال منتخب کریں)',
+  'admin.settings.bannerSlotsDesc':
+    '5 تک بینر تصاویر اپ لوڈ کریں اور ویب سائٹ کے لیے کسی بھی تصویر کو بطور ڈیفالٹ بینر منتخب کریں۔',
+  'admin.settings.slotNumber': 'بینر #{number}',
+  'admin.settings.slotActive': 'فعال بینر',
+  'admin.settings.setAsActive': 'بطور فعال منتخب کریں',
+  'admin.settings.slotEmpty': 'خالی سلاٹ',
+  'admin.settings.uploadSlot': 'تصویر اپ لوڈ کریں',
+  'admin.settings.clearSlot': 'ہٹائیں',
   'admin.settings.heroBannerPlaceholder':
     'تجویز کردہ سائز: 1200 × 750 px (نسبت 16:10) یا 1920 × 1080 px (نسبت 16:9)۔ زیادہ سے زیادہ سائز: 2 MB۔ فارمیٹس: JPG, PNG, WebP۔',
   'admin.settings.uploadBanner': 'بینر تصویر اپ لوڈ کریں',

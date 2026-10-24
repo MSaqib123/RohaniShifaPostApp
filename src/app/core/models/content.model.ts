@@ -152,6 +152,8 @@ export interface SiteSettings {
   homeSections?: Array<{ id: string; enabled: boolean }>;
   heroBannerUrl?: string | null;
   heroBannerAlt?: string | null;
+  heroBannerImages?: string[];
+  heroBannerActiveIndex?: number;
   heroBannerShowOverlays?: boolean;
   heroBannerTitle?: LocalizedText | string | null;
   heroBannerSubtitle?: LocalizedText | string | null;

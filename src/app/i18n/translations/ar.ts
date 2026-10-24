@@ -562,6 +562,15 @@ export const ar: Record<TranslationKey, string> = {
   'admin.settings.heroBanner': 'بانر الصفحة الرئيسية',
   'admin.settings.heroBannerSub':
     'تحميل أو تغيير صورة البانر الرئيسية المعروضة في أعلى الصفحة الرئيسية.',
+  'admin.settings.bannerSlots': 'خيارات صور البانر (5 صور)',
+  'admin.settings.bannerSlotsDesc':
+    'قم بتحميل حتى 5 صور للبانر وحدد أي منها لتكون الصورة الافتراضية النشطة للموقع.',
+  'admin.settings.slotNumber': 'بانر #{number}',
+  'admin.settings.slotActive': 'البانر النشط',
+  'admin.settings.setAsActive': 'تعيين كنشط',
+  'admin.settings.slotEmpty': 'موضع فارغ',
+  'admin.settings.uploadSlot': 'تحميل صورة',
+  'admin.settings.clearSlot': 'إزالة',
   'admin.settings.heroBannerPlaceholder':
     'الأبعاد الموصى بها: 1200 × 750 بكسل (نسبة 16:10) أو 1920 × 1080 بكسل (نسبة 16:9). أقصى حجم: 2 ميجابايت. التنسيقات: JPG, PNG, WebP.',
   'admin.settings.uploadBanner': 'تحميل صورة البانر',

@@ -81,6 +81,212 @@
 }
 
 // ── Upload & Preview Grid ───────────────────────────────────────────────────
+// ── 5 Banner Pictures Slots ────────────────────────────────────────────────
+.banner-slots-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-block-end: var(--sp-5);
+  padding: var(--sp-4);
+  background: var(--c-surface-alt);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-xl);
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+}
+
+.banner-slots-title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text);
+
+  app-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--c-primary-700);
+  }
+}
+
+.banner-slots-desc {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.active-slot-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--r-full);
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.banner-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: var(--sp-3);
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.banner-slot-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-surface);
+  border: 2px solid var(--c-line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+
+  &:hover {
+    border-color: var(--c-primary-500);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  &--active {
+    border-color: #10b981;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+    background: var(--c-surface);
+
+    .slot-number-badge {
+      background: #10b981;
+      color: #fff;
+    }
+  }
+}
+
+.banner-slot-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--c-line);
+  background: var(--c-bg);
+}
+
+.slot-number-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--r-sm);
+  background: var(--c-line);
+  color: var(--text);
+}
+
+.slot-active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  font-weight: 700;
+
+  app-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+.btn--xs {
+  padding: 0.15rem 0.45rem;
+  font-size: 0.6875rem;
+  border-radius: var(--r-sm);
+}
+
+.banner-slot-card__thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--c-bg-deep);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+}
+
+.banner-slot-card:hover .banner-slot-card__thumb img {
+  transform: scale(1.05);
+}
+
+.banner-slot-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  padding: 0.5rem;
+  text-align: center;
+
+  app-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    opacity: 0.4;
+  }
+}
+
+.banner-slot-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  border-top: 1px dashed var(--c-line);
+  background: var(--c-surface);
+}
+
+.slot-upload-btn {
+  flex: 1;
+}
+
+.slot-trash-btn {
+  color: var(--c-danger-600);
+  padding: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--c-danger-50);
+  }
+
+  app-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+}
+
 .banner-upload-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
