@@ -377,6 +377,96 @@ export class AdminSettingsPage {
     this.heroBannerPill4.set({ ...DEFAULT_BANNER_OVERLAYS.pill4 });
   }
 
+  onBannerAltChange(event: Event): void {
+    this.heroBannerAlt.set((event.target as HTMLInputElement).value);
+  }
+
+  onBannerShowOverlaysToggle(event: Event): void {
+    this.heroBannerShowOverlays.set((event.target as HTMLInputElement).checked);
+  }
+
+  onBannerShowPillsToggle(event: Event): void {
+    this.heroBannerShowPills.set((event.target as HTMLInputElement).checked);
+  }
+
+  setOverlayEditingLang(lang: SupportedLanguage): void {
+    this.overlayEditingLang.set(lang);
+  }
+
+  getOverlayVal(
+    field:
+      | 'title'
+      | 'subtitle'
+      | 'tagline'
+      | 'quote'
+      | 'pill1'
+      | 'pill2'
+      | 'pill3'
+      | 'pill4',
+  ): string {
+    const lang = this.overlayEditingLang();
+    switch (field) {
+      case 'title':
+        return this.heroBannerTitle()[lang] ?? '';
+      case 'subtitle':
+        return this.heroBannerSubtitle()[lang] ?? '';
+      case 'tagline':
+        return this.heroBannerTagline()[lang] ?? '';
+      case 'quote':
+        return this.heroBannerQuote()[lang] ?? '';
+      case 'pill1':
+        return this.heroBannerPill1()[lang] ?? '';
+      case 'pill2':
+        return this.heroBannerPill2()[lang] ?? '';
+      case 'pill3':
+        return this.heroBannerPill3()[lang] ?? '';
+      case 'pill4':
+        return this.heroBannerPill4()[lang] ?? '';
+    }
+  }
+
+  setOverlayVal(
+    field:
+      | 'title'
+      | 'subtitle'
+      | 'tagline'
+      | 'quote'
+      | 'pill1'
+      | 'pill2'
+      | 'pill3'
+      | 'pill4',
+    event: Event,
+  ): void {
+    const val = (event.target as HTMLInputElement).value;
+    const lang = this.overlayEditingLang();
+    switch (field) {
+      case 'title':
+        this.heroBannerTitle.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'subtitle':
+        this.heroBannerSubtitle.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'tagline':
+        this.heroBannerTagline.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'quote':
+        this.heroBannerQuote.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill1':
+        this.heroBannerPill1.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill2':
+        this.heroBannerPill2.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill3':
+        this.heroBannerPill3.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+      case 'pill4':
+        this.heroBannerPill4.update((prev) => ({ ...prev, [lang]: val }));
+        break;
+    }
+  }
+
   onBannerDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
