@@ -17,6 +17,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { I18nService, TranslationKey } from '../../i18n/i18n.service';
 import { LanguageSwitcher } from '../../i18n/language-switcher';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { ThemeSwitcherComponent } from '../../shared/components/theme-switcher/theme-switcher';
 import { BrandLogo, localizedSiteName } from '../brand-logo';
 
 interface NavLink {
@@ -34,7 +35,15 @@ interface NavLink {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, IconComponent, BrandLogo, LanguageSwitcher, CdkTrapFocus],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    IconComponent,
+    BrandLogo,
+    LanguageSwitcher,
+    ThemeSwitcherComponent,
+    CdkTrapFocus,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './header.html',
   styleUrl: './header.scss',

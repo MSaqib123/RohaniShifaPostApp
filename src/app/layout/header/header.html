@@ -31,6 +31,8 @@
 
       <app-language-switcher />
 
+      <app-theme-switcher class="hide-mobile" />
+
       @if (auth.isLoggedIn()) {
         <div class="menu-anchor user-menu-anchor hide-mobile">
           <button
@@ -105,14 +107,17 @@
     >
       <div class="drawer__head">
         <strong>{{ i18n.t('nav.menu') }}</strong>
-        <button
-          type="button"
-          class="icon-btn"
-          (click)="closeDrawer()"
-          [attr.aria-label]="i18n.t('nav.closeMenu')"
-        >
-          <app-icon name="close" />
-        </button>
+        <div style="display: flex; align-items: center; gap: 0.5rem">
+          <app-theme-switcher />
+          <button
+            type="button"
+            class="icon-btn"
+            (click)="closeDrawer()"
+            [attr.aria-label]="i18n.t('nav.closeMenu')"
+          >
+            <app-icon name="close" />
+          </button>
+        </div>
       </div>
 
       @for (link of navLinks; track link.route) {

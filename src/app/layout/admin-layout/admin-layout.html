@@ -64,6 +64,8 @@
       <span class="admin-topbar__title">{{ siteName() }}</span>
 
       <div class="admin-topbar__actions">
+        <app-theme-switcher />
+        <app-language-switcher />
         <a class="btn btn--sm btn--ghost" [routerLink]="['/']">
           <app-icon name="external" />
           <span class="admin-topbar__site-label">{{ i18n.t('admin.viewSite') }}</span>

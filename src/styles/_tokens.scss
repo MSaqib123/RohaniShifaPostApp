@@ -1,12 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS — TEMPORARY BRANDING (§3, §4)
-// Deep Islamic green + warm gold, inspired by the project's visual identity.
-// When final brand colors arrive, edit THIS file only — components inherit
-// every value through CSS custom properties.
+// DESIGN TOKENS — LUXURY SPIRITUAL IDENTITY
+// Obsidian Emerald + Royal Islamic Gold + Glassmorphism Micro-Elevations.
 // ─────────────────────────────────────────────────────────────────────────────
 
 :root {
-  // ── Brand: deep green ─────────────────────────────────────────────────────
+  // ── Brand: Deep Sacred Green ──────────────────────────────────────────────
   --c-primary-950: #052a20;
   --c-primary-900: #07392b;
   --c-primary-800: #0a4735;
@@ -17,9 +15,7 @@
   --c-primary-100: #d6ece4;
   --c-primary-50: #ecf7f3;
 
-  // ── Brand: warm gold ──────────────────────────────────────────────────────
-  // Darkened from #96770f so gold text clears WCAG AA (≥4.5:1) on white and
-  // on the `--c-gold-50` badge background — audit M2.
+  // ── Brand: Illuminated Royal Gold ────────────────────────────────────────
   --c-gold-700: #8a6d0a;
   --c-gold-600: #b2901c;
   --c-gold-500: #c9a227;
@@ -28,22 +24,30 @@
   --c-gold-100: #f5ecce;
   --c-gold-50: #fbf7e8;
 
-  // ── Neutrals ──────────────────────────────────────────────────────────────
-  --c-ink-900: #10201a;
-  --c-ink-800: #1b2d26;
-  --c-ink-700: #2c3d36;
-  --c-ink-500: #55655d;
-  // Darkened from #71807a: it is `--text-faint`, so it must clear WCAG AA
-  // (≥4.5:1) on white, `--c-bg` and `--c-surface-alt` — audit M2.
-  --c-ink-400: #67736d;
-  --c-ink-300: #98a49e;
+  // ── Neutrals & Surfaces (Light) ──────────────────────────────────────────
+  --c-ink-900: #0f1f18;
+  --c-ink-800: #1a2e24;
+  --c-ink-700: #293e34;
+  --c-ink-500: #51645a;
+  --c-ink-400: #6c8075;
+  --c-ink-300: #9cb0a5;
 
   --c-surface: #ffffff;
-  --c-surface-alt: #f7f5ee;
-  --c-bg: #fbfaf6;
-  --c-bg-deep: #f3f1e8;
-  --c-line: #e7e2d5;
-  --c-line-soft: #f0ede3;
+  --c-surface-alt: #f8f6f0;
+  --c-surface-glass: rgba(255, 255, 255, 0.85);
+  --c-bg: #fcfbf7;
+  --c-bg-deep: #f3efe4;
+  --c-line: #e6e0d2;
+  --c-line-soft: #f0ebe0;
+
+  --c-header-bg: rgba(252, 251, 247, 0.85);
+  --c-header-border: rgba(230, 224, 210, 0.75);
+
+  // ── Luxury Gradients ─────────────────────────────────────────────────────
+  --grad-gold: linear-gradient(135deg, #d4af37 0%, #f6e8a4 50%, #b2901c 100%);
+  --grad-gold-foil: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+  --grad-emerald: linear-gradient(135deg, #0d5c46 0%, #063325 100%);
+  --grad-emerald-subtle: linear-gradient(135deg, rgba(13, 92, 70, 0.08) 0%, rgba(201, 162, 39, 0.06) 100%);
 
   // ── Semantic ──────────────────────────────────────────────────────────────
   --c-danger-700: #8f1d17;
@@ -57,7 +61,7 @@
   --c-info-600: #1d5fa8;
   --c-info-50: #e9f1fb;
 
-  // ── Semantic aliases (used by components) ─────────────────────────────────
+  // ── Semantic aliases ──────────────────────────────────────────────────────
   --primary: var(--c-primary-700);
   --primary-hover: var(--c-primary-800);
   --primary-contrast: #ffffff;
@@ -69,7 +73,7 @@
   --focus-ring: 0 0 0 3px rgba(21, 145, 108, 0.35);
 
   // ── Typography ────────────────────────────────────────────────────────────
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Amiri', 'Times New Roman', serif;
   --font-urdu: 'Gulzar', 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
   --font-arabic: 'Amiri', 'Noto Naskh Arabic', 'Times New Roman', serif;
@@ -83,7 +87,7 @@
   --fs-xl: 1.375rem;
   --fs-2xl: 1.75rem;
   --fs-3xl: 2.25rem;
-  --fs-4xl: clamp(2rem, 4vw, 3rem);
+  --fs-4xl: clamp(2rem, 4vw, 3.25rem);
 
   --lh-tight: 1.25;
   --lh-normal: 1.6;
@@ -101,27 +105,31 @@
   --sp-12: 3rem;
   --sp-16: 4rem;
 
-  --container: 76rem;
+  --container: 78rem;
   --container-narrow: 48rem;
-  --header-h: 4.25rem;
+  --header-h: 4.5rem;
 
   // ── Shape / elevation ─────────────────────────────────────────────────────
   --r-sm: 0.375rem;
   --r-md: 0.625rem;
   --r-lg: 1rem;
   --r-xl: 1.5rem;
+  --r-2xl: 2rem;
   --r-full: 999px;
 
-  --shadow-sm: 0 1px 2px rgba(16, 32, 26, 0.06);
-  --shadow-md: 0 4px 14px rgba(16, 32, 26, 0.08);
-  --shadow-lg: 0 14px 34px rgba(16, 32, 26, 0.12);
-  --shadow-gold: 0 6px 18px rgba(201, 162, 39, 0.25);
+  --shadow-sm: 0 1px 3px rgba(15, 31, 24, 0.05), 0 1px 2px rgba(15, 31, 24, 0.03);
+  --shadow-md: 0 4px 16px rgba(15, 31, 24, 0.08), 0 2px 6px rgba(15, 31, 24, 0.04);
+  --shadow-lg: 0 16px 40px rgba(15, 31, 24, 0.1), 0 4px 12px rgba(15, 31, 24, 0.05);
+  --shadow-gold: 0 8px 24px rgba(201, 162, 39, 0.28);
+  --shadow-emerald: 0 8px 24px rgba(13, 92, 70, 0.22);
+  --shadow-glow-gold: 0 0 25px rgba(201, 162, 39, 0.22);
+  --shadow-glow-emerald: 0 0 25px rgba(16, 185, 129, 0.15);
 
   // ── Motion ────────────────────────────────────────────────────────────────
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-fast: 140ms;
-  --dur: 220ms;
-  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --dur-slow: 450ms;
 
   // ── Stacking ──────────────────────────────────────────────────────────────
   --z-header: 100;
@@ -133,8 +141,7 @@
   color-scheme: light;
 }
 
-// Script-specific typography — applied automatically by I18nService via
-// <html lang=".."> so no component needs to know the active language.
+// ── Typography Lang Selectors ────────────────────────────────────────────────
 html[lang='ur'] {
   --font-sans: var(--font-urdu);
   --font-display: var(--font-urdu);
@@ -145,7 +152,6 @@ html[lang='ar'] {
   --font-display: var(--font-arabic);
 }
 
-// Nastaliq needs generous leading to stay legible.
 html[lang='ur'] body {
   line-height: 2;
 }
@@ -160,4 +166,80 @@ html[lang='ar'] body {
     --dur: 0.01ms;
     --dur-slow: 0.01ms;
   }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// DARK MODE — LUXURY OBSIDIAN EMERALD & ILLUMINATED GOLD
+// ═════════════════════════════════════════════════════════════════════════════
+[data-theme='dark'],
+html.dark {
+  color-scheme: dark;
+
+  // Deep obsidian emerald canvas
+  --c-bg: #08100d;
+  --c-bg-deep: #040806;
+  --c-surface: #0f1d17;
+  --c-surface-alt: #14261f;
+  --c-surface-glass: rgba(15, 29, 23, 0.82);
+  --c-line: #1c362a;
+  --c-line-soft: #14281f;
+
+  --c-header-bg: rgba(8, 16, 13, 0.85);
+  --c-header-border: rgba(28, 54, 42, 0.7);
+
+  // High-contrast, illuminated text
+  --c-ink-900: #f4faf6;
+  --c-ink-800: #e2efe8;
+  --c-ink-700: #c5dfd3;
+  --c-ink-500: #93ada0;
+  --c-ink-400: #718c7f;
+  --c-ink-300: #4e675b;
+
+  // Luminous primary accents for dark obsidian backdrop
+  --c-primary-950: #ecfdf5;
+  --c-primary-900: #d1fae5;
+  --c-primary-800: #6ee7b7;  // Glowing brand title & prominent highlights!
+  --c-primary-700: #34d399;  // Emerald links & focus rings!
+  --c-primary-600: #10b981;  // Primary buttons!
+  --c-primary-500: #059669;
+  --c-primary-300: #047857;
+  --c-primary-100: #064e3b;
+  --c-primary-50: #062b20;
+
+  // Radiant Gold in dark mode
+  --c-gold-700: #fef08a;
+  --c-gold-600: #fde047;
+  --c-gold-500: #eab308;
+  --c-gold-400: #ca8a04;
+  --c-gold-200: #854d0e;
+  --c-gold-100: #422006;
+  --c-gold-50: #1f1402;
+
+  // Semantic
+  --c-danger-50: #2b1110;
+  --c-success-50: #0d281a;
+  --c-warning-50: #2b1f06;
+  --c-info-50: #0d1e33;
+
+  // Semantic aliases
+  --primary: var(--c-primary-600);
+  --primary-hover: var(--c-primary-700);
+  --primary-contrast: #03150e;
+  --accent: var(--c-gold-500);
+  --text: var(--c-ink-900);
+  --text-muted: var(--c-ink-500);
+  --text-faint: var(--c-ink-400);
+  --border: var(--c-line);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.75);
+  --shadow-gold: 0 8px 24px rgba(234, 179, 8, 0.28);
+  --shadow-emerald: 0 8px 28px rgba(16, 185, 129, 0.25);
+  --shadow-glow-gold: 0 0 30px rgba(234, 179, 8, 0.35);
+  --shadow-glow-emerald: 0 0 30px rgba(16, 185, 129, 0.3);
+
+  --grad-gold: linear-gradient(135deg, #fde047 0%, #ca8a04 100%);
+  --grad-emerald: linear-gradient(135deg, #10b981 0%, #064e3b 100%);
+  --grad-emerald-subtle: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(234, 179, 8, 0.08) 100%);
 }

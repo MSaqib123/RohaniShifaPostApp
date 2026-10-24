@@ -1,15 +1,35 @@
-<section class="admin-page">
-  <header class="admin-page__head">
-    <div>
-      <span class="admin-page__kicker">{{ i18n.t('admin.welcome') }}</span>
-      <h1>{{ i18n.t('admin.dashboard') }}</h1>
-      <p>{{ i18n.t('admin.dashboardSub') }}</p>
+<section class="admin-page dashboard-pro">
+  <!-- Top Greeting & Status Banner -->
+  <header class="dashboard-header">
+    <div class="dashboard-header__welcome">
+      <div class="dashboard-header__meta">
+        <span class="dashboard-date-pill">
+          <app-icon name="calendar" />
+          {{ todayFormatted() }}
+        </span>
+        @if (firebase.configured) {
+          <span class="status-badge status-badge--connected">
+            <span class="status-dot"></span>
+            {{ i18n.t('admin.connected') }}
+          </span>
+        } @else {
+          <span class="status-badge status-badge--demo">
+            <span class="status-dot status-dot--amber"></span>
+            Demo Mode (Local)
+          </span>
+        }
+      </div>
+      <h1 class="dashboard-header__title">
+        {{ i18n.t('admin.welcome') }}<span class="dashboard-header__user">, {{ auth.user()?.displayName || 'Admin' }}</span>
+      </h1>
+      <p class="dashboard-header__sub">{{ i18n.t('admin.dashboardSub') }}</p>
     </div>
-    <div class="admin-page__actions" style="display: flex; gap: 0.5rem; align-items: center">
+
+    <div class="dashboard-header__actions">
       @if (firebase.configured) {
         <button
           type="button"
-          class="btn btn--outline btn--sm"
+          class="btn btn--secondary btn--sm"
           [disabled]="seeding()"
           (click)="onSeedDemoData()"
         >
@@ -17,19 +37,12 @@
           {{ seeding() ? i18n.t('admin.seeding') : i18n.t('admin.seedDemoData') }}
         </button>
       }
-      <a class="btn btn--outline btn--sm" routerLink="/">
+      <a class="btn btn--primary btn--sm" routerLink="/" target="_blank" rel="noopener">
         <app-icon name="external" />
         {{ i18n.t('admin.viewSite') }}
       </a>
     </div>
   </header>
-
-  @if (!firebase.configured) {
-    <div class="alert alert--info">
-      <app-icon name="info" />
-      <span>{{ i18n.t('common.demoModeMessage') }}</span>
-    </div>
-  }
 
   @if (loading()) {
     <app-content-state kind="loading" />
@@ -42,28 +55,147 @@
       (retry)="retry()"
     />
   } @else {
-    <div class="stat-grid">
+    <!-- 6 KPI Stat Cards -->
+    <div class="kpi-grid">
       @for (stat of stats(); track stat.key) {
-        <div class="stat-card">
-          <span class="stat-card__icon"><app-icon [name]="stat.icon" /></span>
-          <div>
-            <strong>{{ stat.value }}</strong>
-            <span>{{ i18n.t(stat.key) }}</span>
+        <a class="kpi-card" [routerLink]="stat.route">
+          <div class="kpi-card__top">
+            <span class="kpi-card__icon" [style.background]="stat.gradient">
+              <app-icon [name]="stat.icon" />
+            </span>
+            @if (stat.badge) {
+              <span class="kpi-card__badge">{{ stat.badge }}</span>
+            }
           </div>
-        </div>
+          <div class="kpi-card__body">
+            <div class="kpi-card__value">{{ stat.value }}</div>
+            <div class="kpi-card__label">{{ i18n.t(stat.key) }}</div>
+          </div>
+          <div class="kpi-card__footer">
+            <span>{{ i18n.t('admin.viewAll') }}</span>
+            <app-icon name="chevron-right" />
+          </div>
+        </a>
       }
     </div>
 
-    <section class="admin-section" [attr.aria-label]="i18n.t('admin.quickActions')">
-      <h2>{{ i18n.t('admin.quickActions') }}</h2>
-      <div class="quick-actions">
+    <!-- Quick Actions Bar -->
+    <section class="dashboard-section" [attr.aria-label]="i18n.t('admin.quickActions')">
+      <div class="dashboard-section__head">
+        <h2 class="dashboard-section__title">
+          <app-icon name="sparkle" />
+          {{ i18n.t('admin.quickActions') }}
+        </h2>
+      </div>
+      <div class="quick-actions-pro">
         @for (action of quickActions; track action.route) {
-          <a class="btn btn--outline" [routerLink]="action.route">
-            <app-icon [name]="action.icon" />
-            {{ i18n.t(action.key) }}
+          <a class="quick-action-tile" [routerLink]="action.route">
+            <span class="quick-action-tile__icon">
+              <app-icon [name]="action.icon" />
+            </span>
+            <span class="quick-action-tile__label">{{ i18n.t(action.key) }}</span>
           </a>
         }
       </div>
     </section>
+
+    <!-- Recent Content 2-Column Split -->
+    <div class="dashboard-split-grid">
+      <!-- Recent Posts -->
+      <section class="dashboard-card" [attr.aria-label]="i18n.t('admin.recentPosts')">
+        <div class="dashboard-card__head">
+          <div class="dashboard-card__title-group">
+            <app-icon name="post" />
+            <h3>{{ i18n.t('admin.recentPosts') }}</h3>
+          </div>
+          <a class="dashboard-card__link" routerLink="/admin/posts">
+            {{ i18n.t('admin.viewAll') }}
+            <app-icon name="chevron-right" />
+          </a>
+        </div>
+
+        @if (recentPosts().length === 0) {
+          <div class="dashboard-empty">
+            <app-icon name="post" />
+            <p>{{ i18n.t('admin.activityEmpty') }}</p>
+            <a class="btn btn--outline btn--sm" routerLink="/admin/posts/new">
+              <app-icon name="plus" />
+              {{ i18n.t('admin.newPost') }}
+            </a>
+          </div>
+        } @else {
+          <div class="recent-list">
+            @for (post of recentPosts(); track post.id) {
+              <div class="recent-item">
+                <div class="recent-item__media">
+                  @if (post.coverImage) {
+                    <img [src]="post.coverImage" [alt]="resolveTitle(post.title)" loading="lazy" />
+                  } @else {
+                    <span class="recent-item__placeholder"><app-icon name="post" /></span>
+                  }
+                </div>
+                <div class="recent-item__content">
+                  <div class="recent-item__title" [title]="resolveTitle(post.title)">
+                    {{ resolveTitle(post.title) }}
+                  </div>
+                  <div class="recent-item__meta">
+                    <span class="recent-item__date">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
+                    <span class="badge" [class.badge--success]="post.status === 'published'" [class.badge--muted]="post.status !== 'published'">
+                      {{ post.status === 'published' ? 'Published' : 'Draft' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="recent-item__action">
+                  <a class="btn-icon-subtle" [routerLink]="['/admin/posts', post.id, 'edit']" [title]="i18n.t('common.edit')">
+                    <app-icon name="edit" />
+                  </a>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Recent Comments -->
+      <section class="dashboard-card" [attr.aria-label]="i18n.t('admin.recentComments')">
+        <div class="dashboard-card__head">
+          <div class="dashboard-card__title-group">
+            <app-icon name="comment" />
+            <h3>{{ i18n.t('admin.recentComments') }}</h3>
+          </div>
+          <a class="dashboard-card__link" routerLink="/admin/comments">
+            {{ i18n.t('admin.viewAll') }}
+            <app-icon name="chevron-right" />
+          </a>
+        </div>
+
+        @if (recentComments().length === 0) {
+          <div class="dashboard-empty">
+            <app-icon name="comment" />
+            <p>{{ i18n.t('admin.activityEmpty') }}</p>
+          </div>
+        } @else {
+          <div class="comments-list">
+            @for (comment of recentComments(); track comment.id) {
+              <div class="comment-item">
+                <div class="comment-item__avatar">
+                  <app-icon name="users" />
+                </div>
+                <div class="comment-item__body">
+                  <div class="comment-item__header">
+                    <strong class="comment-item__author">{{ comment.displayName || 'Community Member' }}</strong>
+                    <span class="comment-item__date">{{ formatDate(comment.createdAt) }}</span>
+                  </div>
+                  <p class="comment-item__text">{{ comment.content }}</p>
+                  <div class="comment-item__context">
+                    <span class="badge badge--sm">{{ comment.itemType }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    </div>
   }
 </section>

@@ -15,6 +15,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { Observable, of, catchError, map } from 'rxjs';
+import { SAMPLE_POSTS } from '../data/sample-data';
 import { LocalizedText } from '../../i18n/language.types';
 import { Post, PostDraft, PostType } from '../models';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -100,7 +101,16 @@ export class PostService {
 
   /** Resolve related ids to posts, preserving the given id order. */
   byIds(ids: string[]): Observable<Post[]> {
-    if (!this.firebase.configured || ids.length === 0) return of([]);
+    if (ids.length === 0) return of([]);
+    if (!this.firebase.configured) {
+      const resolved = ids
+        .map((id) => {
+          const found = (SAMPLE_POSTS as any[]).find((p) => p.slug === id || p.id === id);
+          return found ? ({ ...found, id: found.id || found.slug } as Post) : null;
+        })
+        .filter((p): p is Post => !!p);
+      return of(resolved);
+    }
     // Firestore `in` accepts 30 values per query, so large sets are chunked.
     const chunks: string[][] = [];
     for (let i = 0; i < ids.length; i += 30) chunks.push(ids.slice(i, i + 30));

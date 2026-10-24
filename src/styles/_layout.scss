@@ -25,15 +25,19 @@ public-layout {
   position: sticky;
   inset-block-start: 0;
   z-index: var(--z-header);
-  background: rgba(251, 250, 246, 0.98);
-  border-block-end: 1px solid transparent;
+  background: var(--c-header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-block-end: 1px solid var(--c-header-border);
   transition:
+    background-color var(--dur) var(--ease),
     border-color var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
 
   &--scrolled {
+    background: var(--c-surface-glass);
     border-block-end-color: var(--c-line);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
   }
 
   &:has(.drawer) {
@@ -58,6 +62,11 @@ public-layout {
 
   &:hover {
     text-decoration: none;
+
+    .logo-mark {
+      transform: scale(1.08) rotate(3deg);
+      box-shadow: var(--shadow-gold);
+    }
   }
 
   &__name {
@@ -67,6 +76,7 @@ public-layout {
     line-height: 1.15;
     color: var(--c-primary-800);
     letter-spacing: -0.01em;
+    transition: color var(--dur-fast) var(--ease);
   }
 
   &__local {
@@ -78,51 +88,62 @@ public-layout {
 }
 
 .logo-mark {
-  inline-size: 2.4rem;
-  block-size: 2.4rem;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
   flex: none;
-  border-radius: 0.65rem;
+  border-radius: 0.75rem;
   box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
 .logo-img {
-  inline-size: 2.4rem;
-  block-size: 2.4rem;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
   object-fit: contain;
 }
 
 .nav-desktop {
   display: flex;
   align-items: center;
-  gap: var(--sp-1);
+  gap: 0.35rem;
   margin-inline: auto;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--r-full);
+  background: var(--c-surface-glass);
+  border: 1px solid var(--c-line-soft);
+  box-shadow: var(--shadow-sm);
 
   a {
-    padding: 0.5rem 0.85rem;
-    border-radius: var(--r-md);
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--r-full);
     color: var(--c-ink-700);
     font-weight: 600;
     font-size: var(--fs-base);
     text-decoration: none;
     transition:
       background-color var(--dur-fast) var(--ease),
-      color var(--dur-fast) var(--ease);
+      color var(--dur-fast) var(--ease),
+      transform var(--dur-fast) var(--ease);
 
     &:hover {
-      background: rgba(13, 92, 70, 0.07);
-      color: var(--c-primary-800);
+      background: var(--c-surface-alt);
+      color: var(--c-primary-700);
       text-decoration: none;
+      transform: translateY(-1px);
     }
 
     &.is-active {
       background: var(--c-primary-50);
-      color: var(--c-primary-700);
+      color: var(--c-primary-800);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--c-line);
+      font-weight: 700;
     }
   }
 
   @media (max-width: 1080px) {
     a {
-      padding-inline: 0.6rem;
+      padding-inline: 0.7rem;
       font-size: var(--fs-sm);
     }
   }
@@ -202,17 +223,20 @@ public-layout {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.45rem 0.6rem;
+  padding: 0.45rem 0.8rem;
   border: 1px solid var(--c-line);
-  border-radius: var(--r-md);
-  background: var(--c-surface);
+  border-radius: var(--r-full);
+  background: var(--c-surface-glass);
   color: var(--c-ink-700);
   font-size: var(--fs-sm);
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition:
     border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
 
   .icon {
     inline-size: 1.05rem;
@@ -221,8 +245,10 @@ public-layout {
 
   &:hover,
   &[aria-expanded='true'] {
-    border-color: var(--c-primary-300);
-    color: var(--c-primary-800);
+    border-color: var(--c-primary-500);
+    color: var(--c-primary-700);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
   }
 
   @media (max-width: 640px) {

@@ -256,6 +256,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <symbol id="i-moon" viewBox="0 0 24 24">
         <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" />
       </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </symbol>
       <symbol id="i-sparkle" viewBox="0 0 24 24">
         <path d="M12 3.5 13.8 9l5.7 1.8-5.7 1.8L12 18.5l-1.8-5.9-5.7-1.8L10.2 9Z" />
         <path d="M19 3v3M20.5 4.5h-3" />

@@ -12,7 +12,9 @@ import { filter } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { SessionService } from '../../core/auth/session.service';
 import { I18nService, TranslationKey } from '../../i18n/i18n.service';
+import { LanguageSwitcher } from '../../i18n/language-switcher';
 import { IconComponent } from '../../shared/components/icon/icon';
+import { ThemeSwitcherComponent } from '../../shared/components/theme-switcher/theme-switcher';
 import { BrandLogo, localizedSiteName } from '../brand-logo';
 
 interface AdminLink {
@@ -30,7 +32,15 @@ interface AdminLink {
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, IconComponent, BrandLogo],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    IconComponent,
+    BrandLogo,
+    LanguageSwitcher,
+    ThemeSwitcherComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.scss',

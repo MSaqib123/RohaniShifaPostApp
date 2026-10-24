@@ -159,7 +159,7 @@ export class AdminService {
    * Exact document counts via the count aggregate — cheap enough to poll the
    * dashboard without downloading a single document (§22).
    */
-  countQuery(name: 'posts' | 'videos' | 'users' | 'events'): Observable<number> {
+  countQuery(name: 'posts' | 'videos' | 'users' | 'events' | 'comments' | 'categories' | 'reports'): Observable<number> {
     if (!this.firebase.configured) return of(0);
     return new Observable<number>((subscriber) => {
       void getCountFromServer(collection(this.firebase.requireDb(), name))

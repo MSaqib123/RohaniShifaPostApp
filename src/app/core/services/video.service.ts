@@ -15,6 +15,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { Observable, of, catchError, map } from 'rxjs';
+import { SAMPLE_VIDEOS } from '../data/sample-data';
 import { LocalizedText } from '../../i18n/language.types';
 import { Video, VideoDraft } from '../models';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -92,7 +93,16 @@ export class VideoService {
   }
 
   byIds(ids: string[]): Observable<Video[]> {
-    if (!this.firebase.configured || ids.length === 0) return of([]);
+    if (ids.length === 0) return of([]);
+    if (!this.firebase.configured) {
+      const resolved = ids
+        .map((id) => {
+          const found = (SAMPLE_VIDEOS as any[]).find((v) => v.slug === id || v.id === id);
+          return found ? ({ ...found, id: found.id || found.slug } as Video) : null;
+        })
+        .filter((v): v is Video => !!v);
+      return of(resolved);
+    }
     const chunks: string[][] = [];
     for (let i = 0; i < ids.length; i += 30) chunks.push(ids.slice(i, i + 30));
 
