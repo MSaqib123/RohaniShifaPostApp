@@ -57,6 +57,13 @@ describe('FirebaseIslamicAiService', () => {
     expect(res.relatedTopics.length).toBeGreaterThan(0);
   });
 
+  it('should introduce itself when asked "who are you"', async () => {
+    const res = await service.askIslamicAi('who are you', 'en');
+    expect(res.isIslamic).toBe(true);
+    expect(res.isIslamicOnlyNotice).toBe(false);
+    expect(res.answer).toContain('Rohani Shifa Islamic AI Agent');
+  });
+
   it('should answer questions about Prophet Muhammad birth and Seerah', async () => {
     const res = await service.askIslamicAi('when prophet Muhammad was born', 'en');
     expect(res.isIslamic).toBe(true);

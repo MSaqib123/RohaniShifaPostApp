@@ -40,6 +40,30 @@ interface FallbackIslamicTopic {
 const FALLBACK_ISLAMIC_LIBRARY: FallbackIslamicTopic[] = [
   {
     keywords: [
+      'who are you', 'who r u', 'what are you', 'what is rohani shifa',
+      'about you', 'introduce yourself', 'your purpose', 'ai agent', 'agent',
+      'تم کون ہو', 'آپ کون ہیں', 'تعارف', 'من أنت', 'ما أنت', 'روحانی شفا کیا ہے'
+    ],
+    title: {
+      en: 'About Rohani Shifa Islamic AI Agent',
+      ur: 'روحانی شفا اسلامی AI اسسٹنٹ کا تعارف',
+      ar: 'نبذة عن المساعد الذكي لموقع روحاني شفاء',
+    },
+    answer: {
+      en: 'Assalamu Alaikum wa Rahmatullah! 🌟\n\nI am the **Rohani Shifa Islamic AI Agent**, your dedicated assistant for authentic Islamic knowledge, Quranic reflections, and spiritual well-being.\n\n### 📖 What I Can Help You With:\n1. **The Holy Quran & Hadith**: Guidance rooted in Quranic verses and Sahih Hadith collections.\n2. **Daily Duas & Supplications**: Sunnah Duas for peace of heart, anxiety, protection, and family.\n3. **Rohani Shifa (Spiritual Healing)**: Prophetic medicines, Ayat al-Kursi, Surah Al-Fatiha, and Ruqyah Shariah.\n4. **Worship & Pillars**: Guidance on Salah (Prayer), Tahajjud, Ramadan Fasting, Zakat, and Hajj.\n5. **Seerah & Islamic History**: The blessed life of Prophet Muhammad ﷺ and righteous examples.\n\nFeel free to ask me any question regarding Islamic teachings and spiritual guidance!',
+      ur: 'السلام علیکم ورحمۃ اللہ وبرکاتہ! 🌟\n\nمیں **روحانی شفا اسلامی AI ایجنٹ** ہوں، جو قرآنی تعلیمات، احادیثِ نبوی ﷺ اور روحانی رہنمائی کے لیے خصوصی طور پر تیار کیا گیا ہے۔\n\n### 📖 میں کس طرح آپ کی مدد کر سکتا ہوں:\n1. **قرآن و سنت کی روشنی**: قرآنی آیات اور صحیح احادیث کے مستند حوالہ جات۔\n2. **مسنون دعائیں اور اذکار**: پریشانی، غم، حفاظت، رزق اور شفا کے لیے مسنون دعائیں۔\n3. **روحانی شفا و علاج**: قرآنی آیات (آیت الکرسی، سورۃ الفاتحہ، معوذتین) اور طبِ نبوی کے ذریعے رہنمائی۔\n4. **عبادات کے احکام**: نماز، تہجد، وضو، روزہ، زکوٰۃ اور حج کے بنیادی مسائل۔\n5. **سیرت النبی ﷺ**: خاتم النبیین حضرت محمد ﷺ کی سیرتِ طیبہ اور اخلاقِ حسنہ۔\n\nآپ اسلامی احکام و مسائل سے متعلق کوئی بھی سوال بلا جھجھک پوچھ سکتے ہیں!',
+      ar: 'السلام عليكم ورحمة الله وبركاته! 🌟\n\nأنا **المساعد الذكي لموقع روحاني شفاء**، مرشدكم في رحاب القرآن الكريم والسنة النبوية والتوجيه الروحي.\n\n### 📖 مجالات المساعدة:\n1. **القرآن الكريم والحديث الشريف**: الاستشهاد بالآيات القرآنية وأحاديث الصحيحين والسنن.\n2. **الأدعية المأثورة والأذكار**: أدعية الشفاء والسكينة وتحصين النفس والبيت.\n3. **الرقية الشرعية والشفاء الروحي**: رقى القرآن الكريم والطب النبوي الشريف.\n4. **أحكام العبادات**: الصلاة، قيام الليل، الصيام، الزكاة، والحج.\n5. **السيرة النبوية العطرة**: مواقف من حياة الحبيب المصطفى ﷺ.\n\nيسعدني استقبال جميع استفساراتكم حول علوم الشريعة الإسلامية!',
+    },
+    reference: 'The Holy Quran & Sunnah • Rohani Shifa Platform',
+    source: 'Rohani Shifa Islamic AI Knowledge Engine',
+    relatedTopics: {
+      en: ['How to perform Tahajjud', 'Dua for peace and anxiety', 'Virtues of Sabr', 'Ayat al-Kursi benefits'],
+      ur: ['نمازِ تہجد کا طریقہ', 'دعا برائے سکون و راحت', 'صبر کی فضیلت', 'آیت الکرسی کے فضائل'],
+      ar: ['صلاة التهجد', 'أدعية تفريج الهم', 'فضل الصبر', 'فضل آية الكرسي'],
+    },
+  },
+  {
+    keywords: [
       'prophet', 'muhammad', 'born', 'birth', 'seerah', 'rasool', 'messenger',
       'milad', 'mawlid', 'نبی', 'رسول', 'محمد', 'ولادت', 'میلاد', 'سیرت', 'مولد'
     ],

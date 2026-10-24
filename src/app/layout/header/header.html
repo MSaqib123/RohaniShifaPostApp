@@ -20,6 +20,20 @@
     </nav>
 
     <div class="site-header__actions">
+      @if (auth.isLoggedIn()) {
+        <a
+          class="ai-agent-header-btn"
+          [routerLink]="['/search']"
+          [queryParams]="{ q: 'who are you' }"
+          [attr.aria-label]="i18n.t('search.aiTitle')"
+          [title]="'Rohani Shifa Islamic AI Agent - Ask Anything'"
+        >
+          <span class="ai-agent-header-btn__pulse" aria-hidden="true"></span>
+          <app-icon name="sparkle" />
+          <span class="ai-agent-header-btn__text">Islamic AI</span>
+        </a>
+      }
+
       <a
         class="icon-btn"
         routerLink="/search"
@@ -137,6 +151,19 @@
         <app-icon name="search" />
         {{ i18n.t('nav.search') }}
       </a>
+
+      @if (auth.isLoggedIn()) {
+        <a
+          class="drawer__link drawer__link--ai"
+          [routerLink]="['/search']"
+          [queryParams]="{ q: 'who are you' }"
+          (click)="closeDrawer()"
+        >
+          <app-icon name="sparkle" />
+          <span>{{ i18n.t('search.aiTitle') }}</span>
+          <span class="badge badge--gold">Agent</span>
+        </a>
+      }
 
       <hr class="drawer__divider" />
 

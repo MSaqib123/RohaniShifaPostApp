@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SearchResult, SearchService } from '../../core/services/search.service';
@@ -114,6 +115,14 @@ export class SearchPage {
 
     const initial = this.query();
     if (initial) this.search(initial);
+
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const q = params.get('q') ?? '';
+      if (q && q !== this.query()) {
+        this.query.set(q);
+        this.search(q);
+      }
+    });
   }
 
   async runAiSearch(term: string): Promise<void> {
