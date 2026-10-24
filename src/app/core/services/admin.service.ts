@@ -131,28 +131,67 @@ export class AdminService {
 
   /** Live settings document — used by the home page and the admin editor. */
   settings(): Observable<SiteSettings | null> {
-    if (!this.firebase.configured) return of(null);
+    const SETTINGS_LOCAL_KEY = 'rohani_site_settings';
+    const readLocal = (): SiteSettings | null => {
+      try {
+        const item = localStorage.getItem(SETTINGS_LOCAL_KEY);
+        return item ? (JSON.parse(item) as SiteSettings) : null;
+      } catch {
+        return null;
+      }
+    };
+
+    if (!this.firebase.configured) return of(readLocal());
+
     const reference = doc(
       this.firebase.requireDb(),
       'settings',
       'site',
     ) as DocumentReference<SiteSettings>;
-    return new Observable<SiteSettings | null>((subscriber) =>
-      onSnapshot(
+
+    return new Observable<SiteSettings | null>((subscriber) => {
+      const local = readLocal();
+      if (local) subscriber.next(local);
+
+      return onSnapshot(
         reference,
-        (snapshot) => subscriber.next(snapshot.exists() ? snapshot.data() : null),
-        (error) => subscriber.error(error),
-      ),
-    );
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.data();
+            try {
+              localStorage.setItem(SETTINGS_LOCAL_KEY, JSON.stringify(data));
+            } catch {}
+            subscriber.next(data);
+          } else if (!local) {
+            subscriber.next(null);
+          }
+        },
+        (error) => {
+          const fallback = readLocal();
+          if (fallback) {
+            subscriber.next(fallback);
+          } else {
+            subscriber.error(error);
+          }
+        },
+      );
+    });
   }
 
   async saveSettings(patch: SiteSettings): Promise<void> {
-    const db = this.firebase.requireDb();
-    await setDoc(
-      doc(db, 'settings', 'site'),
-      removeUndefined({ ...patch, updatedAt: Timestamp.now() }),
-      { merge: true },
-    );
+    const SETTINGS_LOCAL_KEY = 'rohani_site_settings';
+    try {
+      localStorage.setItem(SETTINGS_LOCAL_KEY, JSON.stringify(patch));
+    } catch {}
+
+    if (this.firebase.configured) {
+      const db = this.firebase.requireDb();
+      await setDoc(
+        doc(db, 'settings', 'site'),
+        removeUndefined({ ...patch, updatedAt: Timestamp.now() }),
+        { merge: true },
+      );
+    }
   }
 
   /**

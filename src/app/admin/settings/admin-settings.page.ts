@@ -280,58 +280,106 @@ export class AdminSettingsPage {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
-      return;
-    }
-
-    const sizeStr =
-      file.size > 1024 * 1024
-        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
-        : `${Math.round(file.size / 1024)} KB`;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const img = new Image();
-      img.onload = () => {
-        let finalUrl = result;
-        const maxW = 1600;
-        if (img.naturalWidth > maxW) {
-          const canvas = document.createElement('canvas');
-          const scale = maxW / img.naturalWidth;
-          canvas.width = maxW;
-          canvas.height = Math.round(img.naturalHeight * scale);
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            finalUrl = canvas.toDataURL('image/jpeg', 0.88);
-          }
-        }
-        this.bannerSlots.update((slots) => {
-          const next = [...slots];
-          next[slotIndex] = finalUrl;
-          return next;
+    try {
+      const result = await this.compressImageFile(file, 1200, 750, 0.75);
+      this.bannerSlots.update((slots) => {
+        const next = [...slots];
+        next[slotIndex] = result.url;
+        return next;
+      });
+      if (this.activeBannerSlotIndex() === slotIndex || !this.heroBannerUrl()) {
+        this.heroBannerUrl.set(result.url);
+        this.activeBannerSlotIndex.set(slotIndex);
+        this.bannerDimensions.set({
+          width: result.width,
+          height: result.height,
+          sizeStr: result.sizeStr,
         });
-        if (this.activeBannerSlotIndex() === slotIndex || !this.heroBannerUrl()) {
-          this.heroBannerUrl.set(finalUrl);
-          this.activeBannerSlotIndex.set(slotIndex);
-          this.bannerDimensions.set({
-            width: img.naturalWidth,
-            height: img.naturalHeight,
+      }
+      this.toast.success(
+        `${this.i18n.t('admin.settings.bannerUploaded')} (#${slotIndex + 1} • ${result.sizeStr})`,
+      );
+    } catch {
+      this.toast.error(this.i18n.t('admin.settings.invalidImage'));
+    }
+  }
+
+  private compressImageFile(
+    file: File,
+    maxW = 1200,
+    maxH = 750,
+    quality = 0.75,
+  ): Promise<{ url: string; width: number; height: number; sizeStr: string }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('File reading failed'));
+      reader.onload = () => {
+        const rawData = reader.result as string;
+        const img = new Image();
+        img.onerror = () => reject(new Error('Invalid image data'));
+        img.onload = () => {
+          let w = img.naturalWidth;
+          let h = img.naturalHeight;
+          if (w > maxW || h > maxH) {
+            const ratio = Math.min(maxW / w, maxH / h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Canvas unavailable'));
+            return;
+          }
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', quality);
+          const bytes = Math.round((compressed.length * 3) / 4);
+          const sizeStr = `${Math.round(bytes / 1024)} KB`;
+          resolve({
+            url: compressed,
+            width: w,
+            height: h,
             sizeStr,
           });
+        };
+        img.src = rawData;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  private recompressDataUrl(
+    dataUrl: string,
+    maxW = 1200,
+    maxH = 750,
+    quality = 0.70,
+  ): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        if (w > maxW || h > maxH) {
+          const ratio = Math.min(maxW / w, maxH / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
         }
-        this.toast.success(
-          `${this.i18n.t('admin.settings.bannerUploaded')} (#${slotIndex + 1})`,
-        );
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+          return;
+        }
+        resolve(dataUrl);
       };
-      img.onerror = () => {
-        this.toast.error(this.i18n.t('admin.settings.invalidImage'));
-      };
-      img.src = result;
-    };
-    reader.readAsDataURL(file);
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
   }
 
   clearBannerSlot(slotIndex: number, event?: Event): void {
@@ -505,48 +553,25 @@ export class AdminSettingsPage {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
+    try {
+      const result = await this.compressImageFile(file, 1200, 750, 0.75);
+      this.heroBannerUrl.set(result.url);
+      this.bannerSlots.update((slots) => {
+        const next = [...slots];
+        next[this.activeBannerSlotIndex()] = result.url;
+        return next;
+      });
+      this.bannerDimensions.set({
+        width: result.width,
+        height: result.height,
+        sizeStr: result.sizeStr,
+      });
+      this.toast.success(
+        `${this.i18n.t('admin.settings.bannerUploaded')} (${result.sizeStr})`,
+      );
+    } catch {
       this.toast.error(this.i18n.t('admin.settings.invalidImage'));
-      return;
     }
-
-    const sizeStr =
-      file.size > 1024 * 1024
-        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
-        : `${Math.round(file.size / 1024)} KB`;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const img = new Image();
-      img.onload = () => {
-        let finalUrl = result;
-        const maxW = 1600;
-        if (img.naturalWidth > maxW) {
-          const canvas = document.createElement('canvas');
-          const scale = maxW / img.naturalWidth;
-          canvas.width = maxW;
-          canvas.height = Math.round(img.naturalHeight * scale);
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            finalUrl = canvas.toDataURL('image/jpeg', 0.88);
-          }
-        }
-        this.heroBannerUrl.set(finalUrl);
-        this.bannerDimensions.set({
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-          sizeStr,
-        });
-        this.toast.success(this.i18n.t('admin.settings.bannerUploaded'));
-      };
-      img.onerror = () => {
-        this.toast.error(this.i18n.t('admin.settings.invalidImage'));
-      };
-      img.src = result;
-    };
-    reader.readAsDataURL(file);
   }
 
   private probeImageDimensions(url: string): void {
@@ -575,30 +600,48 @@ export class AdminSettingsPage {
 
   async save(): Promise<void> {
     this.saving.set(true);
-    const patch: SiteSettings = {
-      featuredPostIds: this.featuredPostIds(),
-      featuredVideoId: this.featuredVideoId(),
-      homeSections: this.sections(),
-      heroBannerUrl: this.heroBannerUrl().trim() || null,
-      heroBannerAlt: this.heroBannerAlt().trim() || null,
-      heroBannerImages: this.bannerSlots(),
-      heroBannerActiveIndex: this.activeBannerSlotIndex(),
-      heroBannerShowOverlays: this.heroBannerShowOverlays(),
-      heroBannerTitle: this.heroBannerTitle(),
-      heroBannerSubtitle: this.heroBannerSubtitle(),
-      heroBannerTagline: this.heroBannerTagline(),
-      heroBannerQuote: this.heroBannerQuote(),
-      heroBannerShowPills: this.heroBannerShowPills(),
-      heroBannerPill1: this.heroBannerPill1(),
-      heroBannerPill2: this.heroBannerPill2(),
-      heroBannerPill3: this.heroBannerPill3(),
-      heroBannerPill4: this.heroBannerPill4(),
-    };
     try {
+      // Recompress any oversized data URLs before saving to keep total payload safely <450KB
+      const sanitizedSlots = await Promise.all(
+        this.bannerSlots().map(async (slot) => {
+          if (!slot || !slot.startsWith('data:image')) return slot;
+          if (slot.length < 120_000) return slot;
+          return this.recompressDataUrl(slot, 1200, 750, 0.70);
+        }),
+      );
+      this.bannerSlots.set(sanitizedSlots);
+
+      const activeUrl =
+        sanitizedSlots[this.activeBannerSlotIndex()] ||
+        this.heroBannerUrl().trim() ||
+        null;
+
+      const patch: SiteSettings = {
+        featuredPostIds: this.featuredPostIds(),
+        featuredVideoId: this.featuredVideoId(),
+        homeSections: this.sections(),
+        heroBannerUrl: activeUrl,
+        heroBannerAlt: this.heroBannerAlt().trim() || null,
+        heroBannerImages: sanitizedSlots,
+        heroBannerActiveIndex: this.activeBannerSlotIndex(),
+        heroBannerShowOverlays: this.heroBannerShowOverlays(),
+        heroBannerTitle: this.heroBannerTitle(),
+        heroBannerSubtitle: this.heroBannerSubtitle(),
+        heroBannerTagline: this.heroBannerTagline(),
+        heroBannerQuote: this.heroBannerQuote(),
+        heroBannerShowPills: this.heroBannerShowPills(),
+        heroBannerPill1: this.heroBannerPill1(),
+        heroBannerPill2: this.heroBannerPill2(),
+        heroBannerPill3: this.heroBannerPill3(),
+        heroBannerPill4: this.heroBannerPill4(),
+      };
+
       await this.adminService.saveSettings(patch);
       this.toast.success(this.i18n.t('admin.settings.saved'));
-    } catch {
-      this.toast.error(this.i18n.t('common.errorMessage'));
+    } catch (err: unknown) {
+      console.error('Failed to save settings:', err);
+      const msg = err instanceof Error ? err.message : this.i18n.t('common.errorMessage');
+      this.toast.error(msg);
     } finally {
       this.saving.set(false);
     }
