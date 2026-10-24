@@ -72,6 +72,16 @@ export class FirebaseService {
     return this.dbInstance;
   }
 
+  /** Non-null FirebaseApp handle — call only after checking `configured`. */
+  requireApp(): FirebaseApp {
+    if (!this.app) throw new FirebaseNotConfiguredError();
+    return this.app;
+  }
+
+  get appInstance(): FirebaseApp | null {
+    return this.app;
+  }
+
   /** Non-null auth handle — call only after checking `configured`. */
   requireAuth(): Auth {
     if (!this.authInstance) throw new FirebaseNotConfiguredError();

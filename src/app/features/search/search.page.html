@@ -1,39 +1,160 @@
-<section class="section container container--narrow">
+<section class="section container container--narrow search-container">
   <header class="section-head">
     <div class="section-head__titles">
-      <span class="section-head__kicker">{{ i18n.t('nav.search') }}</span>
+      <div class="search-kicker-row">
+        <span class="badge badge--gold">
+          <app-icon name="sparkle" />
+          {{ i18n.t('search.aiOnlyNoticeBadge') }}
+        </span>
+        <span class="section-head__kicker">{{ i18n.t('nav.search') }}</span>
+      </div>
       <h1 class="section-head__title">{{ i18n.t('search.title') }}</h1>
-      <p class="section-head__sub">{{ i18n.t('search.note') }}</p>
+      <p class="section-head__sub">{{ i18n.t('search.aiSubtitle') }}</p>
     </div>
   </header>
 
-  <form class="search-box" role="search" (submit)="$event.preventDefault()">
+  <form class="search-box" role="search" (submit)="onSubmit(); $event.preventDefault()">
     <label class="sr-only" for="site-search">{{ i18n.t('search.title') }}</label>
     <div class="search-box__field">
       <app-icon name="search" />
       <input
         id="site-search"
-        class="input"
+        class="input search-input"
         type="search"
         [placeholder]="i18n.t('search.placeholder')"
         [value]="query()"
         (input)="onInput($event)"
         autocomplete="off"
       />
+      @if (query()) {
+        <button
+          type="button"
+          class="search-box__clear"
+          (click)="clearSearch()"
+          [attr.aria-label]="i18n.t('common.close')"
+        >
+          <app-icon name="close" />
+        </button>
+      }
     </div>
   </form>
 
+  <!-- Islamic quick suggestion chips -->
+  <div class="search-chips-wrapper">
+    <span class="search-chips-label">
+      <app-icon name="sparkle" />
+      {{ i18n.t('search.aiRelatedTopics') }}:
+    </span>
+    <div class="search-chips">
+      @for (chip of promptChips; track chip.query) {
+        <button
+          type="button"
+          class="search-chip-btn"
+          (click)="search(chip.query)"
+        >
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Firebase Islamic AI Response Section -->
+  @if (aiSearching()) {
+    <div class="search-ai-card search-ai-card--loading" aria-live="polite">
+      <div class="search-ai-card__shimmer"></div>
+      <div class="search-ai-card__header">
+        <span class="search-ai-badge">
+          <app-icon name="sparkle" />
+          {{ i18n.t('search.aiTitle') }}
+        </span>
+        <span class="search-ai-loading-text">
+          <span class="spinner-dot"></span>
+          {{ i18n.t('search.aiSearching') }}
+        </span>
+      </div>
+    </div>
+  } @else if (aiResponse(); as ai) {
+    <div class="search-ai-card" [class.search-ai-card--alert]="!ai.isIslamic">
+      <div class="search-ai-card__header">
+        <div class="search-ai-card__tag">
+          <span class="search-ai-badge">
+            <app-icon name="sparkle" />
+            {{ i18n.t('search.aiAnswerTitle') }}
+          </span>
+          @if (!ai.isIslamic) {
+            <span class="badge badge--warning">
+              <app-icon name="alert-triangle" />
+              {{ i18n.t('search.aiOnlyNoticeBadge') }}
+            </span>
+          } @else {
+            <span class="badge badge--emerald">
+              <app-icon name="mosque" />
+              Quran & Sunnah
+            </span>
+          }
+        </div>
+        <button
+          type="button"
+          class="search-ai-copy-btn"
+          (click)="copyAiAnswer()"
+          [title]="i18n.t('search.copyAnswer')"
+        >
+          <app-icon name="copy" />
+          <span>{{ i18n.t('search.copyAnswer') }}</span>
+        </button>
+      </div>
+
+      <div class="search-ai-card__body">
+        <div class="search-ai-card__decor-arch" aria-hidden="true"></div>
+        <p class="search-ai-answer">{{ ai.answer }}</p>
+
+        @if (ai.source) {
+          <div class="search-ai-card__source">
+            <app-icon name="bookmark" />
+            <span class="source-label">{{ ai.source }}</span>
+          </div>
+        }
+      </div>
+
+      @if (ai.relatedTopics && ai.relatedTopics.length > 0) {
+        <div class="search-ai-card__footer">
+          <span class="footer-title">{{ i18n.t('search.aiRelatedTopics') }}:</span>
+          <div class="search-ai-pills">
+            @for (topic of ai.relatedTopics; track topic) {
+              <button
+                type="button"
+                class="search-ai-pill"
+                (click)="onSuggestedTopicClick(topic)"
+              >
+                {{ topic }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="search-ai-card__disclaimer">
+        <app-icon name="info" />
+        <small>{{ i18n.t('search.aiDisclaimer') }}</small>
+      </div>
+    </div>
+  }
+
+  <!-- Platform content search results -->
   @if (searching()) {
     <p class="search-status" role="status">{{ i18n.t('search.searching') }}</p>
   }
 
   @if (visibleResults().length > 0) {
-    <p class="search-status search-status--count">
-      {{ i18n.t('common.results', { count: results().length }) }}
-      @if (query()) {
-        — {{ i18n.t('search.resultsFor', { query: query() }) }}
-      }
-    </p>
+    <div class="search-content-header">
+      <h2 class="search-content-title">{{ i18n.t('search.tabContent') }}</h2>
+      <p class="search-status search-status--count">
+        {{ i18n.t('common.results', { count: results().length }) }}
+        @if (query()) {
+          — {{ i18n.t('search.resultsFor', { query: query() }) }}
+        }
+      </p>
+    </div>
 
     <div class="tabs" role="group" [attr.aria-label]="i18n.t('common.filters')">
       @for (tab of availableTabs(); track tab.value) {
@@ -67,13 +188,15 @@
       }
     </ul>
   } @else if (showEmpty()) {
-    <app-content-state
-      kind="empty"
-      icon="search"
-      [title]="i18n.t('common.noResultsTitle')"
-      [message]="i18n.t('common.noResultsMessage')"
-    />
-  } @else if (!searching() && !searched()) {
+    @if (!aiResponse()) {
+      <app-content-state
+        kind="empty"
+        icon="search"
+        [title]="i18n.t('common.noResultsTitle')"
+        [message]="i18n.t('common.noResultsMessage')"
+      />
+    }
+  } @else if (!searching() && !searched() && !aiResponse()) {
     <app-content-state
       kind="empty"
       icon="search"
