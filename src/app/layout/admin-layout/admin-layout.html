@@ -92,5 +92,18 @@
     <main id="admin-content" class="admin-content" tabindex="-1">
       <router-outlet />
     </main>
+
+    <footer class="admin-footer">
+      <div class="admin-footer__inner">
+        <span>© {{ currentYear }} {{ siteName() }} • {{ i18n.t('nav.admin') }}</span>
+        <div class="admin-footer__meta">
+          <span class="admin-footer__pill">
+            <span class="status-dot"></span>
+            v2.0 Pro
+          </span>
+          <a routerLink="/" class="admin-footer__link">{{ i18n.t('admin.viewSite') }}</a>
+        </div>
+      </div>
+    </footer>
   </div>
 </div>

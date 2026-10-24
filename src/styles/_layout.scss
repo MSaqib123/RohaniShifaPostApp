@@ -414,8 +414,35 @@ public-layout {
 .site-footer {
   position: relative;
   margin-block-start: auto;
-  background: linear-gradient(180deg, var(--c-primary-900), var(--c-primary-950));
+  background: linear-gradient(180deg, #07392b 0%, #032018 100%);
   color: #cfe0d9;
+  border-block-start: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.08);
+
+  [data-theme='dark'] &,
+  html.dark & {
+    background: linear-gradient(180deg, #06110d 0%, #030806 100%);
+    border-block-start: 1px solid rgba(255, 255, 255, 0.07);
+    color: #9cb5a8;
+    box-shadow: none;
+
+    h2 {
+      color: #facc15;
+    }
+
+    a {
+      color: #b7cec6;
+
+      &:hover {
+        color: #34d399;
+      }
+    }
+
+    .site-footer__bottom {
+      border-block-start-color: rgba(255, 255, 255, 0.06);
+      color: #718c7f;
+    }
+  }
 }
 
 .site-footer__grid {
@@ -605,9 +632,11 @@ public-layout {
   flex-direction: column;
   gap: var(--sp-1);
   padding: var(--sp-4) var(--sp-3);
-  background: var(--c-primary-950);
-  color: #cfe0d9;
+  background: var(--c-sidebar-bg);
+  border-inline-end: 1px solid var(--c-sidebar-border);
+  color: var(--c-sidebar-text);
   overflow-y: auto;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2);
 
   .admin-sidebar__head {
     display: flex;
@@ -615,38 +644,70 @@ public-layout {
     justify-content: space-between;
     gap: var(--sp-2);
     padding: 0.35rem 0.5rem var(--sp-4);
+    margin-block-end: var(--sp-2);
+    border-block-end: 1px solid var(--c-sidebar-border);
 
     strong {
       color: #fff;
       font-size: var(--fs-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
   }
 
   .admin-link {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-    padding: 0.6rem 0.75rem;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
     border-radius: var(--r-md);
-    color: #b7cec6;
+    color: var(--c-sidebar-text);
     font-size: var(--fs-sm);
     font-weight: 600;
     text-decoration: none;
+    transition: all var(--dur-fast) var(--ease);
+    position: relative;
 
     .icon {
-      inline-size: 1.1rem;
-      block-size: 1.1rem;
+      inline-size: 1.15rem;
+      block-size: 1.15rem;
+      opacity: 0.85;
+      transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.07);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
       text-decoration: none;
+      transform: translateX(2px);
+
+      .icon {
+        opacity: 1;
+        transform: scale(1.1);
+      }
     }
 
     &.is-active {
-      background: rgba(201, 162, 39, 0.16);
-      color: var(--c-gold-200);
+      background: var(--c-sidebar-active-bg);
+      color: var(--c-sidebar-active-text);
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+
+      .icon {
+        opacity: 1;
+        color: var(--c-sidebar-active-text);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        top: 20%;
+        bottom: 20%;
+        width: 3px;
+        border-radius: 999px;
+        background: var(--c-sidebar-active-text);
+      }
     }
   }
 
@@ -739,6 +800,51 @@ public-layout {
 .admin-content {
   padding: clamp(1rem, 3vw, 2rem);
   min-inline-size: 0;
+  flex: 1;
+}
+
+.admin-footer {
+  margin-block-start: auto;
+  padding: var(--sp-4) clamp(1rem, 3vw, 2rem);
+  background: var(--c-surface);
+  border-block-start: 1px solid var(--c-line);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--r-full);
+    background: var(--c-bg);
+    border: 1px solid var(--c-line);
+    font-weight: 600;
+  }
+
+  &__link {
+    color: var(--c-primary-700);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 // ═══ ADMIN PAGE FRAME (shared by every /admin route) ═══════════════════════

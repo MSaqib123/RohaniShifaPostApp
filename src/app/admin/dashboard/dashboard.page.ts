@@ -132,7 +132,7 @@ export class DashboardPage {
             value: posts,
             route: '/admin/posts',
             badge: 'Articles',
-            gradient: 'linear-gradient(135deg, #094532 0%, #032419 100%)',
+            gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
           },
           {
             key: 'admin.totalVideos',
@@ -140,7 +140,7 @@ export class DashboardPage {
             value: videos,
             route: '/admin/videos',
             badge: 'YouTube',
-            gradient: 'linear-gradient(135deg, #9a6b06 0%, #4a3402 100%)',
+            gradient: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
           },
           {
             key: 'admin.totalUsers',
@@ -148,7 +148,7 @@ export class DashboardPage {
             value: users,
             route: '/admin/users',
             badge: 'Community',
-            gradient: 'linear-gradient(135deg, #105943 0%, #062b1e 100%)',
+            gradient: 'linear-gradient(135deg, #06b6d4 0%, #0e7490 100%)',
           },
           {
             key: 'admin.upcomingEvents',
@@ -156,7 +156,7 @@ export class DashboardPage {
             value: events,
             route: '/admin/events',
             badge: 'Schedule',
-            gradient: 'linear-gradient(135deg, #1c4b75 0%, #0d263e 100%)',
+            gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
           },
           {
             key: 'admin.totalComments',
@@ -164,7 +164,7 @@ export class DashboardPage {
             value: comments,
             route: '/admin/comments',
             badge: 'Engage',
-            gradient: 'linear-gradient(135deg, #2b614d 0%, #112d23 100%)',
+            gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
           },
           {
             key: 'admin.totalCategories',
@@ -172,7 +172,7 @@ export class DashboardPage {
             value: categories,
             route: '/admin/categories',
             badge: 'Topics',
-            gradient: 'linear-gradient(135deg, #6c4f10 0%, #352605 100%)',
+            gradient: 'linear-gradient(135deg, #eab308 0%, #a16207 100%)',
           },
         ]);
 

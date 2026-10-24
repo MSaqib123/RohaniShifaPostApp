@@ -53,6 +53,7 @@ export class AdminLayout {
 
   readonly siteName = computed(() => localizedSiteName(this.i18n.language()));
   readonly sidebarOpen = signal(false);
+  readonly currentYear = new Date().getFullYear();
 
   readonly links: AdminLink[] = [
     { route: '/admin', key: 'admin.dashboard', icon: 'dashboard', exact: true },

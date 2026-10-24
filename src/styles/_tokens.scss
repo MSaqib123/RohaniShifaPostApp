@@ -15,6 +15,16 @@
   --c-primary-100: #d6ece4;
   --c-primary-50: #ecf7f3;
 
+  --c-brand-title: var(--c-primary-800);
+  --c-brand-accent: var(--c-gold-500);
+
+  // ── Admin Sidebar Tokens (Light Mode) ──────────────────────────────────────
+  --c-sidebar-bg: #042119;
+  --c-sidebar-border: rgba(255, 255, 255, 0.08);
+  --c-sidebar-text: #b7cec6;
+  --c-sidebar-active-bg: rgba(212, 175, 55, 0.18);
+  --c-sidebar-active-text: #fde047;
+
   // ── Brand: Illuminated Royal Gold ────────────────────────────────────────
   --c-gold-700: #8a6d0a;
   --c-gold-600: #b2901c;
@@ -195,16 +205,27 @@ html.dark {
   --c-ink-400: #718c7f;
   --c-ink-300: #4e675b;
 
-  // Luminous primary accents for dark obsidian backdrop
-  --c-primary-950: #ecfdf5;
-  --c-primary-900: #d1fae5;
-  --c-primary-800: #6ee7b7;  // Glowing brand title & prominent highlights!
-  --c-primary-700: #34d399;  // Emerald links & focus rings!
-  --c-primary-600: #10b981;  // Primary buttons!
+  // Deep obsidian primary tones for dark backdrop
+  --c-primary-950: #020c08;
+  --c-primary-900: #041811;
+  --c-primary-800: #09281d;
+  --c-primary-700: #0e3b2b;
+  --c-primary-600: #10b981;
   --c-primary-500: #059669;
-  --c-primary-300: #047857;
-  --c-primary-100: #064e3b;
+  --c-primary-300: #34d399;
+  --c-primary-100: #6ee7b7;
   --c-primary-50: #062b20;
+
+  // Luminous Brand text & accents in dark mode
+  --c-brand-title: #6ee7b7;
+  --c-brand-accent: #fde047;
+
+  // ── Admin Sidebar Tokens (Dark Mode) ───────────────────────────────────────
+  --c-sidebar-bg: #050d0a;
+  --c-sidebar-border: #14281f;
+  --c-sidebar-text: #9cb5a8;
+  --c-sidebar-active-bg: rgba(16, 185, 129, 0.18);
+  --c-sidebar-active-text: #34d399;
 
   // Radiant Gold in dark mode
   --c-gold-700: #fef08a;
