@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Subject, catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SearchResult, SearchService } from '../../core/services/search.service';
 import { FirebaseIslamicAiService, IslamicAiResponse } from '../../core/services/firebase-ai.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -74,29 +74,42 @@ export class SearchPage {
         debounceTime(DEBOUNCE_MS),
         distinctUntilChanged(),
         switchMap((term) => {
-          if (term.trim().length < MIN_CHARS) {
+          const q = term.trim();
+          if (q.length < MIN_CHARS) {
             this.searching.set(false);
             this.searched.set(false);
             this.results.set([]);
             this.aiResponse.set(null);
             this.aiSearching.set(false);
-            return [];
+            return of({ query: '', results: [] });
           }
           this.searching.set(true);
-          void this.runAiSearch(term);
-          return this.searchService.search(term);
+          void this.runAiSearch(q);
+          return this.searchService.search(q).pipe(
+            catchError((err) => {
+              console.warn('Search service error in pipe:', err);
+              return of({ query: q, results: [] });
+            }),
+          );
         }),
       )
-      .subscribe((response) => {
-        if (!response) return;
-        this.results.set(response.results);
-        this.searching.set(false);
-        this.searched.set(true);
-        void this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { q: response.query || null },
-          replaceUrl: true,
-        });
+      .subscribe({
+        next: (response) => {
+          if (!response) return;
+          this.results.set(response.results);
+          this.searching.set(false);
+          this.searched.set(true);
+          void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { q: response.query || null },
+            replaceUrl: true,
+          });
+        },
+        error: (err) => {
+          console.error('Unhandled search subscription error:', err);
+          this.searching.set(false);
+          this.searched.set(true);
+        },
       });
 
     const initial = this.query();
@@ -109,7 +122,10 @@ export class SearchPage {
     this.aiSearching.set(true);
     try {
       const resp = await this.islamicAiService.askIslamicAi(q, this.i18n.language());
-      this.aiResponse.set(resp);
+      const current = this.query().trim().toLowerCase();
+      if (!current || current.includes(q.toLowerCase()) || q.toLowerCase().includes(current)) {
+        this.aiResponse.set(resp);
+      }
     } catch (err) {
       console.error('Islamic AI Search error:', err);
     } finally {
@@ -136,16 +152,29 @@ export class SearchPage {
   onInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.query.set(value);
+    if (value.trim().length >= MIN_CHARS) {
+      this.aiSearching.set(true);
+    } else {
+      this.aiResponse.set(null);
+      this.aiSearching.set(false);
+    }
     this.terms$.next(value);
   }
 
   search(term: string): void {
     this.query.set(term);
+    if (term.trim().length >= MIN_CHARS) {
+      this.aiSearching.set(true);
+      void this.runAiSearch(term);
+    }
     this.terms$.next(term);
   }
 
   clearSearch(): void {
     this.query.set('');
+    this.aiResponse.set(null);
+    this.aiSearching.set(false);
+    this.results.set([]);
     this.terms$.next('');
   }
 

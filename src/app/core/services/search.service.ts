@@ -8,7 +8,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { Observable, from, map, of } from 'rxjs';
+import { Observable, catchError, from, map, of } from 'rxjs';
 import { LocalizedText } from '../../i18n/language.types';
 import { Category } from '../models';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -72,6 +72,10 @@ export class SearchService {
         query: rawQuery.trim(),
         results: groups.flat(),
       })),
+      catchError((err) => {
+        console.warn('Search query caught error:', err);
+        return of({ query: rawQuery.trim(), results: [] });
+      }),
     );
   }
 
@@ -80,78 +84,96 @@ export class SearchService {
   /**
    * Query one keyword-searchable collection.
    *
-   * Firestore matches documents containing *any* prefix (index-friendly
-   * `array-contains`); the `every` filter then enforces AND semantics in the
-   * client, which is the honest cost of prefix search without a text engine.
+   * Query matches documents with status and searchKeywords without combining
+   * with orderBy, eliminating any composite index requirement. Results are
+   * sorted in-memory.
    */
   private async queryKeywordCollection(
     entry: (typeof KEYWORD_COLLECTIONS)[number],
     terms: string[],
   ): Promise<SearchResult[]> {
-    const db = this.firebase.requireDb();
-    const statusFilter =
-      entry.name === 'events'
-        ? // Events stay readable after they happen — the archive is public (§17).
-          where('status', 'in', ['published', 'completed', 'cancelled'])
-        : where('status', '==', 'published');
+    try {
+      const db = this.firebase.requireDb();
+      const statusFilter =
+        entry.name === 'events'
+          ? // Events stay readable after they happen — the archive is public (§17).
+            where('status', 'in', ['published', 'completed', 'cancelled'])
+          : where('status', '==', 'published');
 
-    const base: Query = query(
-      collection(db, entry.name),
-      statusFilter,
-      where('searchKeywords', 'array-contains', terms[0]),
-      orderBy(entry.orderField, 'desc'),
-      limitDocs(PER_COLLECTION * 3),
-    );
+      const base: Query = query(
+        collection(db, entry.name),
+        statusFilter,
+        where('searchKeywords', 'array-contains', terms[0]),
+        limitDocs(PER_COLLECTION * 3),
+      );
 
-    const snapshot = await getDocs(base);
-    const matched = snapshot.docs
-      .map(
-        (docSnap) =>
-          ({
-            ...docSnap.data(),
-            id: docSnap.id,
-          }) as {
-            id: string;
-            searchKeywords: string[];
-            title: LocalizedText;
-            description: LocalizedText;
-          },
-      )
-      .filter((doc) => terms.every((term) => doc.searchKeywords.includes(term)));
+      const snapshot = await getDocs(base);
+      const matched = snapshot.docs
+        .map(
+          (docSnap) =>
+            ({
+              ...docSnap.data(),
+              id: docSnap.id,
+            }) as {
+              id: string;
+              searchKeywords: string[];
+              title: LocalizedText;
+              description: LocalizedText;
+              [key: string]: unknown;
+            },
+        )
+        .filter((doc) => terms.every((term) => doc.searchKeywords.includes(term)))
+        .sort((a, b) => {
+          const valA = a[entry.orderField];
+          const valB = b[entry.orderField];
+          if (!valA && !valB) return 0;
+          if (!valA) return 1;
+          if (!valB) return -1;
+          return valA > valB ? -1 : 1;
+        });
 
-    return matched.slice(0, PER_COLLECTION).map((doc) => ({
-      kind: entry.name as SearchKind,
-      id: doc.id,
-      title: pickLocalized(doc.title),
-      subtitle: pickLocalized(doc.description),
-      route: `/${entry.name}/${doc.id}`,
-    }));
+      return matched.slice(0, PER_COLLECTION).map((doc) => ({
+        kind: entry.name as SearchKind,
+        id: doc.id,
+        title: pickLocalized(doc.title),
+        subtitle: pickLocalized(doc.description),
+        route: `/${entry.name}/${doc.id}`,
+      }));
+    } catch (err) {
+      console.warn(`Error querying collection ${entry.name}:`, err);
+      return [];
+    }
   }
 
   /** Categories carry no status/keywords — filter active entries in memory. */
   private async queryCategories(terms: string[]): Promise<SearchResult[]> {
-    const db = this.firebase.requireDb();
-    const snapshot = await getDocs(
-      query(collection(db, 'categories'), where('isActive', '==', true), limitDocs(100)),
-    );
-
-    const matched = snapshot.docs
-      .map((docSnap) => ({ ...docSnap.data(), id: docSnap.id }) as Category)
-      .filter((category) =>
-        terms.every((term) =>
-          [category.name?.en, category.name?.ur, category.name?.ar, category.slug]
-            .filter((value): value is string => !!value)
-            .some((value) => value.toLowerCase().includes(term)),
-        ),
+    try {
+      const db = this.firebase.requireDb();
+      const snapshot = await getDocs(
+        query(collection(db, 'categories'), where('isActive', '==', true), limitDocs(100)),
       );
 
-    return matched.slice(0, PER_COLLECTION).map((category) => ({
-      kind: 'category' as const,
-      id: category.id,
-      title: pickLocalized(category.name),
-      subtitle: '',
-      route: `/categories/${category.slug}`,
-    }));
+      const matched = snapshot.docs
+        .map((docSnap) => ({ ...docSnap.data(), id: docSnap.id }) as Category)
+        .filter((category) =>
+          terms.every((term) =>
+            [category.name?.en, category.name?.ur, category.name?.ar, category.slug]
+              .filter((value): value is string => !!value)
+              .some((value) => value.toLowerCase().includes(term)),
+          ),
+        );
+
+      return matched.slice(0, PER_COLLECTION).map((category) => ({
+        kind: 'category' as const,
+        id: category.id,
+        title: pickLocalized(category.name),
+        subtitle: '',
+        route: `/categories/${category.slug}`,
+      }));
+    } catch (err) {
+      console.warn('Error querying categories:', err);
+      return [];
+    }
   }
 }
 

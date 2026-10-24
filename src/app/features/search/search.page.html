@@ -15,27 +15,38 @@
 
   <form class="search-box" role="search" (submit)="onSubmit(); $event.preventDefault()">
     <label class="sr-only" for="site-search">{{ i18n.t('search.title') }}</label>
-    <div class="search-box__field">
-      <app-icon name="search" />
-      <input
-        id="site-search"
-        class="input search-input"
-        type="search"
-        [placeholder]="i18n.t('search.placeholder')"
-        [value]="query()"
-        (input)="onInput($event)"
-        autocomplete="off"
-      />
-      @if (query()) {
-        <button
-          type="button"
-          class="search-box__clear"
-          (click)="clearSearch()"
-          [attr.aria-label]="i18n.t('common.close')"
-        >
-          <app-icon name="close" />
-        </button>
-      }
+    <div class="search-box__row">
+      <div class="search-box__field">
+        <app-icon name="search" />
+        <input
+          id="site-search"
+          class="input search-input"
+          type="search"
+          [placeholder]="i18n.t('search.placeholder')"
+          [value]="query()"
+          (input)="onInput($event)"
+          (keydown.enter)="onSubmit()"
+          autocomplete="off"
+        />
+        @if (query()) {
+          <button
+            type="button"
+            class="search-box__clear"
+            (click)="clearSearch()"
+            [attr.aria-label]="i18n.t('common.close')"
+          >
+            <app-icon name="close" />
+          </button>
+        }
+      </div>
+      <button
+        type="submit"
+        class="search-box__submit-btn"
+        [disabled]="query().trim().length < 3"
+      >
+        <app-icon name="sparkle" />
+        <span class="submit-text">{{ i18n.t('search.askAiButton') }}</span>
+      </button>
     </div>
   </form>
 

@@ -57,6 +57,14 @@ describe('FirebaseIslamicAiService', () => {
     expect(res.relatedTopics.length).toBeGreaterThan(0);
   });
 
+  it('should answer questions about Prophet Muhammad birth and Seerah', async () => {
+    const res = await service.askIslamicAi('when prophet Muhammad was born', 'en');
+    expect(res.isIslamic).toBe(true);
+    expect(res.isIslamicOnlyNotice).toBe(false);
+    expect(res.answer).toContain('Elephant');
+    expect(res.source).toContain('Quran');
+  });
+
   it('should return Urdu decline notice when language is ur', async () => {
     const res = await service.askIslamicAi('action movie watch free', 'ur');
     expect(res.isIslamic).toBe(false);
