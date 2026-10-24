@@ -130,16 +130,19 @@ export class AdminService {
   // ── Platform settings (`settings/site`) ───────────────────────────────────
 
   /** Live settings document — used by the home page and the admin editor. */
+  getCachedSettings(): SiteSettings | null {
+    const SETTINGS_LOCAL_KEY = 'rohani_site_settings';
+    try {
+      const item = localStorage.getItem(SETTINGS_LOCAL_KEY);
+      return item ? (JSON.parse(item) as SiteSettings) : null;
+    } catch {
+      return null;
+    }
+  }
+
   settings(): Observable<SiteSettings | null> {
     const SETTINGS_LOCAL_KEY = 'rohani_site_settings';
-    const readLocal = (): SiteSettings | null => {
-      try {
-        const item = localStorage.getItem(SETTINGS_LOCAL_KEY);
-        return item ? (JSON.parse(item) as SiteSettings) : null;
-      } catch {
-        return null;
-      }
-    };
+    const readLocal = (): SiteSettings | null => this.getCachedSettings();
 
     if (!this.firebase.configured) return of(readLocal());
 

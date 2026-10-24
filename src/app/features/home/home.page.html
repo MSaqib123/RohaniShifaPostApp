@@ -1,10 +1,15 @@
 @if (isVisible('hero')) {
   <section class="hero-showcase" aria-labelledby="hero-title">
     <div class="container hero-showcase__container">
-      <div class="hero-showcase__frame" role="region" [attr.aria-label]="heroBannerAlt()">
-        <img [src]="heroBannerUrl()" [alt]="heroBannerAlt()" class="hero-showcase__img" />
+      @if (!settingsLoaded()) {
+        <div class="hero-showcase__frame hero-showcase__frame--loading" aria-busy="true">
+          <div class="hero-showcase__skeleton"></div>
+        </div>
+      } @else {
+        <div class="hero-showcase__frame" role="region" [attr.aria-label]="heroBannerAlt()">
+          <img [src]="heroBannerUrl()" [alt]="heroBannerAlt()" class="hero-showcase__img" fetchpriority="high" />
 
-        @if (showOverlays()) {
+          @if (showOverlays()) {
           <div class="hero-showcase__overlays" aria-hidden="false">
             <!-- Left Side Quick Category Pills (Desktop / Tablet) -->
             @if (showPills()) {
@@ -194,6 +199,7 @@
           </span>
           <span class="hero-mobile-quote__star">❖</span>
         </div>
+      }
       }
     </div>
   </section>

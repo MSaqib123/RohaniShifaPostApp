@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subscription, combineLatest, catchError, of } from 'rxjs';
 import { siteConfig } from '../../config/site.config';
@@ -101,7 +101,7 @@ export const DEFAULT_BANNER_OVERLAYS: BannerOverlaysConfig = {
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
   readonly i18n = inject(I18nService);
   readonly config = siteConfig;
   readonly firebase = inject(FirebaseService);
@@ -121,18 +121,31 @@ export class HomePage {
   readonly events = signal<EventItem[]>([]);
   readonly categories = signal<Category[]>([]);
   readonly reminder = signal<Post | null>(null);
-  readonly settings = signal<SiteSettings | null>(null);
+
+  /**
+   * Synchronously seed with cached site settings if present so that the active
+   * banner image and overlay mode are active on frame 0 without flickering.
+   */
+  readonly settings = signal<SiteSettings | null>(this.adminService.getCachedSettings());
+  readonly settingsLoaded = signal<boolean>(!!this.adminService.getCachedSettings());
 
   /** Curated selection overrides the "latest" list when the admin set one. */
   readonly featuredOverride = signal<Post[]>([]);
   private featuredSubscription: Subscription | null = null;
+  private settingsSubscription: Subscription | null = null;
+  private contentSubscription: Subscription | null = null;
   private lastFeaturedIds: string[] = [];
 
   readonly siteName = computed(() => localizedSiteName(this.i18n.language()));
   readonly tagline = computed(() => this.i18n.localized(this.config.tagline));
 
   readonly heroBannerUrl = computed(() => {
-    const custom = this.settings()?.heroBannerUrl;
+    const s = this.settings();
+    if (s?.heroBannerImages && s.heroBannerActiveIndex !== undefined) {
+      const slotImg = s.heroBannerImages[s.heroBannerActiveIndex];
+      if (slotImg && slotImg.trim()) return slotImg.trim();
+    }
+    const custom = s?.heroBannerUrl;
     return custom && custom.trim() ? custom.trim() : 'images/hero-banner.jpg';
   });
 
@@ -281,18 +294,47 @@ export class HomePage {
   readonly isVisible = (sectionId: string): boolean => this.enabledSections().has(sectionId);
 
   constructor() {
+    this.subscribeSettings();
     this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.settingsSubscription?.unsubscribe();
+    this.featuredSubscription?.unsubscribe();
+    this.contentSubscription?.unsubscribe();
   }
 
   retry(): void {
     this.load();
   }
 
+  private subscribeSettings(): void {
+    this.settingsSubscription?.unsubscribe();
+    this.settingsSubscription = this.adminService
+      .settings()
+      .pipe(catchError(() => of(null)))
+      .subscribe({
+        next: (settings) => {
+          if (settings) {
+            this.settings.set(settings);
+            this.settingsLoaded.set(true);
+            this.applyFeatured(settings.featuredPostIds ?? []);
+          } else {
+            this.settingsLoaded.set(true);
+          }
+        },
+        error: () => {
+          this.settingsLoaded.set(true);
+        },
+      });
+  }
+
   private load(): void {
     this.loading.set(true);
     this.error.set(false);
 
-    combineLatest({
+    this.contentSubscription?.unsubscribe();
+    this.contentSubscription = combineLatest({
       posts: this.postService.listPublished({ max: 6 }).pipe(catchError(() => of([]))),
       videos: this.videoService.listPublished({ max: 6 }).pipe(catchError(() => of([]))),
       events: this.eventService.listUpcoming(3).pipe(catchError(() => of([]))),
@@ -300,17 +342,14 @@ export class HomePage {
       reminder: this.postService
         .listPublished({ type: 'reminder', max: 1 })
         .pipe(catchError(() => of([]))),
-      settings: this.adminService.settings().pipe(catchError(() => of(null))),
     }).subscribe({
-      next: ({ posts, videos, events, categories, reminder, settings }) => {
+      next: ({ posts, videos, events, categories, reminder }) => {
         this.posts.set(posts);
         this.videos.set(videos);
         this.events.set(events);
         this.categories.set(categories);
         this.reminder.set(reminder[0] ?? null);
-        this.settings.set(settings);
         this.loading.set(false);
-        this.applyFeatured(settings?.featuredPostIds ?? []);
       },
       error: (err) => {
         console.error('Home load error:', err);

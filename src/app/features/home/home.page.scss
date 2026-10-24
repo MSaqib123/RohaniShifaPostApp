@@ -33,6 +33,35 @@
       border-radius: var(--r-md);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
+
+    &--loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #094030 0%, #031c15 100%);
+    }
+  }
+
+  &__skeleton {
+    inline-size: 100%;
+    block-size: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(212, 175, 55, 0.12) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: heroBannerShimmer 1.8s infinite;
+  }
+
+  @keyframes heroBannerShimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 
   &__img {
